@@ -1,0 +1,263 @@
+<!-- FLIGHT TICKET-->
+					<div id="ticketid0123" class="offset-2" >
+						<div class="fblueline"><b>Bucharest</b> Otopeni <span class="farrow"></span> <b>London</b> Heathrow</div>
+						
+						
+						<!-- GOING TICKET-->
+						<div class="frow1">
+							<ul class="flightstable mt20">
+								<li class="ft1">
+									<img src="<?php echo BLUE_THEME_DIR;?>/updates/update1/img/tarom.png"  alt="">
+								</li>
+								<li class="ft2">
+									<div class="radio radiomargin0">
+									  <label>
+										<input type="radio" checked="" value="option1" id="optionsRadios1" name="optionsFradios">
+										Departure
+									  </label>
+									</div>
+									<span class="grey">3 February, Mon</span><br/>
+									<span class="size16 dark bold">14:00</span><br/>
+								</li>
+								<li class="ft3">
+									Arrival<br/>
+									<span class="grey">3 February, Mon</span><br/>
+									<span class="size16 dark bold">17:45</span><br/>
+								</li>
+								<li class="ft4">
+									Flight<br/>
+									<span class="grey">LH-1419</span><br/>
+									Embraer ERJ-190<br/>
+								</li>
+								<li class="ft5">
+									<button class="lightbtn mt1" type="button" data-toggle="collapse" data-target="#collapse10">More</button>
+								</li>
+							</ul>
+							<div class="clearfix"></div><br/><br/>
+						</div>
+						
+						<div  class="collapse frowexpand" id="collapse10">
+							
+							<ul class="flightstable mt20">
+								<li class="ft1">
+									
+								</li>
+								<li class="ft2">
+									Duration<br/>
+									<span class="grey">Economy</span><br/>
+									<b>5 h 45 min</b><br/>
+								</li>
+								<li class="ft3">
+									Connections<br/>
+									<span class="grey">Frankfurt, Germany</span><br/>
+									<b>1 h 25 min</b><br/>
+								</li>
+								<li class="ft4">
+									Seats left<br/><br/>
+									<b>6</b>
+								</li>
+								<li class="ft5">
+									<button class="hidebtn mt1" type="button" data-toggle="collapse" data-target="#collapse10">Hide</button>
+								</li>
+							</ul>
+							<div class="clearfix"></div><br/><br/>
+
+						</div>
+						
+						<div class="frow2">
+
+						
+							<ul class="flightstable mt20">
+								<li class="ft1">
+									<img src="<?php echo BLUE_THEME_DIR;?>/updates/update1/img/tarom.png"  alt="">
+								</li>
+								<li class="ft2">
+									<div class="radio radiomargin0">
+									  <label>
+										<input type="radio"  value="option1" id="optionsRadios1" name="optionsFradios">
+										Departure
+									  </label>
+									</div>
+									<span class="grey">3 February, Mon</span><br/>
+									<span class="size16 dark bold">14:00</span><br/>
+								</li>
+								<li class="ft3">
+									Arrival<br/>
+									<span class="grey">3 February, Mon</span><br/>
+									<span class="size16 dark bold">17:45</span><br/>
+								</li>
+								<li class="ft4">
+									Flight<br/>
+									<span class="grey">LH-1419</span><br/>
+									Embraer ERJ-190<br/>
+								</li>
+								<li class="ft5">
+									<button class="lightbtn mt1" type="button" data-toggle="collapse" data-target="#collapse11">More</button>
+								</li>
+							</ul>
+							<div class="clearfix"></div><br/><br/>
+						
+						
+						</div>	
+						<div  class="collapse frowexpand" id="collapse11">
+
+							<ul class="flightstable mt20">
+								<li class="ft1">
+									
+								</li>
+								<li class="ft2">
+									Duration<br/>
+									<span class="grey">Economy</span><br/>
+									<b>5 h 45 min</b><br/>
+								</li>
+								<li class="ft3">
+									Connections<br/>
+									<span class="grey">Frankfurt, Germany</span><br/>
+									<b>1 h 25 min</b><br/>
+								</li>
+								<li class="ft4">
+									Seats left<br/><br/>
+									<b>6</b>
+								</li>
+								<li class="ft5">
+									<button class="hidebtn mt1" type="button" data-toggle="collapse" data-target="#collapse11">Hide</button>
+								</li>
+							</ul>
+							<div class="clearfix"></div><br/><br/>
+
+						</div>
+						<!-- END OF GOING TICKET-->
+						
+						<div class="fgreenline"><b>London</b> Heathrow <span class="farrow"></span> <b>Bucharest</b> Otopeni</div>
+						
+						<!-- RETURNING TICKET-->
+						<div class="frow2">
+						
+							<ul class="flightstable mt20">
+								<li class="ft1">
+									<img src="<?php echo BLUE_THEME_DIR;?>/updates/update1/img/tarom.png"  alt="">
+								</li>
+								<li class="ft2">
+									<div class="radio radiomargin0">
+									  <label>
+										<input type="radio" checked="" value="option2" id="optionsRadios2" name="optionsFradios2">
+										Departure
+									  </label>
+									</div>
+									<span class="grey">3 February, Mon</span><br/>
+									<span class="size16 dark bold">14:00</span><br/>
+								</li>
+								<li class="ft3">
+									Arrival<br/>
+									<span class="grey">3 February, Mon</span><br/>
+									<span class="size16 dark bold">17:45</span><br/>
+								</li>
+								<li class="ft4">
+									Flight<br/>
+									<span class="grey">LH-1419</span><br/>
+									Embraer ERJ-190<br/>
+								</li>
+								<li class="ft5">
+									<button class="lightbtn mt1" type="button" data-toggle="collapse" data-target="#collapse12">More</button>
+								</li>
+							</ul>
+							<div class="clearfix"></div><br/><br/>
+							
+						</div>	
+						<div  class="collapse frowexpand" id="collapse12">
+
+								<ul class="flightstable mt20">
+									<li class="ft1">
+										
+									</li>
+									<li class="ft2">
+										Duration<br/>
+										<span class="grey">Economy</span><br/>
+										<b>5 h 45 min</b><br/>
+									</li>
+									<li class="ft3">
+										Connections<br/>
+										<span class="grey">Frankfurt, Germany</span><br/>
+										<b>1 h 25 min</b><br/>
+									</li>
+									<li class="ft4">
+										Seats left<br/><br/>
+										<b>6</b>
+									</li>
+									<li class="ft5">
+										<button class="hidebtn mt1" type="button" data-toggle="collapse" data-target="#collapse12">Hide</button>
+									</li>
+								</ul>
+								<div class="clearfix"></div><br/><br/>
+								
+
+							<div class="clearfix"></div>
+						</div>
+						<!-- END OF RETURNING TICKET -->
+						
+						
+						<div class="fselect">
+							<span class="size12 lightgrey">Roundtrip / per person</span> <span class="size18 green bold">$770</span>&nbsp; <button class="selectbtn mt1" type="button">Select</button>	
+						</div>
+					</div>
+					<!-- END OF FLIGHT TICKET-->
+
+					<div class="clearfix"></div>
+					<div class="offset-2"><hr class="featurette-divider3"></div>
+					
+					
+					
+					
+	
+										
+										
+										
+										
+									/*var table = document.createElement('table');
+									table.setAttribute('id', 'search-result');
+									var thead = document.createElement('thead');
+									var tr_head = document.createElement('tr');
+									tr_head.appendChild(set_td_data('th', 'Maskapai'));
+									tr_head.appendChild(set_td_data('th', 'Rute & Jam'));
+									tr_head.appendChild(set_td_data('th', 'Transit'));
+									tr_head.appendChild(set_td_data('th', 'Harga'));
+									tr_head.appendChild(set_td_data('th', 'Pesan'));
+									table.appendChild(tr_head);
+										
+									var tbody = document.createElement('tbody');
+										
+									
+									for(var i=0; i<data.items[0].departures.result.length;i++){
+										var tr_body = document.createElement('tr');
+										tr_body.appendChild(set_td_data('td', data.items[0].departures.result[i].airlines_name+" "+data.items[0].departures.result[i].flight_number));
+										tr_body.appendChild(set_td_data('td', data.items[0].departures.result[i].full_via));
+										tr_body.appendChild(set_td_data('td', data.items[0].departures.result[i].stop));
+										//tr_body.appendChild(set_td_data('td', data.items[0].departures.result[i].price_value));
+										// detail untuk price tiap usia
+										var td1 = document.createElement('td');
+										var p1 = document.createElement('p');
+										p1.appendChild(document.createTextNode('Dewasa: '+data.items[0].departures.result[i].price_adult));
+										td1.appendChild(p1);
+												
+										var p2 = document.createElement('p');
+										p2.appendChild(document.createTextNode('Anak(3-9thn): '+data.items[0].departures.result[i].price_child));
+										td1.appendChild(p2);
+												
+										var p3 = document.createElement('p');
+										p3.appendChild(document.createTextNode('Bayi: '+data.items[0].departures.result[i].price_infant));
+										td1.appendChild(p3);
+												
+										tr_body.appendChild(td1);
+												
+										var el_td = document.createElement('td');
+										var link_order = document.createElement('a');
+										var str = document.createTextNode('Pesan');
+										link_order.appendChild(str);
+										link_order.setAttribute('href', '<?php echo base_url();?>index.php/webfront/form_passengers/flight/'+data.items[0].departures.result[i].flight_id+'/'+data.items[0].search_queries.date);
+										link_order.setAttribute('class', 'tombol-pesan');
+										el_td.appendChild(link_order);
+										tr_body.appendChild(el_td);
+											
+										table.appendChild(tr_body);
+											
+									}*/
