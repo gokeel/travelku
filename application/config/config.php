@@ -25,7 +25,7 @@ $config['account_id'] = '2';
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/travelapp/';
+$config['base_url']	= 'http://localhost/travelku/';
 
 /*
 |--------------------------------------------------------------------------
