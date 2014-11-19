@@ -657,16 +657,16 @@
 		<div class="lastminute4">
 			<div class="row">
 				<div class="col-md-3">
-					<b><?php echo $tag_line_1_title;?></b><br/><?php echo $tag_line_1_content;?><br/>
+					<b><?php echo $tag_line_1_title;?></b><br/><?php echo $tag_line_1_content;?><br/><br/>
 				</div>
 				<div class="col-md-3">
-					<b><?php echo $tag_line_2_title;?></b><br/><?php echo $tag_line_2_content;?><br/>
+					<b><?php echo $tag_line_2_title;?></b><br/><?php echo $tag_line_2_content;?><br/><br/>
 				</div>
 				<div class="col-md-3">
-					<b><?php echo $tag_line_3_title;?></b><br/><?php echo $tag_line_3_content;?><br/>
+					<b><?php echo $tag_line_3_title;?></b><br/><?php echo $tag_line_3_content;?><br/><br/>
 				</div>
 				<div class="col-md-3">
-					<b><?php echo $tag_line_4_title;?></b><br/><?php echo $tag_line_4_content;?>
+					<b><?php echo $tag_line_4_title;?></b><br/><?php echo $tag_line_4_content;?><br/><br/>
 				</div>
 			</div>
 			<!--<div class="container">	
