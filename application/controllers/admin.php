@@ -1959,16 +1959,31 @@ class Admin extends CI_Controller {
 		);
 		if($image_file <> '')
 			$data['image_file'] = $image_file;
-		print_r($data);
-		//$data['publish_date'] = ($this->input->post('status',TRUE)=='publish' ? date('Y-m-d') : '');
 		$upd = $this->general->update_data_on_table('posts', 'post_id', $id, $data);
 		if($upd){
-			if(sizeof($image_additional > 0))
-				$this->general->update_data_on_table('post_additional_images', 'post_id', $id, $image_additional);
+			if(sizeof($image_additional > 0)){
+				//cek dulu ada atau nggak
+				$check = $this->general->get_afield_by_id('post_additional_images','post_id', $id, 'post_id');
+				if($check==false){
+					$image_additional['post_id'] = $id;
+					$ins = $this->general->add_to_table('post_additional_images', $image_additional);
+				}
+					
+				else
+					$this->general->update_data_on_table('post_additional_images', 'post_id', $id, $image_additional);
+			}
+				
 			redirect(base_url('index.php/admin/cms_page'));
 		}
-		else
+		else{
+			$error = array(
+				'category' => 'mysql_update',
+				'message' => $this->db->_error_message()
+			);
+			$this->general->add_to_table('error_logs', $error);
 			$this->show_message_page('mengubah konten', 'Mohon cek inputan anda atau hubungi web administrator.');
+		}
+			
 	}
 	
 	public function del_post(){
@@ -1996,6 +2011,7 @@ class Admin extends CI_Controller {
 				'enabled' => $row['enabled']				,
 				'image' => $row['image_file'],
 				'point_reward' => $row['point_reward'],
+				'star_rating' => $row['star_rating'],
 				'image_slider' => $row['shown_in_image_slider'],
 				'image_1' => $row['image_1'],
 				'image_2' => $row['image_2'],

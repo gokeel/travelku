@@ -42,6 +42,18 @@
 						<td><input name="price" id="price" type="text" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
+						<td>Rating</td>
+						<td><select name="star_rating" id="star_rating">
+								<option value="">--Pilih rating--</option>
+								<?php 
+								for($i=5;$i>0;$i--)
+									echo '<option value='.$i.'>'.$i.'</option>';
+								?>
+									
+							</select>
+						</td>
+					</tr>
+					<tr class="editTR" >
 						<td class="tdTitle">Poin Reward</td>
 						<td><input name="point_reward" id="point_reward" type="text" value="" size="60"></td>
 					</tr>
