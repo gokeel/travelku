@@ -1862,6 +1862,7 @@ class Admin extends CI_Controller {
 		
 		$error_additional = false;
 		$image_additional = array();
+		
 		if($this->input->post('image_1_delete')=='delete')
 			$image_additional['image_1'] = '';
 		else{
@@ -1955,13 +1956,15 @@ class Admin extends CI_Controller {
 			'price' => $this->input->post('price'),
 			'point_reward' => $this->input->post('point_reward'),
 			'status' => $this->input->post('status'),
-			'enabled' => $this->input->post('enabled')
+			'enabled' => $this->input->post('enabled'),
+			'star_rating' => $this->input->post('star_rating')
 		);
 		if($image_file <> '')
 			$data['image_file'] = $image_file;
+		
 		$upd = $this->general->update_data_on_table('posts', 'post_id', $id, $data);
 		if($upd){
-			if(sizeof($image_additional > 0)){
+			if(sizeof($image_additional) > 0){
 				//cek dulu ada atau nggak
 				$check = $this->general->get_afield_by_id('post_additional_images','post_id', $id, 'post_id');
 				if($check==false){
