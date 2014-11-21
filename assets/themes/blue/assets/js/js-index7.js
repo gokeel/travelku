@@ -224,7 +224,7 @@ jQuery(window).scroll(function(){
 			 if ( jQueryiw < 992 ) {
 			  }
 			  else{
-			   jQuery('.mtnav').stop().animate({top: '0px'}, 500);
+			   jQuery('.mtnav').stop().animate({top: '0px'}, 500); //aslinya 30px
 			  }
 			
 			

@@ -1,13 +1,5 @@
 	<div class="footerbg">
 		<div class="container">		
-			<div class="col-md-12">
-				<span class="ftitleblack">Kami menerima pembayaran menggunakan:</span><br/>
-				<?php
-				for($i=0;$i<sizeof($bank);$i++){
-			?>
-				<img src="<?php echo base_url();?>assets/images/payment/<?php echo $bank[$i]['image'];?>" width="95" height="25" alt=""/>
-			<?php } ?>
-			</div><br/><br/>
 			<div class="col-md-3">
 				<span class="ftitleblack">Let's socialize</span>
 				<div class="scont">

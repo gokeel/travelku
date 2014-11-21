@@ -654,30 +654,24 @@
 			</div>
 		</div>
 		
-		<div class="lastminute4">
-			<div class="row">
-				<div class="col-md-3">
-					<b><?php echo $tag_line_1_title;?></b><br/><?php echo $tag_line_1_content;?><br/><br/>
-				</div>
-				<div class="col-md-3">
-					<b><?php echo $tag_line_2_title;?></b><br/><?php echo $tag_line_2_content;?><br/><br/>
-				</div>
-				<div class="col-md-3">
-					<b><?php echo $tag_line_3_title;?></b><br/><?php echo $tag_line_3_content;?><br/><br/>
-				</div>
-				<div class="col-md-3">
-					<b><?php echo $tag_line_4_title;?></b><br/><?php echo $tag_line_4_content;?><br/><br/>
+		<div class="deals4">
+			<div class="container">	
+				<div class="row">
+					<div class="col-md-4">
+						<img src="<?php echo base_url();?>assets/images/tagline-bestchoice.png"> <b><?php echo $tag_line_1_title;?></b><br/><br/>
+						<span class="size13 grey mt-9"><?php echo $tag_line_1_content;?></span>
+					</div>
+					<div class="col-md-4">
+						<img src="<?php echo base_url();?>assets/images/tagline-man-wireless.png"> <b><?php echo $tag_line_2_title;?></b><br/><br/>
+						<span class="size13 grey mt-9"><?php echo $tag_line_2_content;?></span>
+					</div>
+					<div class="col-md-4">
+						<img src="<?php echo base_url();?>assets/images/tagline-best-price.png"> <b><?php echo $tag_line_3_title;?></b><br/><br/>
+						<span class="size13 grey mt-9"><?php echo $tag_line_3_content;?></span>
+					</div>
 				</div>
 			</div>
-			<!--<div class="container">	
-				<img src="<?php echo BLUE_THEME_DIR;?>/images/rating-4.png" alt=""/><br/>
-				LAST MINUTE: <b>Barcelona</b> - 2 nights - Flight+4* Hotel, Dep 27h Aug from $209/person<br/>
-				<form action="details.html">
-					<button class="btn iosbtn" type="submit">Read more</button>
-				</form>
-			</div>-->
-		</div>	
-		
+		</div>
 		<div class="container cstyle06">	
 
 			<div class="row anim2">
@@ -718,21 +712,13 @@
 			<hr class="featurette-divider2">
 			
 			<div class="row anim3">
-			  <div class="col-md-12">
-				<h2>Maskapai Partnership</h2>
-			  </div>
-			  
-			  <div class="col-md-4">
-				<img src="<?php echo BLUE_THEME_DIR;?>/images/maskapai-1.jpg" alt=""/>
+			  <div class="col-md-8">
+				<img src="<?php echo base_url();?>assets/images/partner-maskapai.png" alt="" width="100%" height="155px"/>
 			  </div>
 			  <div class="col-md-4">
-				<img src="<?php echo BLUE_THEME_DIR;?>/images/maskapai-2.jpg" alt=""/>
-			  </div>
-			  <div class="col-md-4">
-				<img src="<?php echo BLUE_THEME_DIR;?>/images/maskapai-3.jpg" alt=""/>
+				<img src="<?php echo base_url();?>assets/images/partner-bank-agent.png" alt="" width="100%" height="155px"/>
 			  </div>
 			</div>
-			
 		</div>
 		
 
