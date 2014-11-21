@@ -415,7 +415,7 @@
 								?>	
 									<!-- FADE -->
 									<li data-transition="fade" data-slotamount="1" data-masterspeed="300"> 										
-										<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $slider[$i]['image'];?>" alt=""/></a>
+										<img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $slider[$i]['image'];?>" alt=""/>
 										<div class="tp-caption scrolleffect sft"
 											 data-x="center"
 											 data-y="100"
@@ -436,7 +436,7 @@
 											 data-start="800"
 											 data-easing="easeOutExpo"  >
 											<div class="blacklable">
-											<h4 class="lato bold white"><?php echo $slider[$i]['title'];?> <span class="green"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span></h4>
+											<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[0]['id'];?>"><h4 class="lato bold white"><?php echo $slider[$i]['title'];?> <span class="green"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span></h4></a>
 											<h5 class="lato grey mt-10"><?php echo $slider[$i]['mini_slogan'];?></h5>
 											</div>
 										</div>	
