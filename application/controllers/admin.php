@@ -393,6 +393,16 @@ class Admin extends CI_Controller {
 		
 	}
 	
+	public function content_modify_nonpaket(){
+		if($this->check_session('administrator')){
+			$id = $this->uri->segment(3);
+			$this->page('admin_cms_content_modify_nonpaket', array('id' => $id));
+		}
+		else
+			$this->no_right_access();
+		
+	}
+	
 	public function setting_email_dist(){
 		if($this->check_session('administrator'))
 			$this->page('admin_setting_email_dist');
@@ -1468,7 +1478,8 @@ class Admin extends CI_Controller {
 	}
 	
 	public function get_content_categories(){
-		$get = $this->posts->get_categories();
+		$is_paket = $this->uri->segment(3);
+		$get = $this->posts->get_categories($is_paket);
 		$number_row=0;
 		foreach ($get->result_array() as $row){
 			$number_row++;
@@ -1785,15 +1796,14 @@ class Admin extends CI_Controller {
 	}
 	
 	public function get_posts(){
-		$get = $this->posts->get_posts();
-		$number_row=0;
+		$is_paket = $this->uri->segment(3);
+		$get = $this->posts->get_posts($is_paket);
 		foreach ($get->result_array() as $row){
-			$number_row++;
 			$data[] = array(
-				'number_row' => $number_row,
 				'id' => $row['post_id'],
 				'category' => $row['category_name'],
 				'title' => $row['title'],
+				'star_rating' => $row['star_rating'],
 				'is_promo' => $row['is_promo'],
 				'price' => $row['price'],
 				'author' => $row['user_name'],
@@ -1957,11 +1967,13 @@ class Admin extends CI_Controller {
 			'point_reward' => $this->input->post('point_reward'),
 			'status' => $this->input->post('status'),
 			'enabled' => $this->input->post('enabled'),
-			'star_rating' => $this->input->post('star_rating')
+			'star_rating' => $this->input->post('star_rating'),
+			'is_promo' => $this->input->post('is_promo'),
+			'shown_in_image_slider' => $this->input->post('shown_in_image_slider'),
+			'mini_slogan' => $this->input->post('mini_slogan'),
 		);
 		if($image_file <> '')
 			$data['image_file'] = $image_file;
-		
 		$upd = $this->general->update_data_on_table('posts', 'post_id', $id, $data);
 		if($upd){
 			if(sizeof($image_additional) > 0){
@@ -1987,6 +1999,25 @@ class Admin extends CI_Controller {
 			$this->show_message_page('mengubah konten', 'Mohon cek inputan anda atau hubungi web administrator.');
 		}
 			
+	}
+	
+	public function edit_post_non_paket(){
+		$id = $this->uri->segment(3);
+		$posts = $this->input->post(NULL,TRUE);
+		foreach($posts as $key => $value)
+			$data[$key] = $value;
+		$upd = $this->general->update_data_on_table('posts', 'post_id', $id, $data);
+		if($upd){
+			redirect(base_url('index.php/admin/cms_page'));
+		}
+		else{
+			$error = array(
+				'category' => 'mysql_update',
+				'message' => $this->db->_error_message()
+			);
+			$this->general->add_to_table('error_logs', $error);
+			$this->show_message_page('mengubah konten', 'Mohon cek inputan anda atau hubungi web administrator.');
+		}
 	}
 	
 	public function del_post(){
@@ -5002,5 +5033,27 @@ class Admin extends CI_Controller {
 			redirect(base_url('index.php/admin/content_review'));
 		else
 			$this->show_message_page('menghapus komentar', 'Mohon cek inputan anda atau hubungi web administrator.');
+	}
+	
+	public function get_post_paket(){
+		$get = $this->posts->get_posts('true');
+		foreach ($get->result_array() as $row){
+			$data[] = array(
+				'id' => $row['post_id'],
+				'category' => $row['category_name'],
+				'title' => $row['title'],
+				'star_rating' => $row['star_rating'],
+				'is_promo' => $row['is_promo'],
+				'price' => $row['price'],
+				'author' => $row['user_name'],
+				'status' => $row['status'],
+				'enabled' => $row['enabled'],
+				'point_reward' => $row['point_reward'],
+				'creation_date' => $row['creation_date'],
+				'publish_date' => $row['publish_date'],
+				'image_slider' => $row['shown_in_image_slider']
+			);
+		}
+		echo json_encode($data);
 	}
 }

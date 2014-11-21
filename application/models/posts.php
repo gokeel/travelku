@@ -12,8 +12,8 @@ class Posts extends CI_Model {
 		else return false;
 	}
 	
-	function get_categories(){
-		$this->db->select('*')->from('post_categories')->order_by('id asc');
+	function get_categories($is_paket){
+		$this->db->select('*')->from('post_categories')->where('is_package', $is_paket)->order_by('id asc');
 		$get = $this->db->get();
 		if ($get->num_rows() > 0)
 			return $get;
@@ -67,11 +67,12 @@ class Posts extends CI_Model {
 		else return false;
 	}
 	
-	function get_posts(){
+	function get_posts($paket){
 		$this->db->select('posts.*, post_categories.category as category_name, users.user_name');
 		$this->db->from('posts');
 		$this->db->join('post_categories', 'posts.category = post_categories.id');
 		$this->db->join('users', 'posts.author = users.account_id');
+		$this->db->where('post_categories.is_package',$paket);
 		$this->db->order_by('post_categories.category asc, posts.post_id desc');
 		$get = $this->db->get();
 		if ($get->num_rows() > 0)

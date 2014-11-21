@@ -1,7 +1,7 @@
 <div id="content"  style="min-height:400px;"> 
 	<div class="frametab">
 			<h3 style="margin:5px 0 5px 5px;">Ubah Konten</h3>
-			<?php echo form_open_multipart('admin/edit_post/'.$id);?>
+			<?php echo form_open_multipart('admin/edit_post_non_paket/'.$id);?>
 				<!--<input type="hidden" name="post_id" value="<?php echo $id;?>">-->
 				<input type="hidden" name="author" value="<?php echo $this->session->userdata('account_id');?>">
 				<table cellpadding="5"  id="table-modify"   cellspacing="0" border="0px" bgcolor="#FFFFFF" class="myTable" >
@@ -14,46 +14,8 @@
 						<td><input name="title" id="title" type="text" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
-						<td class="tdTitle">Mini Slogan</td>
-						<td><input name="mini_slogan" id="mini_slogan" type="text" value="" size="60"></td>
-					</tr>
-					<tr class="editTR" >
 						<td class="tdTitle">Konten</td>
 						<td><input class="editor" name="content" id="content"></td>
-					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Hot Promo</td>
-						<td><input name="is_promo" id="is_promo-true" type="radio" value="true">Ya<br>
-							<input name="is_promo" id="is_promo-false" type="radio" value="false">Tidak</td>
-					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Tampilkan di Image Slider</td>
-						<td><input name="shown_in_image_slider" id="shown_in_image_slider-true" type="radio" value="true">Ya<br>
-							<input name="shown_in_image_slider" id="shown_in_image_slider-false" type="radio" value="false">Tidak</td>
-					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto (ukuran max 1MB)</td>
-						<td><div id="image-show"></div><input name="image" id="image" type="file" value="" size="60"></td>
-					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Harga</td>
-						<td><input name="price" id="price" type="text" value="" size="60"></td>
-					</tr>
-					<tr class="editTR" >
-						<td>Rating</td>
-						<td><select name="star_rating" id="star_rating">
-								<option value="">--Pilih rating--</option>
-								<?php 
-								for($i=5;$i>0;$i--)
-									echo '<option value='.$i.'>'.$i.'</option>';
-								?>
-									
-							</select>
-						</td>
-					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Poin Reward</td>
-						<td><input name="point_reward" id="point_reward" type="text" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
 						<td>Status</td>
@@ -69,26 +31,6 @@
 						<td><input name="enabled" id="enabled-true" type="radio" value="true">Ya<br>
 							<input name="enabled" id="enabled-false" type="radio" value="false">Tidak</td>
 					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 1 (ukuran max 1MB)</td>
-						<td><div id="image-1-show"></div><input name="image_1" id="image_1" type="file" value="" size="60"></td>
-					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 2 (ukuran max 1MB)</td>
-						<td><div id="image-2-show"></div><input name="image_2" id="image_2" type="file" value="" size="60"></td>
-					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 3 (ukuran max 1MB)</td>
-						<td><div id="image-3-show"></div><input name="image_3" id="image_3" type="file" value="" size="60"></td>
-					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 4 (ukuran max 1MB)</td>
-						<td><div id="image-4-show"></div><input name="image_4" id="image_4" type="file" value="" size="60"></td>
-					</tr>
-					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 5 (ukuran max 1MB)</td>
-						<td><div id="image-5-show"></div><input name="image_5" id="image_5" type="file" value="" size="60"></td>
-					</tr>
 				</table>
 				<input type="submit" value="Submit">
 			</form>		
@@ -99,7 +41,7 @@
 	var selected;
 	$( window ).load(function() {
 		load_content();
-		simple_load('<?php echo base_url();?>index.php/admin/get_content_categories/true', '#category', selected);
+		simple_load('<?php echo base_url();?>index.php/admin/get_content_categories/false', '#category', selected);
 	})
 	
 	function load_content(){
