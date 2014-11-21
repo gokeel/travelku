@@ -169,7 +169,7 @@
 					
 					<div class="padding30">					
 						<span class="left size14 dark">Total:</span>
-						<span class="right lred2 bold size18">IDR <?php echo number_format($price,0,',','.');?></span>
+						<span class="right lred2 bold size18"><?php echo $currency;?> <?php echo number_format($price,0,',','.');?></span>
 						<div class="clearfix"></div>
 					</div>
 

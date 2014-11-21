@@ -164,7 +164,7 @@
 				<div class="line3"></div>
 				
 				<div class="hpadding20">
-					<h2 class="opensans slim green2">IDR <?php echo $post_price;?></h2>
+					<h2 class="opensans slim green2"><?php echo $currency;?> <?php echo $post_price;?></h2>
 				</div>
 				
 				<div class="line3 margtop20"></div>

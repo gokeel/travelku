@@ -214,7 +214,7 @@ class Posts extends CI_Model {
 	}
 	
 	function get_post_shown_image_slider(){
-		$this->db->select('posts.post_id, posts.description, posts.image_file, posts.title, posts.price, post_categories.category');
+		$this->db->select('posts.post_id, posts.mini_slogan, posts.image_file, posts.title, posts.currency, posts.price, post_categories.category');
 		$this->db->from('posts');
 		$this->db->join('post_categories', 'posts.category=post_categories.id');
 		$this->db->where('shown_in_image_slider', 'true');

@@ -8,20 +8,24 @@
 	<div id="top_menu">
 		<ul class="sub0 sortleftmenu" id="ul_0" >
 			<?php echo ($uri2=='cms_page' ? '<li id="grp_5" class="selected">' : '<li id="grp_5">');?>
-				<a href="<?php echo base_url();?>index.php/admin/cms_page" >Contents</a>
+				<a href="<?php echo base_url();?>index.php/admin/cms_page" >Konten</a>
 			</li>
 			<?php echo ($uri2=='content_category_page' ? '<li id="grp_6" class="selected">' : '<li id="grp_6">');?>
-				<a href="<?php echo base_url();?>index.php/admin/content_category_page" >Content Category</a>
+				<a href="<?php echo base_url();?>index.php/admin/content_category_page" >Kategori Konten</a>
 			</li>
 			<?php echo ($uri2=='content_add_page' ? '<li id="grp_4" class="selected">' : '<li id="grp_4">');?>
-				<a href="<?php echo base_url();?>index.php/admin/content_add_page" >Add New Content</a>
+				<a href="<?php echo base_url();?>index.php/admin/content_add_page" >Tambah Konten Paket</a>
 			</li>
-			<?php echo ($uri2=='option_setting' ? '<li id="grp_7" class="selected">' : '<li id="grp_4">');?>
-				<a href="<?php echo base_url();?>index.php/admin/option_setting" >Setting Options</a>
+			<?php echo ($uri2=='content_add_nonpaket_page' ? '<li id="grp_4" class="selected">' : '<li id="grp_4">');?>
+				<a href="<?php echo base_url();?>index.php/admin/content_add_nonpaket_page" >Tambah Konten Non Paket</a>
 			</li>
 			<?php echo ($uri2=='content_review' ? '<li id="grp_7" class="selected">' : '<li id="grp_4">');?>
 				<a href="<?php echo base_url();?>index.php/admin/content_review" >Komentar/Review</a>
 			</li>
+			<?php echo ($uri2=='option_setting' ? '<li id="grp_7" class="selected">' : '<li id="grp_4">');?>
+				<a href="<?php echo base_url();?>index.php/admin/option_setting" >Pengaturan Opsi</a>
+			</li>
+			
 		</ul>
 	</div>
 </div>

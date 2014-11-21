@@ -383,6 +383,16 @@ class Admin extends CI_Controller {
 			$this->no_right_access();
 	}
 	
+	public function content_add_nonpaket_page(){
+		if($this->check_session('administrator')){
+			//create a blank row and insert to post, finally get the inserted ID
+		$get_id = $this->posts->add_blank_post();
+		$this->page('admin_cms_content_add_nonpaket', array('id' => $get_id));
+		}
+		else
+			$this->no_right_access();
+	}
+	
 	public function content_modify(){
 		if($this->check_session('administrator')){
 			$id = $this->uri->segment(3);
@@ -1795,6 +1805,21 @@ class Admin extends CI_Controller {
 		}
 	}
 	
+	public function add_post_nonpaket(){
+		$id = $this->input->post('post_id');
+		$posts = $this->input->post(NULL, TRUE);
+		foreach ($posts as $key => $value)
+			$data[$key] = $value;
+		$data['publish_date'] = ($this->input->post('status')=='publish' ? date('Y-m-d') : '');
+			
+		$upd = $this->posts->update_post($id, $data);
+		if($upd){
+			$this->show_success_page('Proses menambah konten berhasil.');
+		}
+		else
+			$this->show_message_page('menambah konten', 'Mohon cek inputan anda atau hubungi web administrator.');
+	}
+	
 	public function get_posts(){
 		$is_paket = $this->uri->segment(3);
 		$get = $this->posts->get_posts($is_paket);
@@ -1971,6 +1996,7 @@ class Admin extends CI_Controller {
 			'is_promo' => $this->input->post('is_promo'),
 			'shown_in_image_slider' => $this->input->post('shown_in_image_slider'),
 			'mini_slogan' => $this->input->post('mini_slogan'),
+			'currency' => $this->input->post('currency')
 		);
 		if($image_file <> '')
 			$data['image_file'] = $image_file;
@@ -2040,6 +2066,7 @@ class Admin extends CI_Controller {
 				'mini_slogan' => $row['mini_slogan'],
 				'content' => $row['content'],
 				'is_promo' => $row['is_promo'],
+				'currency' => $row['currency'],
 				'price' => $row['price'],
 				'status' => $row['status'],
 				'enabled' => $row['enabled']				,

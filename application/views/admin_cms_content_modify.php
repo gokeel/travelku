@@ -36,6 +36,14 @@
 						<td><div id="image-show"></div><input name="image" id="image" type="file" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
+						<td>Mata Uang</td>
+						<td><select name="currency" id="currency">
+								<option value="IDR">Rupiah</option>
+								<option value="USD">Dolar</option>
+							</select>
+						</td>
+					</tr>
+					<tr class="editTR" >
 						<td class="tdTitle">Harga</td>
 						<td><input name="price" id="price" type="text" value="" size="60"></td>
 					</tr>
@@ -117,6 +125,7 @@
 				$('#title').val(datajson.title);
 				$('#mini_slogan').val(datajson.mini_slogan);
 				$(".editor").jqteVal(datajson.content);
+				$('#currency').val(datajson.currency);
 				$('#price').val(datajson.price);
 				$('#point_reward').val(datajson.point_reward);
 				$('#status').val(datajson.status);

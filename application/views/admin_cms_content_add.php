@@ -38,6 +38,14 @@
 						<td><input name="image" id="image" type="file" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
+						<td>Mata Uang</td>
+						<td><select name="currency" id="currency">
+								<option value="IDR" selected>Rupiah</option>
+								<option value="USD">Dolar</option>
+							</select>
+						</td>
+					</tr>
+					<tr class="editTR" >
 						<td class="tdTitle">Harga</td>
 						<td><input name="price" id="price" type="text" value="" size="60"></td>
 					</tr>
@@ -100,20 +108,6 @@
 	$(".editor").jqte();
 	
 	$( window ).load(function() {
-		simple_load('<?php echo base_url();?>index.php/admin/get_content_categories', '#category', '');
+		simple_load('<?php echo base_url();?>index.php/admin/get_content_categories/true', '#category', '');
 	})
-	
-	function load_categories(){
-		var data = [];
-		$.ajax({
-			type : "GET",
-			async: false,
-			url: '<?php echo base_url();?>index.php/admin/get_content_categories',
-			dataType: "json",
-			success:function(datajson){
-				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row: datajson[i].number_row, id:datajson[i].id, category:datajson[i].category, description: datajson[i].description, removable: datajson[i].removable};
-			}
-		});
-	}
 </script>

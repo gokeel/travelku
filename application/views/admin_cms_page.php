@@ -6,7 +6,6 @@ YUI().use('tabview', function(Y) {
 </script>
 <div id="content"  style="min-height:400px;"> 
 	<div class="frametab">
-		<a href="<?php echo base_url();?>index.php/admin/content_add_page"><button style="margin:10px; float:right;padding: 4px 5px;">Tambah Konten/Paket</button></a>
 		<h3 style="margin:5px 0 5px 5px;">Daftar Semua Konten</h3>
 		<div id="tabs">
 			<ul>

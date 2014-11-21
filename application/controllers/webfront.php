@@ -19,10 +19,11 @@ class Webfront extends CI_Controller {
 		$index = 0;
 		foreach($slider->result_array() as $row){
 			$data['slider'][$index]['id'] = $row['post_id'];
-			$data['slider'][$index]['description'] = $row['description'];
+			$data['slider'][$index]['mini_slogan'] = $row['mini_slogan'];
 			$data['slider'][$index]['category'] = $row['category'];
 			$data['slider'][$index]['image'] = $row['image_file'];
 			$data['slider'][$index]['title'] = $row['title'];
+			$data['slider'][$index]['currency'] = $row['currency'];
 			$data['slider'][$index]['price'] = number_format($row['price'],0,',','.');
 			$index++;
 		}
@@ -36,6 +37,7 @@ class Webfront extends CI_Controller {
 			$data['latest'][$index]['image'] = $row['image_file'];
 			$data['latest'][$index]['title'] = $row['title'];
 			$data['latest'][$index]['star_rating'] = $row['star_rating'];
+			$data['latest'][$index]['currency'] = $row['currency'];
 			$data['latest'][$index]['price'] = number_format($row['price'],0,',','.');
 			$index++;
 		}
@@ -50,6 +52,7 @@ class Webfront extends CI_Controller {
 			$data['umrah'][$index]['image'] = $row['image_file'];
 			$data['umrah'][$index]['title'] = $row['title'];
 			$data['umrah'][$index]['star_rating'] = $row['star_rating'];
+			$data['umrah'][$index]['currency'] = $row['currency'];
 			$data['umrah'][$index]['price'] = number_format($row['price'],0,',','.');
 			$index++;
 		}
@@ -63,6 +66,7 @@ class Webfront extends CI_Controller {
 			$data['promo'][$index]['image'] = $row['image_file'];
 			$data['promo'][$index]['title'] = $row['title'];
 			$data['promo'][$index]['star_rating'] = $row['star_rating'];
+			$data['promo'][$index]['currency'] = $row['currency'];
 			$data['promo'][$index]['price'] = number_format($row['price'],0,',','.');
 			$index++;
 		}
@@ -75,6 +79,7 @@ class Webfront extends CI_Controller {
 			$data['package'][$index]['id'] = $row['post_id'];
 			$data['package'][$index]['image'] = $row['image_file'];
 			$data['package'][$index]['title'] = $row['title'];
+			$data['package'][$index]['currency'] = $row['currency'];
 			$data['package'][$index]['price'] = number_format($row['price'],0,',','.');
 			$index++;
 		}
@@ -388,6 +393,7 @@ class Webfront extends CI_Controller {
 				'post_image' => $row['image_file'],
 				'post_mini_slogan' => $row['mini_slogan'],
 				'post_publish_date' => $row['publish_date'],
+				'currency' => $row['currency'],
 				'post_star_rating' => $row['star_rating']
 			);
 		}
@@ -491,6 +497,7 @@ class Webfront extends CI_Controller {
 				'title' => $row['title'],
 				'content' => $row['content'],
 				'is_promo' => $row['is_promo'],
+				'currency' => $row['currency'],
 				'price' => $row['price'],
 				'status' => $row['status'],
 				'enabled' => $row['enabled']				,

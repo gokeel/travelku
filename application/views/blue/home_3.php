@@ -415,7 +415,7 @@
 								?>	
 									<!-- FADE -->
 									<li data-transition="fade" data-slotamount="1" data-masterspeed="300"> 										
-										<img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $slider[$i]['image'];?>" alt=""/>
+										<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $slider[$i]['image'];?>" alt=""/></a>
 										<div class="tp-caption scrolleffect sft"
 											 data-x="center"
 											 data-y="100"
@@ -426,7 +426,7 @@
 												<span class="lato size28 slim caps white"><?php echo $slider[$i]['category'];?></span><br/><br/><br/>
 												<span class="lato size48 slim caps white"><?php echo $slider[$i]['title'];?></span><br/><br/><br/>
 												<!--<span class="lato size20 normal caps white">from</span><br/><br/>-->
-												<span class="lato size40 slim uppercase yellow">IDR <?php echo $slider[$i]['price'];?></span><br/>
+												<span class="lato size40 slim uppercase yellow"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span><br/>
 											 </div>
 										</div>	
 										<div class="tp-caption sfb"
@@ -436,8 +436,8 @@
 											 data-start="800"
 											 data-easing="easeOutExpo"  >
 											<div class="blacklable">
-											<h4 class="lato bold white"><?php echo $slider[$i]['title'];?> <span class="green">IDR <?php echo $slider[$i]['price'];?></span></h4>
-											<h5 class="lato grey mt-10"><?php echo $slider[$i]['description'];?></h5>
+											<h4 class="lato bold white"><?php echo $slider[$i]['title'];?> <span class="green"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span></h4>
+											<h5 class="lato grey mt-10"><?php echo $slider[$i]['mini_slogan'];?></h5>
 											</div>
 										</div>	
 									</li>
@@ -466,7 +466,7 @@
 
 								var api = tpj('.fullwidthbanner').revolution(
 									{
-										delay:9000,
+										delay:5000,
 										startwidth:960,
 										startheight:446,
 
@@ -600,7 +600,7 @@
 								<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $latest[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9"><?php echo $latest[$i]['category'];?></span>
 							</div>
 							<div class="dealprice">
-								<p class="size12 grey lh2"><span class="price">IDR <?php echo $latest[$i]['price'];?></span></p>
+								<p class="size12 grey lh2"><span class="price"><?php echo $latest[$i]['currency'];?> <?php echo $latest[$i]['price'];?></span></p>
 							</div>					
 						</div>
 					<?php } ?>				
@@ -622,7 +622,7 @@
 								<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $umrah[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9"><?php echo $umrah[$i]['category'];?></span>
 							</div>
 							<div class="dealprice">
-								<p class="size12 grey lh2"><span class="price">IDR <?php echo $umrah[$i]['price'];?></span><br/></p>
+								<p class="size12 grey lh2"><span class="price"><?php echo $umrah[$i]['currency'];?> <?php echo $umrah[$i]['price'];?></span><br/></p>
 							</div>					
 						</div>
 					<?php } ?>					
@@ -644,7 +644,7 @@
 								<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $promo[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9"><?php echo $promo[$i]['category'];?></span>
 							</div>
 							<div class="dealprice">
-								<p class="size12 grey lh2"><span class="price">IDR <?php echo $promo[$i]['price'];?></span><br/></p>
+								<p class="size12 grey lh2"><span class="price"><?php echo $promo[$i]['currency'];?> <?php echo $promo[$i]['price'];?></span><br/></p>
 							</div>					
 						</div>
 					<?php } ?>
@@ -694,7 +694,7 @@
 								<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $promo[$i]['image'];?>" alt="" width="255px" height="179px"/></a>
 								<div class="m1">
 									<h6 class="lh1 dark"><b><?php echo $promo[$i]['title'];?></b></h6>
-									<h6 class="lh1 green">IDR <?php echo $promo[$i]['price'];?></h6>							
+									<h6 class="lh1 green"><?php echo $promo[$i]['currency'];?> <?php echo $promo[$i]['price'];?></h6>							
 								</div>
 							</li>
 						<?php } ?>
