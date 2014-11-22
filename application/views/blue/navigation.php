@@ -1,5 +1,5 @@
 
-			<div class="navbar-header">
+			  <div class="navbar-header">
 				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
 				  <span class="icon-bar"></span>
 				  <span class="icon-bar"></span>
@@ -7,7 +7,7 @@
 				</button>
 				<!--<a href="index.html" class="navbar-brand"><img src="<?php echo BLUE_THEME_DIR;?>/images/logo.png" alt="Travel Agency Logo" class="logo"/></a>-->
 				<a href="<?php echo base_url();?>" class="navbar-brand"><img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $company_logo;?>?ver=<?php echo rand(1000, 1000000);?>" alt="logo" class="logo"/></a>
-			  </div>
+			  </div><br/>
 			  <div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
 				  <li><a href="<?php echo base_url();?>">Home</a></li>
