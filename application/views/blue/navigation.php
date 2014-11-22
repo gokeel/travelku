@@ -16,6 +16,15 @@
 				  <li><a href="<?php echo base_url();?>index.php/webfront/show_packages/hotel/0/9">Paket Hotel</a></li>			  
 				  <li><a href="<?php echo base_url();?>index.php/webfront/load_faq_content">FAQ</a></li>			  
 				  <li><a href="<?php echo base_url();?>index.php/webfront/agent_registration">Registrasi Agen</a></li>			  
-				  <li><a href="<?php echo base_url();?>index.php/admin">Login</a></li>			  
+				  <li>
+				  <?php if ($this->session->userdata('account_id')=='') {?>
+					<a href="<?php echo base_url();?>index.php/admin">Login</a>
+				  <?php
+				  }
+				  else{
+				  ?>
+					<a href="<?php echo base_url();?>index.php/admin/logout">Logout</a>
+				  <?php } ?>
+				  </li>			  
 				</ul>
 			  </div>

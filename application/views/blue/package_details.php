@@ -57,6 +57,8 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
 	<script src="<?php echo GENERAL_JS_DIR;?>/functions.js"></script>
+	<script src="<?php echo GENERAL_JS_DIR;?>/jquery.htmlClean.js"></script>
+	<script src="<?php echo GENERAL_JS_DIR;?>/jquery.htmlClean.min.js"></script>
 	
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
@@ -158,7 +160,7 @@
 			<div class="col-md-4 detailsright offset-0">
 				<div class="padding20">
 					<h4 class="lh1"><?php echo $post_title;?></h4>
-					<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $post_star_rating;?>.png" alt=""/>
+					<?php if($post_star_rating<>''){?><img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $post_star_rating;?>.png" alt=""/><?php } ?>
 				</div>
 				
 				<div class="line3"></div>
@@ -213,7 +215,9 @@
 				<div class="tab-content4" >
 					<!-- TAB 1 -->				
 					<div id="summary" class="tab-pane fade active in">
-						<?php echo $post_content;?>
+						<script>
+							$('#summary').append($.htmlClean('<?php echo $post_content;?>', {format:true}));
+						</script>
 					</div>
 					
 					<!-- TAB 5 -->					

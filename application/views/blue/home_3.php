@@ -436,7 +436,7 @@
 											 data-start="800"
 											 data-easing="easeOutExpo"  >
 											<div class="blacklable">
-											<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[0]['id'];?>"><h4 class="lato bold white"><?php echo $slider[$i]['title'];?> <span class="green"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span></h4></a>
+											<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $slider[$i]['id'];?>"><h4 class="lato bold white"><?php echo $slider[$i]['title'];?> <span class="green"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span></h4></a>
 											<h5 class="lato grey mt-10"><?php echo $slider[$i]['mini_slogan'];?></h5>
 											</div>
 										</div>	
@@ -466,7 +466,7 @@
 
 								var api = tpj('.fullwidthbanner').revolution(
 									{
-										delay:5000,
+										delay:9000,
 										startwidth:960,
 										startheight:446,
 
@@ -597,7 +597,10 @@
 							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[$i]['image'];?>" alt="" class="dealthumb" width="50" height="50" /></a>
 							<div class="dealtitle">
 								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>" class="dark"><?php echo $latest[$i]['title'];?></a></p>
-								<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $latest[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9"><?php echo $latest[$i]['category'];?></span>
+								<?php if($latest[$i]['star_rating']<>'') {?>
+									<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $latest[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9">
+								<?php } //end of checking star rating
+								echo $latest[$i]['category'];?></span>
 							</div>
 							<div class="dealprice">
 								<p class="size12 grey lh2"><span class="price"><?php echo $latest[$i]['currency'];?> <?php echo $latest[$i]['price'];?></span></p>
@@ -619,7 +622,10 @@
 							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $umrah[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $umrah[$i]['image'];?>" width="50" height="50" alt="" class="dealthumb"/></a>
 							<div class="dealtitle">
 								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $umrah[$i]['id'];?>" class="dark"><?php echo $umrah[$i]['title'];?></a></p>
-								<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $umrah[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9"><?php echo $umrah[$i]['category'];?></span>
+								<?php if($umrah[$i]['star_rating']<>'') {?>
+									<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $umrah[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9">
+								<?php } //end of checking star rating
+								echo $umrah[$i]['category'];?></span>
 							</div>
 							<div class="dealprice">
 								<p class="size12 grey lh2"><span class="price"><?php echo $umrah[$i]['currency'];?> <?php echo $umrah[$i]['price'];?></span><br/></p>
@@ -641,7 +647,10 @@
 							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $promo[$i]['image'];?>" width="50" height="50" alt="" class="dealthumb"/></a>
 							<div class="dealtitle">
 								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>" class="dark"><?php echo $promo[$i]['title'];?></a></p>
-								<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $promo[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9"><?php echo $promo[$i]['category'];?></span>
+								<?php if($promo[$i]['star_rating']<>'') {?>
+									<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $promo[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9">
+								<?php } //end of checking star rating
+								echo $promo[$i]['category'];?></span>
 							</div>
 							<div class="dealprice">
 								<p class="size12 grey lh2"><span class="price"><?php echo $promo[$i]['currency'];?> <?php echo $promo[$i]['price'];?></span><br/></p>
