@@ -215,8 +215,9 @@
 				<div class="tab-content4" >
 					<!-- TAB 1 -->				
 					<div id="summary" class="tab-pane fade active in">
+						<div id="summary-content" style="padding-left:20px"></div>
 						<script>
-							$('#summary').append($.htmlClean('<?php echo $post_content;?>', {format:true}));
+							$('#summary-content').append($.htmlClean('<?php echo $post_content;?>', {format:true}));
 						</script>
 					</div>
 					
