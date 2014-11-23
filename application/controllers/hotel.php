@@ -126,13 +126,6 @@ class Hotel extends CI_Controller {
 					'error' => $diagnose->error_msgs,
 					'category' => 'hotel'
 				);
-				$this->load->view('front_header');
-				$this->load->view('front_order_tiketcom', $response);
-				$data['column'] = (strpos('-second-faq', 'second')!==false ? '-second-faq' : '');
-				$data['footer_column'] = (strpos('-second-faq', 'second')!==false ? '-second' : '');
-				$this->load->view('front_right_sidebar', $data);
-				$this->load->view('front_footer', $data);
-				//redirect(base_url('index.php/webfront/order_success/'.$order_id));
 			}
 			else {
 				// continue to order
@@ -147,12 +140,6 @@ class Hotel extends CI_Controller {
 						'error' => $diagnose_order->error_msgs,
 						'category' => 'hotel'
 					);
-					$this->load->view('front_header');
-					$this->load->view('front_order_tiketcom', $response);
-					$data['column'] = (strpos('-second-faq', 'second')!==false ? '-second-faq' : '');
-					$data['footer_column'] = (strpos('-second-faq', 'second')!==false ? '-second' : '');
-					$this->load->view('front_right_sidebar', $data);
-					$this->load->view('front_footer', $data);
 				}
 				else{ //jika sukses
 					$total_before = intval($myorder->total_without_tax) + intval($myorder->total_tax);
@@ -172,6 +159,7 @@ class Hotel extends CI_Controller {
 					//generate parameter for form_passenger.php
 					$response = array(
 						'status' => $diagnose->status,
+						'error' => '',
 						'category' => 'hotel',
 						'internal_order_id' => $internal_order_id,
 						'order_id' => $myorder->order_id,
@@ -187,24 +175,9 @@ class Hotel extends CI_Controller {
 						'conPhone' => $this->input->post('conPhone', TRUE),
 						'conSalutation' => $this->input->post('conSalutation', TRUE)
 					);
-					$this->load->view('front_header');
-					$this->load->view('front_order_tiketcom', $response);
-					$data['column'] = (strpos('-second-faq', 'second')!==false ? '-second-faq' : '');
-					$data['footer_column'] = (strpos('-second-faq', 'second')!==false ? '-second' : '');
-					$this->load->view('front_right_sidebar', $data);
-					$this->load->view('front_footer', $data);
 				}
 			}
-		/*$array = array();
-		$array[] = (object)$json;
-		 
-		if (isset($_GET['callback'])) {
-				echo $_GET['callback'] . '('.json_encode($array).')';
-			}else{
-				echo '{"items":'. json_encode($array) .'}';
-			}
-			
-		redirect(base_url('index.php/webfront/order_hotel'));*/
+		$this->load_theme('issued_page', $response);
 		
 	}
 	//cindy nordiansyah
@@ -404,6 +377,23 @@ class Hotel extends CI_Controller {
 				}
 			}
 		}
+	}
+	public function load_theme($view, $additional_data=null){
+		$theme_name = 'blue';
+		
+		$this->load->model('posts');
+		$options = $this->posts->fetch_options();
+		$data = array();
+		
+		foreach ($options->result_array() as $row)
+			$data[$row['parameter']] = $row['value'];
+		
+		if(!empty($additional_data)){
+			foreach($additional_data as $key => $val)
+				$data[$key] = $val;
+		}
+		
+		$this->load->view($theme_name.'/'.$view, $data);
 	}
 }
 

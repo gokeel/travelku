@@ -721,11 +721,8 @@
 			<hr class="featurette-divider2">
 			
 			<div class="row anim3">
-			  <div class="col-md-8">
-				<img src="<?php echo base_url();?>assets/images/partner-maskapai.png" alt="" width="100%" height="155px"/>
-			  </div>
-			  <div class="col-md-4">
-				<img src="<?php echo base_url();?>assets/images/partner-bank-agent.png" alt="" width="100%" height="155px"/>
+			  <div class="col-md-12">
+				<img src="<?php echo base_url();?>assets/images/banner-partner.png" alt="" width="100%" height="155px"/>
 			  </div>
 			</div>
 		</div>

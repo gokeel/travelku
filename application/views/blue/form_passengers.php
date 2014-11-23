@@ -53,6 +53,11 @@
 	
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+	
+	<link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.js" />
+	<link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js" />
+	<link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.js" />
+	<link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js" />
 	<!-- end of tambahan -->
   </head>
   <body id="top" class="thebg" >
@@ -101,7 +106,7 @@
 								?>">	
 			<!-- LEFT CONTENT -->
 			<div class="col-md-8 pagecontainer2 offset-0" id="form-passenger">
-
+				
 			</div>
 			<!-- END OF LEFT CONTENT -->			
 		</form>	
@@ -109,11 +114,6 @@
 			<div class="col-md-4" >
 				
 				<div class="pagecontainer2 paymentbox grey" id="trip-summary">
-					
-					
-					
-
-
 				</div><br/>
 				
 				<!--<div class="pagecontainer2 needassistancebox">
@@ -257,210 +257,233 @@
 			async: false,
 			dataType: "json",
 			success:function(data){
-				var total_price_adult_dep = data.items[0].departures.count_adult * data.items[0].departures.price_adult;
-				var total_price_child_dep = data.items[0].departures.count_child * data.items[0].departures.price_child;
-				var total_price_infant_dep = data.items[0].departures.count_infant * data.items[0].departures.price_infant;
-				var total_price_dep = total_price_adult_dep + total_price_child_dep + total_price_infant_dep;// + admin_fee; //sementara tidak pake
-				var total_price = total_price_dep;
-				var dep_stop = data.items[0].departures.stop;
-				var logo_stop = (dep_stop=='Langsung' ? '' : '<div class="wh33percent left"><div class="fcircle center"><span class="fstop"></span></div></div>');
-				var dep_stop_city = data.items[0].departures.long_via;
-				var return_summary = '';
-				var return_price_summary = '';
-				var input_return = '';
-				//if returning create summary as well
-				if(flight_id_pulang!=''){
-					var ret_stop = data.items[0].returns.stop;
-					var logo_ret_stop = (ret_stop=='Langsung' ? '' : '<div class="wh33percent left"><div class="fcircle center"><span class="fstop"></span></div></div>');
-					var ret_stop_city = data.items[0].returns.long_via;
-					
-					return_summary = '<div>\
-						<p>'+data.items[0].returns.airlines_name+' '+data.items[0].returns.flight_number+'</p><br/>\
-						<div class="wh33percent left size12 bold dark">'+data.items[0].returns.flight_infos.flight_info[0].departure_city+'</div>\
-						<div class="wh33percent left center size12 bold dark">'+ret_stop_city+'</div>\
-						<div class="wh33percent right textright size12 bold dark">'+data.items[0].returns.flight_infos.flight_info[0].arrival_city+'</div>\
-						<div class="clearfix"></div>\
-						<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
-						'+logo_ret_stop+'\
-						<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
-						<div class="clearfix"></div><div class="fline2px"></div>\
-						<div class="wh33percent left size12">'+data.items[0].returns.simple_departure_time+'</div>\
-						<div class="wh33percent left center size12">'+data.items[0].returns.duration+'</div>\
-						<div class="wh33percent right textright size12">'+data.items[0].returns.simple_arrival_time+'</div>\
-						<div class="clearfix"></div>\
-					</div>';
-					var total_price_adult_ret = data.items[0].returns.count_adult * data.items[0].returns.price_adult;
-					var total_price_child_ret = data.items[0].returns.count_child * data.items[0].returns.price_child;
-					var total_price_infant_ret = data.items[0].returns.count_infant * data.items[0].returns.price_infant;
-					var total_price_ret = total_price_adult_dep + total_price_child_dep + total_price_infant_dep;// + admin_fee; //sementara tidak pake
-					total_price += total_price_ret;
-					
-					return_price_summary = 'Returning: Total <span class="right bold green">IDR '+currency_separator(total_price_ret,'.')+'</span>\
-					<button type="button" class="collapsebtn3 collapsed mt-5" data-toggle="collapse" data-target="#collapse2"></button>\
-					<div id="collapse2" class="collapse">\
-						<div class="left size14">\
-							Dewasa<br/>\
-							Anak<br/>\
-							Bayi\
-						</div>\
-						<div class="right size14">\
-							IDR '+currency_separator(total_price_adult_ret,'.')+'<br/>\
-							IDR '+currency_separator(total_price_child_ret,'.')+'<br/>\
-							IDR '+currency_separator(total_price_infant_ret,'.')+'\
-						</div><div class="clearfix"></div>\
-					</div>';
-					
-					input_return = '<input type="hidden" name="ret_flight_id" value="'+flight_id_pulang+'">\
-					<input type="hidden" name="airline_name_ret" value="'+data.items[0].returns.airlines_name+'">';
-				}
-				$('#trip-summary').empty();
-				/* TRIP SUMMARY*/
-				$('#trip-summary').append('<div class="padding20"><span class="opensans size18 dark bold">Trip Summary</span></div>\
-								<div class="line3"></div>\
-								<div class="hpadding30 margtop30">\
-								<div>\
-									<p>'+data.items[0].departures.airlines_name+' '+data.items[0].departures.flight_number+'</p><br/>\
-									<div class="wh33percent left size12 bold dark">'+data.items[0].departures.flight_infos.flight_info[0].departure_city+'</div>\
-									<div class="wh33percent left center size12 bold dark">'+dep_stop_city+'</div>\
-									<div class="wh33percent right textright size12 bold dark">'+data.items[0].departures.flight_infos.flight_info[0].arrival_city+'</div>\
-									<div class="clearfix"></div>\
-									<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
-									'+logo_stop+'\
-									<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
-									<div class="clearfix"></div>\
-									<div class="fline2px"></div>\
-									<div class="wh33percent left size12">'+data.items[0].departures.simple_departure_time+'</div>\
-									<div class="wh33percent left center size12">'+data.items[0].departures.duration+'</div>\
-									<div class="wh33percent right textright size12">'+data.items[0].departures.simple_arrival_time+'</div>\
-									<div class="clearfix"></div>\
-								</div><br/><br/>\
-								'+return_summary+'\
-								<br/>\
-								<div class="fdash mt10"></div><br/>\
-								Departing: Total <span class="right bold green">IDR '+currency_separator(total_price_dep,'.')+'</span>\
-								<button type="button" class="collapsebtn3 collapsed mt-5" data-toggle="collapse" data-target="#collapse1"></button>\
-								<div id="collapse1" class="collapse">\
-									<div class="left size14">\
-										Dewasa<br/>\
-										Anak<br/>\
-										Bayi\
-									</div>\
-									<div class="right size14">\
-										IDR '+currency_separator(total_price_adult_dep,'.')+'<br/>\
-										IDR '+currency_separator(total_price_child_dep,'.')+'<br/>\
-										IDR '+currency_separator(total_price_infant_dep,'.')+'\
-									</div><div class="clearfix"></div>\
-								</div>\
-								<div class="fdash mt10"></div><br/>\
-								'+return_price_summary+'\
-								<br/><br/>\
-							</div>\
-							<div class="line3"></div>\
-							<div class="padding30">\
-								<span class="left size14 dark">Trip Total:</span>\
-								<span class="right lred2 bold size18">IDR '+currency_separator(total_price,'.')+'</span>\
-								<div class="clearfix"></div>\
-							</div>\
-					');
-					
-				/*create input contains data*/
-				var token = "<?php echo $this->session->userdata('token');?>";
-				$('#form-passenger').append('\
-					<input type="hidden" name="token" value="'+token+'">\
-					<input type="hidden" name="flight_id" value="'+flight_id_pergi+'">\
-					<input type="hidden" name="adult" value="'+data.items[0].departures.count_adult+'">\
-					<input type="hidden" name="child" value="'+data.items[0].departures.count_child+'">\
-					<input type="hidden" name="infant" value="'+data.items[0].departures.count_infant+'">\
-					<input type="hidden" name="airline_name" value="'+data.items[0].departures.airlines_name+'">\
-					<input type="hidden" name="date_go" value="'+data.items[0].departures.flight_date+'">\
-					'+input_return+'\
-					');
-				//belum
-				/* create mandatory input for passengers and contact person */
-				var div_input = $('#form-passenger');
-				var input_string = '<div class="padding30 grey">';
-				var separator_index = 1;
-				var datepicker_index = 1;
-				Object.getOwnPropertyNames(data.items[0].required).forEach(function(val, idx, array) {
-					
-					if(val.indexOf("separator") >= 0)
-					{
-						if(separator_index>1)
-							input_string += '<br/><br/>';
-						input_string += '<span class="size16px bold dark left">'+data.items[0].required[val]["FieldText"]+'</span>\
-							<div class="roundstep right">'+separator_index+'</div>\
+				if(data.items[0].diagnostic.status=="200"){
+					var total_price_adult_dep = data.items[0].departures.count_adult * data.items[0].departures.price_adult;
+					var total_price_child_dep = data.items[0].departures.count_child * data.items[0].departures.price_child;
+					var total_price_infant_dep = data.items[0].departures.count_infant * data.items[0].departures.price_infant;
+					var total_price_dep = total_price_adult_dep + total_price_child_dep + total_price_infant_dep;// + admin_fee; //sementara tidak pake
+					var total_price = total_price_dep;
+					var dep_stop = data.items[0].departures.stop;
+					var logo_stop = (dep_stop=='Langsung' ? '' : '<div class="wh33percent left"><div class="fcircle center"><span class="fstop"></span></div></div>');
+					var dep_stop_city = data.items[0].departures.long_via;
+					var return_summary = '';
+					var return_price_summary = '';
+					var input_return = '';
+					//if returning create summary as well
+					if(flight_id_pulang!=''){
+						var ret_stop = data.items[0].returns.stop;
+						var logo_ret_stop = (ret_stop=='Langsung' ? '' : '<div class="wh33percent left"><div class="fcircle center"><span class="fstop"></span></div></div>');
+						var ret_stop_city = data.items[0].returns.long_via;
+						
+						return_summary = '<div>\
+							<p>'+data.items[0].returns.airlines_name+' '+data.items[0].returns.flight_number+'</p><br/>\
+							<div class="wh33percent left size12 bold dark">'+data.items[0].returns.flight_infos.flight_info[0].departure_city+'</div>\
+							<div class="wh33percent left center size12 bold dark">'+ret_stop_city+'</div>\
+							<div class="wh33percent right textright size12 bold dark">'+data.items[0].returns.flight_infos.flight_info[0].arrival_city+'</div>\
 							<div class="clearfix"></div>\
-							<div class="line4"></div>';
-						separator_index += 1;
+							<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
+							'+logo_ret_stop+'\
+							<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
+							<div class="clearfix"></div><div class="fline2px"></div>\
+							<div class="wh33percent left size12">'+data.items[0].returns.simple_departure_time+'</div>\
+							<div class="wh33percent left center size12">'+data.items[0].returns.duration+'</div>\
+							<div class="wh33percent right textright size12">'+data.items[0].returns.simple_arrival_time+'</div>\
+							<div class="clearfix"></div>\
+						</div>';
+						var total_price_adult_ret = data.items[0].returns.count_adult * data.items[0].returns.price_adult;
+						var total_price_child_ret = data.items[0].returns.count_child * data.items[0].returns.price_child;
+						var total_price_infant_ret = data.items[0].returns.count_infant * data.items[0].returns.price_infant;
+						var total_price_ret = total_price_adult_dep + total_price_child_dep + total_price_infant_dep;// + admin_fee; //sementara tidak pake
+						total_price += total_price_ret;
+						
+						return_price_summary = 'Returning: Total <span class="right bold green">IDR '+currency_separator(total_price_ret,'.')+'</span>\
+						<button type="button" class="collapsebtn3 collapsed mt-5" data-toggle="collapse" data-target="#collapse2"></button>\
+						<div id="collapse2" class="collapse">\
+							<div class="left size14">\
+								Dewasa<br/>\
+								Anak<br/>\
+								Bayi\
+							</div>\
+							<div class="right size14">\
+								IDR '+currency_separator(total_price_adult_ret,'.')+'<br/>\
+								IDR '+currency_separator(total_price_child_ret,'.')+'<br/>\
+								IDR '+currency_separator(total_price_infant_ret,'.')+'\
+							</div><div class="clearfix"></div>\
+						</div>';
+						
+						input_return = '<input type="hidden" name="ret_flight_id" value="'+flight_id_pulang+'">\
+						<input type="hidden" name="airline_name_ret" value="'+data.items[0].returns.airlines_name+'">';
 					}
-					else {
-						if(data.items[0].required[val]["type"]=="textbox")
+					$('#trip-summary').empty();
+					/* TRIP SUMMARY*/
+					$('#trip-summary').append('<div class="padding20"><span class="opensans size18 dark bold">Trip Summary</span></div>\
+									<div class="line3"></div>\
+									<div class="hpadding30 margtop30">\
+									<div>\
+										<p>'+data.items[0].departures.airlines_name+' '+data.items[0].departures.flight_number+'</p><br/>\
+										<div class="wh33percent left size12 bold dark">'+data.items[0].departures.flight_infos.flight_info[0].departure_city+'</div>\
+										<div class="wh33percent left center size12 bold dark">'+dep_stop_city+'</div>\
+										<div class="wh33percent right textright size12 bold dark">'+data.items[0].departures.flight_infos.flight_info[0].arrival_city+'</div>\
+										<div class="clearfix"></div>\
+										<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
+										'+logo_stop+'\
+										<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
+										<div class="clearfix"></div>\
+										<div class="fline2px"></div>\
+										<div class="wh33percent left size12">'+data.items[0].departures.simple_departure_time+'</div>\
+										<div class="wh33percent left center size12">'+data.items[0].departures.duration+'</div>\
+										<div class="wh33percent right textright size12">'+data.items[0].departures.simple_arrival_time+'</div>\
+										<div class="clearfix"></div>\
+									</div><br/><br/>\
+									'+return_summary+'\
+									<br/>\
+									<div class="fdash mt10"></div><br/>\
+									Departing: Total <span class="right bold green">IDR '+currency_separator(total_price_dep,'.')+'</span>\
+									<button type="button" class="collapsebtn3 collapsed mt-5" data-toggle="collapse" data-target="#collapse1"></button>\
+									<div id="collapse1" class="collapse">\
+										<div class="left size14">\
+											Dewasa<br/>\
+											Anak<br/>\
+											Bayi\
+										</div>\
+										<div class="right size14">\
+											IDR '+currency_separator(total_price_adult_dep,'.')+'<br/>\
+											IDR '+currency_separator(total_price_child_dep,'.')+'<br/>\
+											IDR '+currency_separator(total_price_infant_dep,'.')+'\
+										</div><div class="clearfix"></div>\
+									</div>\
+									<div class="fdash mt10"></div><br/>\
+									'+return_price_summary+'\
+									<br/><br/>\
+								</div>\
+								<div class="line3"></div>\
+								<div class="padding30">\
+									<span class="left size14 dark">Trip Total:</span>\
+									<span class="right lred2 bold size18">IDR '+currency_separator(total_price,'.')+'</span>\
+									<div class="clearfix"></div>\
+								</div>\
+						');
+						
+					/*create input contains data*/
+					var token = "<?php echo $this->session->userdata('token');?>";
+					$('#form-passenger').append('\
+						<input type="hidden" name="token" value="'+token+'">\
+						<input type="hidden" name="flight_id" value="'+flight_id_pergi+'">\
+						<input type="hidden" name="adult" value="'+data.items[0].departures.count_adult+'">\
+						<input type="hidden" name="child" value="'+data.items[0].departures.count_child+'">\
+						<input type="hidden" name="infant" value="'+data.items[0].departures.count_infant+'">\
+						<input type="hidden" name="airline_name" value="'+data.items[0].departures.airlines_name+'">\
+						<input type="hidden" name="date_go" value="'+data.items[0].departures.flight_date+'">\
+						'+input_return+'\
+						');
+					//belum
+					/* create mandatory input for passengers and contact person */
+					var div_input = $('#form-passenger');
+					var input_string = '<div class="padding30 grey">';
+					var separator_index = 1;
+					var datepicker_index = 1;
+					var adult = 0;
+					Object.getOwnPropertyNames(data.items[0].required).forEach(function(val, idx, array) {
+						
+						if(val.indexOf("separator") >= 0)
 						{
-							input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
-								<input type="text" class="form-control" name="'+val+'" placeholder="">';
+							if(separator_index>1)
+								input_string += '<br/><br/>';
+							input_string += '<span class="size16px bold dark left">'+data.items[0].required[val]["FieldText"]+'</span>\
+								<div class="roundstep right">'+separator_index+'</div>\
+								<div class="clearfix"></div>\
+								<div class="line4"></div>';
+							if(val.indexOf("separator_adult") >= 0){
+								adult+=1;
+								input_string += '<span class="size13 dark">ID (KTP/SIM)</span>\
+									<input type="text" class="form-control" name="ida'+adult+'" placeholder="" required>';
+							}
+							
+							separator_index += 1;
 						}
-						else if ( data.items[0].required[val]["type"]=="datetime"){
-							input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'*</span>\
-								<input type="text" class="form-control mySelectCalendar" id="datepicker'+datepicker_index+'" name="'+val+'" placeholder="yyyy-mm-dd"/>';
-							datepicker_index += 1;
-						}
-						else if(data.items[0].required[val]["type"]=="combobox")
-						{
-							//add option
-							if(val.indexOf("nationality") >= 0 || val.indexOf("passportissuing") >= 0){
+						else {
+							if(data.items[0].required[val]["type"]=="textbox")
+							{
 								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
+									<input type="text" class="form-control" name="'+val+'" placeholder="" style="width:75%" required>';
+							}
+							else if ( data.items[0].required[val]["type"]=="datetime"){
+								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'*</span>\
+									<input type="text" class="form-control mySelectCalendar" id="tanggal'+datepicker_index+'" name="'+val+'" placeholder="yyyy-mm-dd" required>';
+								datepicker_index += 1;
+							}
+							else if(data.items[0].required[val]["type"]=="combobox")
+							{
+								//add option
+								if(val.indexOf("nationality") >= 0 || val.indexOf("passportissuing") >= 0){
+									input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
+										<select required class="form-control mySelectBoxClass" name="'+val+'">';
+									//input_string += '<option value="">--Pilih '+data.items[0].required[val]["FieldText"]+'--</option>';
+									for(var i=0; i<data_country.length; i++){
+										if(data_country[i].value=="id")
+											input_string += '<option value="'+data_country[i].value+'" selected>'+data_country[i].teks+'</option>';
+										else
+											input_string += '<option value="'+data_country[i].value+'">'+data_country[i].teks+'</option>';
+									}
+									input_string += '</select>';
+								}
+								/*else if(val.indexOf("passportissuing") >= 0){
+									input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
 									<select class="form-control mySelectBoxClass" name="'+val+'">';
-								
-								for(var i=0; i<data_country.length; i++)
-									input_string += '<option value="'+data_country[i].value+'">'+data_country[i].teks+'<option/>';
 									
-								input_string += '</select>';
-							}
-							/*else if(val.indexOf("passportissuing") >= 0){
-								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
-								<select class="form-control mySelectBoxClass" name="'+val+'">';
-								
-								for(var i=0; i<data_country.length; i++)
-									input_string += '<option value="'+data_country[i].value+'">'+data_country[i].teks+'<option/>';
-									
-								input_string += '</select>';
-							}*/
-							else if(val.indexOf("parent") >= 0){
-								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
-									<select class="form-control mySelectBoxClass" name="'+val+'">';
-								
-								for (var i=0;i<data.items[0].required[val]["resource"].length;i++){
-									var id = Object.getOwnPropertyNames(data.items[0].required[val]["resource"][i]); // id parent
-									input_string += '<option value="'+id+'">'+data.items[0].required[val]["resource"][i][id]+'</option>';
-								}	
-								input_string += '</select>';
-							}
-							else{
-								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
-									<select class="form-control mySelectBoxClass" name="'+val+'">';
-								
-								for (var i=0;i<data.items[0].required[val]["resource"].length;i++){
-									input_string += '<option value="'+data.items[0].required[val]["resource"][i].id+'">'+data.items[0].required[val]["resource"][i].name+'</option>';
-								}	
-								input_string += '</select>';
+									for(var i=0; i<data_country.length; i++)
+										input_string += '<option value="'+data_country[i].value+'">'+data_country[i].teks+'<option/>';
+										
+									input_string += '</select>';
+								}*/
+								else if(val.indexOf("parent") >= 0){
+									input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
+										<select required class="form-control mySelectBoxClass" name="'+val+'">';
+									input_string += '<option value="">--Pilih '+data.items[0].required[val]["FieldText"]+'--</option>';
+									for (var i=0;i<data.items[0].required[val]["resource"].length;i++){
+										var id = Object.getOwnPropertyNames(data.items[0].required[val]["resource"][i]); // id parent
+										input_string += '<option value="'+id+'">'+data.items[0].required[val]["resource"][i][id]+'</option>';
+									}	
+									input_string += '</select>';
+								}
+								else{
+									input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
+										<select required class="form-control mySelectBoxClass" name="'+val+'">';
+									input_string += '<option value="">--Pilih '+data.items[0].required[val]["FieldText"]+'--</option>';
+									for (var i=0;i<data.items[0].required[val]["resource"].length;i++){
+										input_string += '<option value="'+data.items[0].required[val]["resource"][i].id+'">'+data.items[0].required[val]["resource"][i].name+'</option>';
+									}	
+									input_string += '</select>';
+								}
 							}
 						}
+					});
+					input_string += '<br/><br/>\
+						<span class="size16px bold dark left">Review and book your trip</span>\
+						<div class="roundstep right">'+separator_index+'</div>\
+						<div class="clearfix"></div>\
+						<div class="line4"></div>\
+						<div class="alert alert-info">\
+						Perhatian! Mohon untuk membaca informasi berikut.<br/>\
+						<p class="size12">• Tiket yang anda beli akan langsung berhubungan dengan pihak maskapai/kereta api/hotel terkait. Segala hal yang berhubungan dengan pembatalan atau perubahan jadwal atau yang lainnya, mengikuti dengan peraturan perusahaan terkait.</p>\
+						</div>\
+						By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
+						restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
+						<button type="submit" class="bluebtn margtop20">Lanjut -> Issued & Pembayaran</button>';
+						
+					div_input.append(input_string+'</div>');
+					for(x=1;x<=datepicker_index;x++){
+						$(function() {
+							$( "#tanggal"+x ).datepicker({"dateFormat": "yy-mm-dd"});
+						});	
 					}
-				});
-				input_string += '<br/><br/>\
-					<span class="size16px bold dark left">Review and book your trip</span>\
-					<div class="roundstep right">'+separator_index+'</div>\
-					<div class="clearfix"></div>\
-					<div class="line4"></div>\
-					<div class="alert alert-info">\
-					Perhatian! Mohon untuk membaca informasi berikut.<br/>\
-					<p class="size12">• Tiket yang anda beli akan langsung berhubungan dengan pihak maskapai/kereta api/hotel terkait. Segala hal yang berhubungan dengan pembatalan atau perubahan jadwal atau yang lainnya, mengikuti dengan peraturan perusahaan terkait.</p>\
-					</div>\
-					By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
-					restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
-					<button type="submit" class="bluebtn margtop20">Lanjut -> Issued & Pembayaran</button>';
-					
-				div_input.append(input_string+'</div>');
+				}
+				else{
+					$('#form-passenger').append('<div class="alert alert-info">\
+						Pesan Kesalahan<br/>\
+						<p class="size12">'+data.items[0].diagnostic.error_msgs+'</p>\
+						</div>');
+				}
 			}
 		});
 	}
@@ -593,10 +616,10 @@
 			}
 			
 		?>
-		$('#detail').empty();
+		$('#form-passenger').empty();
 		/*create input contains data*/
-		$('#detail').append(inputs);
-		create_form('#pemesan', 1, 'con', 0, 'hotel');
+		$('#form-passenger').append(inputs);
+		create_form('#form-passenger', 1, 'con', 0, 'hotel');
 	};
 	
 	function create_form(el_div, n, who, tot_adult, category){
@@ -604,31 +627,40 @@
 			for (var i=0; i<n; i++){
 				idx = i + 1;
 				if (who=='con'){
-					var div = '<p align="justify"><span class="judul18">Data Pemesan</span><br /><br /></p>\
-								<div id="pemesan"></div>\
-								<br /><br />';
-					var top = '<fieldset style="margin-top: 10px;">\
-						<table id="passenger">';
-					var konten = '<tr>\
-							<td>Titel<span style="color:red">*</span></td>\
-							<td><select id="conSalutation" type="text" name="conSalutation"><option value="Mr">Tuan</option><option value="Mrs">Nyonya</option><option value="Ms">Nona</option></select></td>\
-							<td>ID Card(KTP/SIM/Kartu Pelajar)<span style="color:red">*</span></td>\
-							<td><input type="text" name="conid"></td>\
-						</tr>\
-						<tr>\
-							<td>Nama Depan<span style="color:red">*</span></td>\
-							<td><input type="text" name="conFirstName"></td>\
-							<td>Nama Belakang</td>\
-							<td><input type="text" name="conLastName"></td>\
-						</tr>\
-						<tr>\
-							<td>Email<span style="color:red">*</span></td>\
-							<td><input type="text" name="conEmailAddress"></td>\
-							<td>Telepon/HP<span style="color:red">*</span></td>\
-							<td><input type="text" name="conPhone"></td>\
-						</tr>';
-					var bottom = '</table></fieldset>';
-					$('#input_fields').append(div+top+konten+bottom);
+					var top = '<div class="padding30 grey">\
+									<span class="size16px bold dark left">Informasi Kontak</span>\
+									<div class="roundstep right">1</div>\
+									<div class="clearfix"></div>\
+									<div class="line4"></div>';
+					var konten = '<span class="size13 dark">Titel</span>\
+									<select required class="form-control mySelectBoxClass" name=conSalutation>\
+										<option value="">--Pilih Title--</option><option value="Mr">Tuan</option><option value="Mrs">Nyonya</option><option value="Ms">Nona</option>\
+									</select>\
+								<span class="size13 dark">ID (KTP/SIM)</span>\
+									<input type="text" class="form-control" name="conId" placeholder="" required>\
+								<span class="size13 dark">Nama Depan</span>\
+									<input type="text" class="form-control" name="conFirstName" placeholder="" required>\
+								<span class="size13 dark">Nama Belakang</span>\
+									<input type="text" class="form-control" name="conLastName" placeholder="" required>\
+								<span class="size13 dark">Email</span>\
+									<input type="text" class="form-control" name="conEmailAddress" placeholder="" required>\
+								<span class="size13 dark">Telepon/HP</span>\
+									<input type="text" class="form-control" name="conPhone" placeholder="" required>\
+								';
+					var bottom = '<br/><br/>\
+						<span class="size16px bold dark left">Review and book your trip</span>\
+						<div class="roundstep right">2</div>\
+						<div class="clearfix"></div>\
+						<div class="line4"></div>\
+						<div class="alert alert-info">\
+						Perhatian! Mohon untuk membaca informasi berikut.<br/>\
+						<p class="size12">• Tiket yang anda beli akan langsung berhubungan dengan pihak maskapai/kereta api/hotel terkait. Segala hal yang berhubungan dengan pembatalan atau perubahan jadwal atau yang lainnya, mengikuti dengan peraturan perusahaan terkait.</p>\
+						</div>\
+						By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
+						restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
+						<button type="submit" class="bluebtn margtop20">Lanjut -> Issued & Pembayaran</button>\
+						</div>';
+					$(el_div).append(top+konten+bottom);
 				}
 				else if(who=='a'){
 					var div = '<p align="justify"><span class="judul18">Data Penumpang Dewasa</span><br /><br /></p>\

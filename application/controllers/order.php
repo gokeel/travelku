@@ -1187,12 +1187,6 @@ class Order extends CI_Controller {
 				'error' => 'Masa berakhir passport untuk maskapai LION harus lebih dari 6 bulan dari tanggal keberangkatan',
 				'category' => 'flight'
 			);
-			/*$this->load->view('front_header');
-			$this->load->view('front_order_tiketcom', $response);
-			$data['column'] = (strpos('-second-faq', 'second')!==false ? '-second-faq' : '');
-			$data['footer_column'] = (strpos('-second-faq', 'second')!==false ? '-second' : '');
-			$this->load->view('front_right_sidebar', $data);
-			$this->load->view('front_footer', $data);*/
 		}
 		else{
 			list ($lioncaptcha, $lionsessionid) = $this->get_lion_captcha();
@@ -1209,13 +1203,6 @@ class Order extends CI_Controller {
 					'error' => $diagnose->error_msgs,
 					'category' => 'flight'
 				);
-				/*$this->load->view('front_header');
-				$this->load->view('front_order_tiketcom', $response);
-				$data['column'] = (strpos('-second-faq', 'second')!==false ? '-second-faq' : '');
-				$data['footer_column'] = (strpos('-second-faq', 'second')!==false ? '-second' : '');
-				$this->load->view('front_right_sidebar', $data);
-				$this->load->view('front_footer', $data);*/
-				//redirect(base_url('index.php/webfront/order_success/'.$order_id));
 			}
 			else {
 				// continue to order
@@ -1230,12 +1217,6 @@ class Order extends CI_Controller {
 						'error' => $diagnose_order->error_msgs,
 						'category' => 'flight'
 					);
-					/*$this->load->view('front_header');
-					$this->load->view('front_order_tiketcom', $response);
-					$data['column'] = (strpos('-second-faq', 'second')!==false ? '-second-faq' : '');
-					$data['footer_column'] = (strpos('-second-faq', 'second')!==false ? '-second' : '');
-					$this->load->view('front_right_sidebar', $data);
-					$this->load->view('front_footer', $data);*/
 				}
 				else{ //jika sukses
 					$total_before_discount = intval($myorder->total_without_tax) + intval($myorder->data[0]->detail->baggage_fee) + intval($myorder->total_tax);
@@ -1267,12 +1248,6 @@ class Order extends CI_Controller {
 						'after_discount' => $total_before_discount - intval($myorder->discount_amount),
 						'checkout_uri' => 'checkout_uri='.$response_order->checkout.'&token='.$response_order->token
 					);
-					/*$this->load->view('front_header');
-					$this->load->view('front_order_tiketcom', $response);
-					$data['column'] = (strpos('-second-faq', 'second')!==false ? '-second-faq' : '');
-					$data['footer_column'] = (strpos('-second-faq', 'second')!==false ? '-second' : '');
-					$this->load->view('front_right_sidebar', $data);
-					$this->load->view('front_footer', $data);*/
 				}
 			}
 		}

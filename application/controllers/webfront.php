@@ -439,17 +439,48 @@ class Webfront extends CI_Controller {
 		
 		$this->load_theme('package_details', $data);
 	}
+	function get_paket_pesawat_list(){
+		//get paket pesawat
+		$this->load->model('posts');
+		$pesawat = $this->posts->show_post_by_category(explode('-','pesawat'), '0', '20');
+		$index = 0;
+		if($pesawat<>false){
+			$data['pesawat_status'] = '200';
+			foreach($pesawat->result_array() as $row){
+				$data['pesawat'][$index]['id'] = $row['post_id'];
+				$data['pesawat'][$index]['title'] = $row['title'];
+				$data['pesawat'][$index]['price'] = number_format($row['price'],0,',','.');
+				$index++;
+			}
+		}
+		else
+			$data['pesawat_status'] = '204';
+	
+		return $data;
+	}
 	public function show_flight_list(){
-		$this->load_theme('flight_list');
+		//get pesawat list
+		$data = $this->get_paket_pesawat_list();
+		
+		$this->load_theme('flight_list', $data);
 	}
 	public function show_flight_return_list(){
-		$this->load_theme('flight_list_return');
+		//get pesawat list
+		$data = $this->get_paket_pesawat_list();
+		
+		$this->load_theme('flight_list_return', $data);
 	}
 	public function show_hotel_tiketcom_list(){
-		$this->load_theme('hotel_tiketcom_list');
+		//get pesawat list
+		$data = $this->get_paket_pesawat_list();
+		
+		$this->load_theme('hotel_tiketcom_list', $data);
 	}
 	public function hotel_tiketcom_detail(){
-		$this->load_theme('hotel_tiketcom_room_detail');
+		//get pesawat list
+		$data = $this->get_paket_pesawat_list();
+		
+		$this->load_theme('hotel_tiketcom_room_detail', $data);
 	}
 	public function form_passenger_tiket(){
 		$this->load_theme('form_passengers');

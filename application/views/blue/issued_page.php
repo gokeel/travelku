@@ -119,7 +119,7 @@
 								<li>IDR '.number_format($total_price,0,',','.').'</li>
 							</ul>';
 									
-						echo '<button id="btn-hotel" style="margin-top:30px" class="button-1">Checkout</button>';
+						echo '<button id="btn-hotel" class="bluebtn margtop20">Lanjut ke Pembayaran</button>';
 						echo '<div id="messages"></div>';
 					}
 				?>
