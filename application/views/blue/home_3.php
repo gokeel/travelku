@@ -666,17 +666,21 @@
 		<div class="deals4">
 			<div class="container">	
 				<div class="row">
-					<div class="col-md-4">
-						<img src="<?php echo base_url();?>assets/images/tagline-bestchoice.png"> <b><?php echo $tag_line_1_title;?></b><br/><br/>
+					<div class="col-md-3">
+						<img src="<?php echo base_url();?>assets/images/tagline-bestchoice.png" width="75px" height="50px"> <b><?php echo $tag_line_1_title;?></b><br/><br/>
 						<span class="size13 grey mt-9"><?php echo $tag_line_1_content;?></span>
 					</div>
-					<div class="col-md-4">
-						<img src="<?php echo base_url();?>assets/images/tagline-man-wireless.png"> <b><?php echo $tag_line_2_title;?></b><br/><br/>
+					<div class="col-md-3">
+						<img src="<?php echo base_url();?>assets/images/tagline-man-wireless.png" width="75px" height="50px"> <b><?php echo $tag_line_2_title;?></b><br/><br/>
 						<span class="size13 grey mt-9"><?php echo $tag_line_2_content;?></span>
 					</div>
-					<div class="col-md-4">
-						<img src="<?php echo base_url();?>assets/images/tagline-best-price.png"> <b><?php echo $tag_line_3_title;?></b><br/><br/>
+					<div class="col-md-3">
+						<img src="<?php echo base_url();?>assets/images/tagline-best-price.png" width="75px" height="50px"> <b><?php echo $tag_line_3_title;?></b><br/><br/>
 						<span class="size13 grey mt-9"><?php echo $tag_line_3_content;?></span>
+					</div>
+					<div class="col-md-3">
+						<img src="<?php echo base_url();?>assets/images/tagline-call-center.jpg" width="75px" height="50px"> <b><?php echo $tag_line_4_title;?></b><br/><br/>
+						<span class="size13 grey mt-9"><?php echo $tag_line_4_content;?></span>
 					</div>
 				</div>
 			</div>
