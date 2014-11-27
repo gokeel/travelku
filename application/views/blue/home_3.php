@@ -308,7 +308,7 @@
 							
 							<!-- TRAINS TAB -->
 							<div class="vacationstab none">
-								<form method="get" action="<?php echo base_url();?>index.php/webfront/show_train_list/train">
+								<form method="get" action="<?php echo base_url();?>index.php/webfront/show_flight_list/train">
 									<input type="hidden" name="train-trip" id="train-trip" value="single-trip">
 									<div class="w50percent">
 										<div class="wh90percent textleft">
@@ -596,7 +596,7 @@
 						<div class="deal">
 							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[$i]['image'];?>" alt="" class="dealthumb" width="50" height="50" /></a>
 							<div class="dealtitle">
-								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>" class="dark"><?php echo $latest[$i]['title'];?></a></p>
+								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>" class="dark"><?php echo ucwords($latest[$i]['title']);?></a></p>
 								<?php if($latest[$i]['star_rating']<>'') {?>
 									<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $latest[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9">
 								<?php } //end of checking star rating
@@ -621,7 +621,7 @@
 						<div class="deal">
 							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $umrah[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $umrah[$i]['image'];?>" width="50" height="50" alt="" class="dealthumb"/></a>
 							<div class="dealtitle">
-								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $umrah[$i]['id'];?>" class="dark"><?php echo $umrah[$i]['title'];?></a></p>
+								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $umrah[$i]['id'];?>" class="dark"><?php echo ucwords($umrah[$i]['title']);?></a></p>
 								<?php if($umrah[$i]['star_rating']<>'') {?>
 									<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $umrah[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9">
 								<?php } //end of checking star rating
@@ -646,7 +646,7 @@
 						<div class="deal">
 							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $promo[$i]['image'];?>" width="50" height="50" alt="" class="dealthumb"/></a>
 							<div class="dealtitle">
-								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>" class="dark"><?php echo $promo[$i]['title'];?></a></p>
+								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>" class="dark"><?php echo ucwords($promo[$i]['title']);?></a></p>
 								<?php if($promo[$i]['star_rating']<>'') {?>
 									<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $promo[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9">
 								<?php } //end of checking star rating
@@ -689,8 +689,8 @@
 
 			<div class="row anim2">
 			  <div class="col-md-3">
-				<h2>Semua Paket</h2><br/>
-				Anda dapat memilih sesuai kategori pada menu di atas. 
+				<h2>Paket Promo</h2><br/>
+				Pilih menu Paket Promo untuk pilihan lebih lengkap. 
 			  </div>
 			  <div class="col-md-9">
 			  
@@ -701,12 +701,17 @@
 					<div class="list_carousel">
 						<ul id="foo">
 							<?php
-							for($i=0;$i<sizeof($promo);$i++){
+							$total_promo = sizeof($promo);
+							if($total_promo>6)
+								$limit = 6;
+							else
+								$limit = $total_promo;
+							for($i=0;$i<$limit;$i++){
 						?>
 							<li>
 								<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $promo[$i]['image'];?>" alt="" width="255px" height="179px"/></a>
 								<div class="m1">
-									<h6 class="lh1 dark"><b><?php echo $promo[$i]['title'];?></b></h6>
+									<h6 class="lh1 dark"><b><?php echo ucwords($promo[$i]['title']);?></b></h6>
 									<h6 class="lh1 green"><?php echo $promo[$i]['currency'];?> <?php echo $promo[$i]['price'];?></h6>							
 								</div>
 							</li>

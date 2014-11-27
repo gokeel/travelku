@@ -222,7 +222,7 @@
 			echo 'var diff_date_in_now = '.$diff.';';
 		?>
 		//Tanggal check-in lebih besar dari tanggal check out
-		//Lama menginap lebih dari 100 hari (max 99 hari)
+		//Lama menginap lebih dari 15 hari (max 15 hari)
 		<?php
 			$datetime1 = date_create($this->input->get('checkin', TRUE));
 			$datetime2 = date_create($this->input->get('checkout', TRUE));
@@ -247,8 +247,8 @@
 				
 		}
 		else {
-			if(diff_date_in_out>=100){
-				$('#result-header').append('<p style="color:red">Tanggal Check-Out Tidak Boleh Lebih Dari 99 Hari Sejak Check-In.</p>');
+			if(diff_date_in_out> 15){
+				$('#result-header').append('<p style="color:red">Tanggal Check-Out Tidak Boleh Lebih Dari 15 Hari Sejak Check-In.</p>');
 			}
 			else if(diff_date_in_out<0){
 				$('#result-header').append('<p style="color:red">Tanggal Check-Out Tidak Boleh Kurang Dari Tanggal Check-In.</p>');

@@ -49,7 +49,10 @@
 					<button type="submit" class="btn btn-default btncustom">Submit<img src="<?php echo BLUE_THEME_DIR;?>/images/arrow.png" alt=""/></button>
 				</div>
 				<br/><br/>-->
-				<span class="ftitleblack">Customer support</span><br/>
+				<span class="ftitleblack">Customer support</span><br/><br/>
+				<a href="ymsgr:SendIM?travelku_cs">
+				<img border=0 src="http://opi.yahoo.com/online?u=travelku_cs&m=g&t=9"></a><br/>
+				<!--<embed src="http://w.digsby.com/dw.swf?c=dfirk8nfw47in2x1" type="application/x-shockwave-flash" wmode="transparent" width="210" height="300"></embed><br/>-->
 				<span class="pnr"><?php echo $support_by_call;?></span><br/>
 				<span class="grey2"><?php echo $support_by_email;?></span>
 			</div>			

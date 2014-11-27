@@ -532,8 +532,8 @@
 			else {
 				var compare_date;
 				<?php
-					$pergi = date_create($this->input->get('flight-pergi', TRUE));
-					$pulang = date_create($this->input->get('flight-pulang', TRUE));
+					$pergi = date_create($this->input->get('train-pergi', TRUE));
+					$pulang = date_create($this->input->get('train-pulang', TRUE));
 					if($pulang >= $pergi)
 						echo 'compare_date = "ok";';
 					else

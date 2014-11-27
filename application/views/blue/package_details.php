@@ -181,7 +181,7 @@
 				</div>
 				<div class="clearfix"></div>
 				<div class="hpadding50">
-					<h2 class="opensans slim green2"><?php echo $post_mini_slogan;?></h2>
+					<h2 class="opensans slim green2"><?php echo ucwords($post_mini_slogan);?></h2>
 				</div>
 				
 				<div class="line3 margtop20"></div>
@@ -268,7 +268,7 @@
 							</div>
 							<div class="col-md-8 offset-0">
 								<div class="padding20">
-									<span class="opensans size16 dark"><?php echo $review[$i]['title'];?></span><br/>
+									<span class="opensans size16 dark"><?php echo ucwords($review[$i]['title']);?></span><br/>
 									<span class="opensans size13 lgrey">Diposting tanggal <?php echo $review[$i]['date'];?></span><br/>
 									<p><?php echo $review[$i]['content'];?></p>	
 								</div>

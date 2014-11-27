@@ -317,52 +317,52 @@
 					$('#trip-summary').empty();
 					/* TRIP SUMMARY*/
 					$('#trip-summary').append('<div class="padding20"><span class="opensans size18 dark bold">Trip Summary</span></div>\
-									<div class="line3"></div>\
-									<div class="hpadding30 margtop30">\
-									<div>\
-										<p>'+data.items[0].departures.airlines_name+' '+data.items[0].departures.flight_number+'</p><br/>\
-										<div class="wh33percent left size12 bold dark">'+data.items[0].departures.flight_infos.flight_info[0].departure_city+'</div>\
-										<div class="wh33percent left center size12 bold dark">'+dep_stop_city+'</div>\
-										<div class="wh33percent right textright size12 bold dark">'+data.items[0].departures.flight_infos.flight_info[0].arrival_city+'</div>\
-										<div class="clearfix"></div>\
-										<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
-										'+logo_stop+'\
-										<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
-										<div class="clearfix"></div>\
-										<div class="fline2px"></div>\
-										<div class="wh33percent left size12">'+data.items[0].departures.simple_departure_time+'</div>\
-										<div class="wh33percent left center size12">'+data.items[0].departures.duration+'</div>\
-										<div class="wh33percent right textright size12">'+data.items[0].departures.simple_arrival_time+'</div>\
-										<div class="clearfix"></div>\
-									</div><br/><br/>\
-									'+return_summary+'\
-									<br/>\
-									<div class="fdash mt10"></div><br/>\
-									Departing: Total <span class="right bold green">IDR '+currency_separator(total_price_dep,'.')+'</span>\
-									<button type="button" class="collapsebtn3 collapsed mt-5" data-toggle="collapse" data-target="#collapse1"></button>\
-									<div id="collapse1" class="collapse">\
-										<div class="left size14">\
-											Dewasa<br/>\
-											Anak<br/>\
-											Bayi\
-										</div>\
-										<div class="right size14">\
-											IDR '+currency_separator(total_price_adult_dep,'.')+'<br/>\
-											IDR '+currency_separator(total_price_child_dep,'.')+'<br/>\
-											IDR '+currency_separator(total_price_infant_dep,'.')+'\
-										</div><div class="clearfix"></div>\
-									</div>\
-									<div class="fdash mt10"></div><br/>\
-									'+return_price_summary+'\
-									<br/><br/>\
-								</div>\
-								<div class="line3"></div>\
-								<div class="padding30">\
-									<span class="left size14 dark">Trip Total:</span>\
-									<span class="right lred2 bold size18">IDR '+currency_separator(total_price,'.')+'</span>\
-									<div class="clearfix"></div>\
-								</div>\
-						');
+						<div class="line3"></div>\
+						<div class="hpadding30 margtop30">\
+						<div>\
+							<p>'+data.items[0].departures.airlines_name+' '+data.items[0].departures.flight_number+'</p><br/>\
+							<div class="wh33percent left size12 bold dark">'+data.items[0].departures.flight_infos.flight_info[0].departure_city+'</div>\
+							<div class="wh33percent left center size12 bold dark">'+dep_stop_city+'</div>\
+							<div class="wh33percent right textright size12 bold dark">'+data.items[0].departures.flight_infos.flight_info[0].arrival_city+'</div>\
+							<div class="clearfix"></div>\
+							<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
+							'+logo_stop+'\
+							<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
+							<div class="clearfix"></div>\
+							<div class="fline2px"></div>\
+							<div class="wh33percent left size12">'+data.items[0].departures.simple_departure_time+'</div>\
+							<div class="wh33percent left center size12">'+data.items[0].departures.duration+'</div>\
+							<div class="wh33percent right textright size12">'+data.items[0].departures.simple_arrival_time+'</div>\
+							<div class="clearfix"></div>\
+						</div><br/><br/>\
+						'+return_summary+'\
+						<br/>\
+						<div class="fdash mt10"></div><br/>\
+						Departing: Total <span class="right bold green">IDR '+currency_separator(total_price_dep,'.')+'</span>\
+						<button type="button" class="collapsebtn3 collapsed mt-5" data-toggle="collapse" data-target="#collapse1"></button>\
+						<div id="collapse1" class="collapse">\
+							<div class="left size14">\
+								Dewasa<br/>\
+								Anak<br/>\
+								Bayi\
+							</div>\
+							<div class="right size14">\
+								IDR '+currency_separator(total_price_adult_dep,'.')+'<br/>\
+								IDR '+currency_separator(total_price_child_dep,'.')+'<br/>\
+								IDR '+currency_separator(total_price_infant_dep,'.')+'\
+							</div><div class="clearfix"></div>\
+						</div>\
+						<div class="fdash mt10"></div><br/>\
+						'+return_price_summary+'\
+						<br/><br/>\
+						</div>\
+						<div class="line3"></div>\
+						<div class="padding30">\
+							<span class="left size14 dark">Trip Total:</span>\
+							<span class="right lred2 bold size18">IDR '+currency_separator(total_price,'.')+'</span>\
+							<div class="clearfix"></div>\
+						</div>\
+					');
 						
 					/*create input contains data*/
 					var token = "<?php echo $this->session->userdata('token');?>";
@@ -396,7 +396,7 @@
 							if(val.indexOf("separator_adult") >= 0){
 								adult+=1;
 								input_string += '<span class="size13 dark">ID (KTP/SIM)</span>\
-									<input type="text" class="form-control" name="ida'+adult+'" placeholder="" required>';
+									<input type="text" class="form-control" name="ida'+adult+'" placeholder="" style="width:75%" required>';
 							}
 							
 							separator_index += 1;
@@ -409,7 +409,7 @@
 							}
 							else if ( data.items[0].required[val]["type"]=="datetime"){
 								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'*</span>\
-									<input type="text" class="form-control mySelectCalendar" id="tanggal'+datepicker_index+'" name="'+val+'" placeholder="yyyy-mm-dd" required>';
+									<input type="text" class="form-control mySelectCalendar" id="tanggal'+datepicker_index+'" name="'+val+'" placeholder="yyyy-mm-dd" style="width:75%" required>';
 								datepicker_index += 1;
 							}
 							else if(data.items[0].required[val]["type"]=="combobox")
@@ -417,7 +417,7 @@
 								//add option
 								if(val.indexOf("nationality") >= 0 || val.indexOf("passportissuing") >= 0){
 									input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
-										<select required class="form-control mySelectBoxClass" name="'+val+'">';
+										<select style="width:75%" required class="form-control mySelectBoxClass" name="'+val+'">';
 									//input_string += '<option value="">--Pilih '+data.items[0].required[val]["FieldText"]+'--</option>';
 									for(var i=0; i<data_country.length; i++){
 										if(data_country[i].value=="id")
@@ -438,17 +438,17 @@
 								}*/
 								else if(val.indexOf("parent") >= 0){
 									input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
-										<select required class="form-control mySelectBoxClass" name="'+val+'">';
+										<select style="width:75%" required class="form-control mySelectBoxClass" name="'+val+'">';
 									input_string += '<option value="">--Pilih '+data.items[0].required[val]["FieldText"]+'--</option>';
 									for (var i=0;i<data.items[0].required[val]["resource"].length;i++){
-										var id = Object.getOwnPropertyNames(data.items[0].required[val]["resource"][i]); // id parent
-										input_string += '<option value="'+id+'">'+data.items[0].required[val]["resource"][i][id]+'</option>';
+										var id = Object.getOwnPropertyNames(data.items[0].required[val]["resource"][i].id); // id parent
+										input_string += '<option value="'+id+'">'+data.items[0].required[val]["resource"][i].name+'</option>';
 									}	
 									input_string += '</select>';
 								}
 								else{
 									input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
-										<select required class="form-control mySelectBoxClass" name="'+val+'">';
+										<select style="width:75%" required class="form-control mySelectBoxClass" name="'+val+'">';
 									input_string += '<option value="">--Pilih '+data.items[0].required[val]["FieldText"]+'--</option>';
 									for (var i=0;i<data.items[0].required[val]["resource"].length;i++){
 										input_string += '<option value="'+data.items[0].required[val]["resource"][i].id+'">'+data.items[0].required[val]["resource"][i].name+'</option>';

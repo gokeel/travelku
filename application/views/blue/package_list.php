@@ -179,9 +179,6 @@
 				var div = $('#list');
 				var line = 1; // for dividing lines, per line 3 contents
 				for(var i=0; i<datajson.length; i++){
-					var content_str = datajson[i].content;
-					var content_cut = content_str.substring(0,200);
-					//alert(content cut);
 					div.append('<div class="col-md-4">\
 							<div class="listitem">\
 								<img src="<?php echo base_url();?>assets/uploads/posts/'+datajson[i].image_file+'?ver='+d.getTime()+'" alt=""/>\
@@ -191,12 +188,12 @@
 							</div>\
 							<div class="itemlabel2">\
 								<div class="labelright">\
-									<span class="green size18"><b>IDR <br/>'+currency_separator(datajson[i].price,'.')+'</b></span><br/><br/><br/>\
+									<span class="green size18"><b>'+datajson[i].currency+' <br/>'+currency_separator(datajson[i].price,'.')+'</b></span><br/><br/><br/>\
 									<a class="bookbtn mt1" href="<?php echo base_url();?>index.php/webfront/show_package_content/'+datajson[i].id+'">Book</a>\
 								</div>\
 								<div class="labelleft">\
-									<a href="<?php echo base_url();?>index.php/webfront/show_package_content/'+datajson[i].id+'"><b>'+datajson[i].title+'</b></a><br/><br/><br/>\
-									<p class="grey">'+datajson[i].content+'</p>\
+									<a href="<?php echo base_url();?>index.php/webfront/show_package_content/'+datajson[i].id+'"><b>'+toTitleCase(datajson[i].title)+'</b></a><br/><br/><br/>\
+									<p class="grey">'+datajson[i].mini_slogan+'</p>\
 								</div>\
 							</div>\
 						</div>');

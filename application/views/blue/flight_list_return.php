@@ -9,7 +9,7 @@
   <head>
   	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Flight Return List</title>
+	<title><?php echo ($this->uri->segment(3)=='' ? 'Flight' : 'Train');?> Return List</title>
 	
     <!-- Bootstrap -->
     <link href="<?php echo BLUE_THEME_DIR;?>/dist/css/bootstrap.css" rel="stylesheet" media="screen">
@@ -95,7 +95,7 @@
 			<div class="left">
 				<ul class="bcrumbs">
 					<li>/</li>
-					<li><a href="#">Pesawat</a></li>
+					<li><a href="#"><?php echo ($this->uri->segment(3)=='' ? 'Flight' : 'Train');?></a></li>
 					<li>/</li>
 					<li><a href="#">Returning</a></li>
 				</ul>				
@@ -192,7 +192,14 @@
 	var flight_pergi ='';
 	var flight_pulang = '';
 	$( window ).load(function() {
-		search_flight();
+		<?php
+			$category = $this->uri->segment(3);
+			//load to the page
+			if($category=='')
+				echo 'search_flight();';
+			else if($category=='train')
+				echo 'search_train();';
+		?>
 	});
 	function check_total_passenger(trip, adult,child,infant){
 		/* max each of adult,child,infant are 4, based on tiket.com's requirement*/
