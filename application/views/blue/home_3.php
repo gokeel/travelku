@@ -728,9 +728,9 @@
 			  </div>
 			</div>	
 
-			<hr class="featurette-divider2">
+			<!--<hr class="featurette-divider2">
 			
-			<!--<div class="row anim3">
+			<div class="row anim3">
 			  <div class="col-md-12">
 				<img src="<?php echo base_url();?>assets/images/banner-partner.png" alt="" width="100%" height="155px"/>
 			  </div>
@@ -739,13 +739,13 @@
 		
 
 
-		<!-- FOOTER -->
+		<!-- FOOTER 
 		<div class="container none">		
 			<footer>
 			<p class="pull-right"><a href="#">Back to top</a></p>
 			<p>&copy; 2013 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
 			</footer>
-		</div>		
+		</div>		-->
 		<div class="footerbg">
 			<div class="container">	
 				<div class="col-md-12">
