@@ -730,11 +730,11 @@
 
 			<hr class="featurette-divider2">
 			
-			<div class="row anim3">
+			<!--<div class="row anim3">
 			  <div class="col-md-12">
 				<img src="<?php echo base_url();?>assets/images/banner-partner.png" alt="" width="100%" height="155px"/>
 			  </div>
-			</div>
+			</div>-->
 		</div>
 		
 
@@ -746,7 +746,15 @@
 			<p>&copy; 2013 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
 			</footer>
 		</div>		
-		
+		<div class="footerbg">
+			<div class="container">	
+				<div class="col-md-12">
+					<img src="<?php echo base_url();?>assets/images/banner-partner.png" alt="" width="100%" height="155px"/>
+				</div>
+			</div>
+		</div>
+	<br/>
+	
 		<?php include_once('footer.php')?>
 		
 
