@@ -40,11 +40,12 @@
 				$('#readable').text(datajson.readable);
 				
 				if(datajson.parameter=="company_logo"){ //generate the div showing the image and the input to change the picture
-					$('#value-show').append('<div id="image-show"></div><input name="value" id="value" type="file" value="" size="60">');
+					$('#value-show').append('<div id="image-show"></div><input name="value" id="value" type="file" value="" size="60">\
+							<input type="hidden" name="is_logo" value="yes">');
 					$("#image-show").append('<img src="'+image_path+datajson.value+'?ver='+d.getTime()+'" alt="no-picture" width="250px" height="250px" />');
 				}
 				else {
-					$('#value-show').append('<input type="text" name="value" id="value">');
+					$('#value-show').append('<input type="text" name="value" id="value"><input type="hidden" name="is_logo" value="no">');
 					$('#value').val(datajson.value);
 				}
 				//$('#value').val(datajson.value);

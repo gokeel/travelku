@@ -3,10 +3,10 @@
 			<div class="col-md-3">
 				<span class="ftitleblack">Let's socialize</span>
 				<div class="scont">
-					<a href="<?php echo prep_url($facebook_link);?>" class="social1b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-facebook.png" alt=""/></a>
-					<a href="<?php echo prep_url($twitter_link);?>" class="social2b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-twitter.png" alt=""/></a>
-					<a href="<?php echo prep_url($gplus_link);?>" class="social3b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-gplus.png" alt=""/></a>
-					<a href="<?php echo prep_url($youtube_link);?>" class="social4b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-youtube.png" alt=""/></a>
+					<a target="_blank" href="<?php echo prep_url($facebook_link);?>" class="social1b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-facebook.png" alt=""/></a>
+					<a target="_blank" href="<?php echo prep_url($twitter_link);?>" class="social2b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-twitter.png" alt=""/></a>
+					<a target="_blank" href="<?php echo prep_url($gplus_link);?>" class="social3b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-gplus.png" alt=""/></a>
+					<a target="_blank" href="<?php echo prep_url($youtube_link);?>" class="social4b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-youtube.png" alt=""/></a>
 					<br/><br/><br/>
 					<a href="<?php echo base_url();?>"><img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $company_logo;?>" width="130px" height="70px" alt="" /></a><br/>
 					<span class="grey2">&copy; 2014  |  <a href="#">Privacy Policy</a><br/>
@@ -21,8 +21,8 @@
 				<span class="ftitleblack">Travel Specialists</span>
 				<br/><br/>
 				<ul class="footerlistblack">
-					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/umrah/0/9">Paket Umroh & Haji Plus</a></li>
-					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/tour-travel/0/9">Paket Tour </a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/umrah/0/9">Paket Umroh & Haji</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/tour/0/9">Paket Tour</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/promo/0/9">Paket Promo</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/hotel/0/9">Paket Hotel</a></li>
 				</ul>

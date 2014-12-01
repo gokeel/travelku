@@ -54,6 +54,8 @@
 	<!-- end -->
 	
 	<!-- tambahan -->
+	<link rel="icon" type="image/png" href="<?php echo base_url();?>assets/images/<?php echo $favicon_frontend_logo;?>">
+	
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
 	<script src="<?php echo GENERAL_JS_DIR;?>/functions.js"></script>
@@ -215,9 +217,9 @@
 				<div class="tab-content4" >
 					<!-- TAB 1 -->				
 					<div id="summary" class="tab-pane fade active in">
-						<div id="summary-content" style="padding-left:20px"></div>
+						<div id="summary-content" style="padding-left:20px;padding-right:10px"></div>
 						<script>
-							$('#summary-content').append($.htmlClean('<?php echo $post_content;?>', {format:true}));
+							$('#summary-content').append($.htmlClean('<?php echo addslashes($post_content);?>', {format:true}));
 						</script>
 					</div>
 					

@@ -286,6 +286,7 @@ class Webfront extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+	
 	public function count_post_by_category(){
 		$cat = $this->uri->segment(3);
 		$cat_array = explode('-',$cat);
@@ -295,6 +296,30 @@ class Webfront extends CI_Controller {
 				'count' => $query
 			);
 		
+		echo json_encode($data);
+	}
+	
+	public function get_regular_packages(){
+		$limit_start = $this->uri->segment(3);
+		$limit_count = $this->uri->segment(4);
+		$this->load->model('posts');
+		$query = $this->posts->show_package_regular($limit_start, $limit_count);
+		foreach($query->result_array() as $row){
+			$data[] = array(
+				'id' => $row['post_id'],
+				'category' => $row['category_name'],
+				'content' => ucwords($row['content']),
+				'mini_slogan' => ucwords($row['mini_slogan']),
+				'title' => $row['title'],
+				'is_promo' => $row['is_promo'],
+				'currency' => $row['currency'],
+				'price' => $row['price'],
+				'author' => $row['user_name'],
+				'point_reward' => $row['point_reward'],
+				'image_file' => $row['image_file'],
+				'point_reward' => $row['point_reward']
+			);
+		}
 		echo json_encode($data);
 	}
 	
@@ -324,6 +349,16 @@ class Webfront extends CI_Controller {
 	public function count_post_promo(){
 		$this->load->model('posts');
 		$query = $this->posts->count_post_promo();
+		$data = array(
+				'count' => $query
+			);
+		
+		echo json_encode($data);
+	}
+	
+	public function count_regular_packages(){
+		$this->load->model('posts');
+		$query = $this->posts->count_package_regular();
 		$data = array(
 				'count' => $query
 			);
@@ -377,6 +412,26 @@ class Webfront extends CI_Controller {
 			$data['pesawat_status'] = '204';
 	
 		$this->load_theme('package_list', $data);
+	}
+	public function show_regular_packages(){
+		$this->load->model('posts');
+		
+		//get paket pesawat
+		$pesawat = $this->posts->show_post_by_category(explode('-','pesawat'), '0', '20');
+		$index = 0;
+		if($pesawat<>false){
+			$data['pesawat_status'] = '200';
+			foreach($pesawat->result_array() as $row){
+				$data['pesawat'][$index]['id'] = $row['post_id'];
+				$data['pesawat'][$index]['title'] = $row['title'];
+				$data['pesawat'][$index]['price'] = number_format($row['price'],0,',','.');
+				$index++;
+			}
+		}
+		else
+			$data['pesawat_status'] = '204';
+	
+		$this->load_theme('package_regular_list', $data);
 	}
 	public function show_package_content(){
 		$this->load->model('posts');

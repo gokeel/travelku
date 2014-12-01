@@ -41,7 +41,9 @@
 	<script src="http://yui.yahooapis.com/3.17.2/build/yui/yui-min.js"></script>
 	<link rel="stylesheet" href="http://yui.yahooapis.com/3.17.2/build/cssgrids/cssgrids-min.css">
 	
-
+	<!-- tambahan -->
+	<link rel="icon" type="image/png" href="<?php echo base_url();?>assets/images/<?php echo $favicon_frontend_logo;?>">
+	<!-- end of tambahan -->
   </head>
   <body class="yui3-skin-sam">
 	<!-- 100% Width & Height container  -->

@@ -11,10 +11,10 @@
 			  <div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
 				  <li><a href="<?php echo base_url();?>">Home</a></li>
-				  <li><a href="<?php echo base_url();?>index.php/webfront/show_packages/tour-umrah-travel/0/9">Paket Tour & Umrah</a></li>
+				  <li><a href="<?php echo base_url();?>index.php/webfront/show_regular_packages/0/9">Paket Reguler</a></li>
 				  <li><a href="<?php echo base_url();?>index.php/webfront/show_packages/promo/0/9">Paket Promo</a></li>
 				  <li><a href="<?php echo base_url();?>index.php/webfront/show_packages/hotel/0/9">Paket Hotel</a></li>			  
-				  <li><a href="<?php echo base_url();?>index.php/webfront/load_faq_content">FAQ</a></li>			  
+				  <!--<li><a href="<?php echo base_url();?>index.php/webfront/load_faq_content">FAQ</a></li>			  -->
 				  <li><a href="<?php echo base_url();?>index.php/webfront/agent_registration">Registrasi Agen</a></li>			  
 				  <li>
 				  <?php if ($this->session->userdata('account_id')=='') {?>

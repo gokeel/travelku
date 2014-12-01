@@ -86,15 +86,7 @@
 			<div class="left">
 				<ul class="bcrumbs">
 					<li>/</li>
-					<li><a href="#">Paket</a></li>
-					<li>/</li>
-					<li><a href="#"><?php 
-						if($this->uri->segment(3)=='umrah')
-							echo 'Umrah & Haji';
-						else
-							echo ucwords($this->uri->segment(3));
-					?>
-					</a></li>
+					<li><a href="#">Paket Reguler</a></li>
 				</ul>				
 			</div>
 			<a class="backbtn right" href="#"></a>
@@ -114,13 +106,7 @@
 			
 				<div class="hpadding20">
 					<!-- Top filters -->
-					<span class="opensans normal dark size24 textcenter">Daftar Paket 
-					<?php 
-						if($this->uri->segment(3)=='umrah')
-							echo 'Umrah & Haji';
-						else
-							echo ucwords($this->uri->segment(3));
-					?></span>
+					<span class="opensans normal dark size24 textcenter">Daftar Paket Reguler</span>
 					<!-- End of topfilters-->
 				</div>
 				<!-- End of padding -->
@@ -171,15 +157,11 @@
 	})
 	function load_posts(){
 		<?php 
-			$par = $this->uri->segment(3);
-			$limit_start = $this->uri->segment(4);
-			$limit_end = $this->uri->segment(5);
+			$limit_start = $this->uri->segment(3);
+			$limit_end = $this->uri->segment(4);
 		?>
 		<?php 
-			if($par == 'promo')
-				echo 'var request = "'.base_url('index.php/webfront/get_post_promo/'.$limit_start.'/'.$limit_end).'";';
-			else
-				echo 'var request = "'.base_url('index.php/webfront/get_post_by_category/'.$par.'/'.$limit_start.'/'.$limit_end).'";';
+			echo 'var request = "'.base_url('index.php/webfront/get_regular_packages/'.$limit_start.'/'.$limit_end).'";';
 		?>
 		var d = new Date(); 
 		var image_path = '<?php echo base_url();?>assets/uploads/posts/';
@@ -223,16 +205,12 @@
 	
 	function count_all_content(){
 		<?php 
-			$par = $this->uri->segment(3);
-			$limit_start = $this->uri->segment(4);
+			$limit_start = $this->uri->segment(3);
 			echo 'var limit_start = "'.$limit_start.'";';
-			$count = $this->uri->segment(5);
+			$count = $this->uri->segment(4);
 		?>
 		<?php 
-			if($par == 'promo')
-				echo 'var request = "'.base_url('index.php/webfront/count_post_promo/').'";';
-			else
-				echo 'var request = "'.base_url('index.php/webfront/count_post_by_category/'.$par).'";';
+			echo 'var request = "'.base_url('index.php/webfront/count_regular_packages/').'";';
 		?>
 		$.ajax({
 			type : "GET",
@@ -251,22 +229,22 @@
 				}
 				if(limit_start==0 && page_number>1){
 					top += '<li class="disabled"><a href="#">&laquo;</a></li>';
-					bottom = '<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/<?php echo $par;?>/'+(page_number-1)*9+'/9">&raquo;</a></li></ul>';
+					bottom = '<li><a href="<?php echo base_url();?>index.php/webfront/show_regular_packages/'+(page_number-1)*9+'/9">&raquo;</a></li></ul>';
 				}
 				if(limit_start==(page_number-1)*9 && page_number>1){
-					top += '<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/<?php echo $par;?>/0/9">&laquo;</a></li>';
+					top += '<li><a href="<?php echo base_url();?>index.php/webfront/show_regular_packages/0/9">&laquo;</a></li>';
 					bottom = '<li class="disabled"><a href="#">&raquo;</a></li></ul>';
 				}
 				if(limit_start>0 && limit_start<(page_number-1)*9 && page_number>1){
-					top += '<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/<?php echo $par;?>/0/9">&laquo;</a></li>';
-					bottom = '<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/<?php echo $par;?>/'+(page_number-1)*9+'/9">&raquo;</a></li></ul>';
+					top += '<li><a href="<?php echo base_url();?>index.php/webfront/show_regular_packages/0/9">&laquo;</a></li>';
+					bottom = '<li><a href="<?php echo base_url();?>index.php/webfront/show_regular_packages/'+(page_number-1)*9+'/9">&raquo;</a></li></ul>';
 				}
 				var li = '';
 				for(var i=1; i<=page_number; i++){
 					if(limit_start==(i-1)*9)
-						li = li + '<li class="disabled"><a href="<?php echo base_url();?>index.php/webfront/show_packages/<?php echo $par;?>/'+((i-1)*9)+'/9">'+i+'</a></li>';
+						li = li + '<li class="disabled"><a href="<?php echo base_url();?>index.php/webfront/show_regular_packages/'+((i-1)*9)+'/9">'+i+'</a></li>';
 					else
-						li = li + '<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/<?php echo $par;?>/'+((i-1)*9)+'/9">'+i+'</a></li>';
+						li = li + '<li><a href="<?php echo base_url();?>index.php/webfront/show_regular_packages/'+((i-1)*9)+'/9">'+i+'</a></li>';
 				}
 					
 				

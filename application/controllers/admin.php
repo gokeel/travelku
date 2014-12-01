@@ -5022,16 +5022,18 @@ class Admin extends CI_Controller {
 		$config['overwrite']	= TRUE;
 		$config['max_size']	= '2000';
 		
-		if ($_FILES['value']['name']<>''){
-			$this->load->library('upload', $config);
-			if ( ! $this->upload->do_upload('value'))
-				$this->show_message_page('mengunggah foto', $this->upload->display_errors());
-			else {
-				$upload_data = $this->upload->data();
-				$ext = end(explode(".", $upload_data['file_name']));
-				$data['value'] = 'pic_'.$id.'.'.$ext;
+		if($this->input->post('is_logo')=='yes'){
+			if ($_FILES['value']['name']<>''){
+				$this->load->library('upload', $config);
+				if ( ! $this->upload->do_upload('value'))
+					$this->show_message_page('mengunggah foto', $this->upload->display_errors());
+				else {
+					$upload_data = $this->upload->data();
+					$ext = end(explode(".", $upload_data['file_name']));
+					$data['value'] = 'pic_'.$id.'.'.$ext;
+				}
 			}
-		}
+		}		
 		else
 			$data['value'] = $this->input->post('value',TRUE);
 		

@@ -172,6 +172,40 @@ class Posts extends CI_Model {
 		return $get->num_rows();
 	}
 	
+	function show_package_regular($limit_start, $limit_count){
+		$this->db->select('posts.*, post_categories.category as category_name, users.user_name');
+		$this->db->from('posts');
+		$this->db->join('post_categories', 'posts.category = post_categories.id');
+		$this->db->join('users', 'posts.author = users.account_id');
+		$this->db->where('is_promo', 'false');
+		$this->db->where('post_categories.is_package', 'true');
+		$this->db->where('posts.status', 'publish');
+		$this->db->where('posts.enabled', 'true');
+		$this->db->order_by('posts.post_id desc');
+		$this->db->limit($limit_count, $limit_start);
+		$get = $this->db->get();
+		if ($get->num_rows() > 0)
+			return $get;
+		else
+			return false;
+	}
+	
+	function count_package_regular(){
+		$this->db->select('posts.*, post_categories.category as category_name, users.user_name');
+		$this->db->from('posts');
+		$this->db->join('post_categories', 'posts.category = post_categories.id');
+		$this->db->join('users', 'posts.author = users.account_id');
+		$this->db->where('is_promo', 'false');
+		$this->db->where('post_categories.is_package', 'true');
+		$this->db->where('posts.status', 'publish');
+		$this->db->where('posts.enabled', 'true');
+		$this->db->order_by('posts.post_id desc');
+		$get = $this->db->get();
+		
+		return $get->num_rows();
+		
+	}
+	
 	function show_post_in_promo($limit_start, $limit_count){
 		$this->db->select('posts.*, post_categories.category as category_name, users.user_name');
 		$this->db->from('posts');

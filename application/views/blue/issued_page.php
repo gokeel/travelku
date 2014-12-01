@@ -37,7 +37,9 @@
 	<!-- Load jQuery -->
 	<script src="<?php echo BLUE_THEME_DIR;?>/assets/js/jquery.v2.0.3.js"></script>
 
-
+	<!-- tambahan -->
+	<link rel="icon" type="image/png" href="<?php echo base_url();?>assets/images/<?php echo $favicon_frontend_logo;?>">
+	<!-- end of tambahan -->
 	
 
   </head>

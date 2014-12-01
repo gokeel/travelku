@@ -66,6 +66,7 @@
 	
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+	<link rel="icon" type="image/png" href="<?php echo base_url();?>assets/images/<?php echo $favicon_frontend_logo;?>">
 	
 	<script type="text/javascript" src="<?php echo GENERAL_JS_DIR;?>/jquery.fancybox.js?v=2.1.5"></script>
 	<link rel="stylesheet" href="<?php echo GENERAL_CSS_DIR;?>/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
