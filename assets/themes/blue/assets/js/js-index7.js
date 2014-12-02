@@ -41,7 +41,7 @@ jQuery(document).ready(function(jQuery){
 		width: "100%",
 		height: 240,
 		items: {
-			visible: 5,
+			visible: 4,
 			minimum: 1,
 			start: 2
 		},
@@ -51,7 +51,7 @@ jQuery(document).ready(function(jQuery){
 			duration: 500,
 			pauseOnHover: true
 		},
-		auto: false,
+		auto: true,
 		prev: {
 			button: "#prev_btn",
 			key: "left"
@@ -64,7 +64,7 @@ jQuery(document).ready(function(jQuery){
 	});
 	
 	
-	jQuery("#foo2").carouFredSel({
+	/*jQuery("#foo2").carouFredSel({
 		width: "100%",
 		height: 240,
 		items: {
@@ -88,7 +88,7 @@ jQuery(document).ready(function(jQuery){
 			key: "right"
 		},				
 		swipe: true
-	});
+	});*/
 	
 
 });

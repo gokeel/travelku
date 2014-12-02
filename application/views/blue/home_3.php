@@ -689,11 +689,9 @@
 		<div class="container cstyle06">	
 
 			<div class="row anim2">
-			  <div class="col-md-3">
-				<h2>Paket Promo</h2><br/>
-				Pilih menu Paket Promo untuk pilihan lebih lengkap. 
-			  </div>
-			  <div class="col-md-9">
+			  <h2>Paket Promo</h2>
+			  
+			  <div class="col-md-12">
 			  
 			  
 			  
@@ -702,12 +700,7 @@
 					<div class="list_carousel">
 						<ul id="foo">
 							<?php
-							$total_promo = sizeof($promo);
-							if($total_promo>6)
-								$limit = 6;
-							else
-								$limit = $total_promo;
-							for($i=0;$i<$limit;$i++){
+							for($i=0;$i<sizeof($promo);$i++){
 						?>
 							<li>
 								<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $promo[$i]['image'];?>" alt="" width="255px" height="179px"/></a>
