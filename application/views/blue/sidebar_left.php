@@ -53,6 +53,7 @@
 							<?php } ?>
 							</ul>
                         </div>
+						<a href="<?php echo base_url();?>index.php/webfront/show_packages/promo/0/9"><span style="float:right;color:green;font-size:12px"><i>Lainnya...</i></span></a>
 					</div>
 				</div>
 				<div class="line2"></div>
@@ -76,6 +77,7 @@
 							<?php } ?>
 							</ul>
                         </div>
+						<a href="<?php echo base_url();?>index.php/webfront/show_regular_packages/0/9"><span style="float:right;color:green;font-size:12px"><i>Lainnya...</i></span></a>
 					</div>
 				</div>
 				<div class="line2"></div>

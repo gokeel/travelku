@@ -457,7 +457,33 @@ class Webfront extends CI_Controller {
 		}
 		else
 			$data['pesawat_status'] = '204';
-	
+		//get the promo content
+		$index = 0;
+		$promo = $this->posts->show_post_in_promo('0', '3');
+		foreach($promo->result_array() as $row){
+			$data['promo'][$index]['id'] = $row['post_id'];
+			$data['promo'][$index]['category'] = ucwords($row['category_name']);
+			$data['promo'][$index]['image'] = $row['image_file'];
+			$data['promo'][$index]['title'] = $row['title'];
+			$data['promo'][$index]['star_rating'] = $row['star_rating'];
+			$data['promo'][$index]['currency'] = $row['currency'];
+			$data['promo'][$index]['price'] = number_format($row['price'],0,',','.');
+			$index++;
+		}
+		//get regular packages
+		$index = 0;
+		$regular = $this->posts->show_package_regular('0', '3');
+		foreach($regular->result_array() as $row){
+			$data['regular'][$index]['id'] = $row['post_id'];
+			$data['regular'][$index]['category'] = ucwords($row['category_name']);
+			$data['regular'][$index]['image'] = $row['image_file'];
+			$data['regular'][$index]['title'] = $row['title'];
+			$data['regular'][$index]['star_rating'] = $row['star_rating'];
+			$data['regular'][$index]['currency'] = $row['currency'];
+			$data['regular'][$index]['price'] = number_format($row['price'],0,',','.');
+			$index++;
+		}
+		
 		$this->load_theme('package_regular_list', $data);
 	}
 	public function show_package_content(){
