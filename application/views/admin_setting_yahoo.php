@@ -164,58 +164,6 @@
 			panel.show();
 		});
 	});
-	
-	
-   
-
-	
-	YUI().use('panel', 'dd-plugin', function (Y) {
-		function add_bank_via(){
-			var form = $('#form-add-bank-via').serialize();
-			$.ajax({
-				type : "GET",
-				url: '<?php echo base_url();?>index.php/admin/bank_via_add',
-				data: form,
-				cache: false,
-				dataType: "json",
-				success:function(data){
-					window.location.assign("<?php echo base_url('index.php/admin/setting_bank_page/bank_list');?>");
-				}
-			})
-		}
-		var addRowBtn  = Y.one('#add-bank-via');
-		// Create the main modal form for add bank
-		var panel_via = new Y.Panel({
-			srcNode      : '#panel-add-bank-via',
-			headerContent: 'Tambah Bank Via',
-			width        : 250,
-			zIndex       : 5,
-			centered     : true,
-			modal        : true,
-			visible      : false,
-			render       : true,
-			plugins      : [Y.Plugin.Drag]
-		});
-		panel_via.addButton({
-			value  : 'Simpan',
-			section: Y.WidgetStdMod.FOOTER,
-			action : function (e) {
-				e.preventDefault();
-				add_bank_via();
-			}
-		});
-		panel_via.addButton({
-			value  : 'Batal',
-			section: Y.WidgetStdMod.FOOTER,
-			action : function (e) {
-				panel_via.hide();
-			}
-		});
-		// When the addRowBtn is pressed, show the modal form.
-		addRowBtn.on('click', function (e) {
-			panel_via.show();
-		});
-	});
 </script>
 
  

@@ -50,9 +50,7 @@
 				</div>
 				<br/><br/>-->
 				<span class="ftitleblack">Customer support</span><br/><br/>
-				<a href="ymsgr:SendIM?travelku_cs">
-				<img border=0 src="http://opi.yahoo.com/online?u=travelku_cs&m=g&t=9"></a><br/>
-				<!--<embed src="http://w.digsby.com/dw.swf?c=dfirk8nfw47in2x1" type="application/x-shockwave-flash" wmode="transparent" width="210" height="300"></embed><br/>-->
+				<div id="ym-customer-service"></div>
 				<span class="pnr"><?php echo $support_by_call;?></span><br/>
 				<span class="grey2"><?php echo $support_by_email;?></span>
 			</div>			
@@ -70,3 +68,18 @@
 		<a href="#top" class="gotop scroll"><img src="<?php echo BLUE_THEME_DIR;?>/images/spacer.png" alt=""/></a>
 		</div>
 	</div>
+	<script>
+		$.ajax({
+			type : "GET",
+			async: false,
+			url: '<?php echo base_url();?>index.php/other/get_yahoo_by_type/customer-service',
+			dataType: "json",
+			success:function(datajson){
+				var div = $('#ym-customer-service');
+				for(var i=0; i<datajson.length;i++)
+					//data_via[i] = {number_row: datajson[i].number_row, id:datajson[i].id, name:datajson[i].name, type:datajson[i].type};
+					div.append('</span><a href="ymsgr:SendIM?'+datajson[i].username+'">\
+						<img border=0 src="http://opi.yahoo.com/online?u='+datajson[i].username+'&m=g&t=9"></a>&nbsp;&nbsp;'+datajson[i].username+'<br/><br/>');
+			}
+		});
+	</script>

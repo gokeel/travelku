@@ -38,4 +38,13 @@ class Yahoo_messenger extends CI_Model {
 		$query = $this->db->get($table);
 		return $query;
 	}
+	
+	public function filter_by_type($type){
+		$this->db->select('*')->from('yahoo_accounts')->where('functional_type', 'customer_service')->order_by('yahoo_account');
+		$get = $this->db->get();
+		if ($get->num_rows() > 0)
+			return $get;
+		else
+			return false;
+	}
 }
