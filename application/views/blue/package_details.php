@@ -171,8 +171,8 @@
 					<h2 class="opensans slim green2"><?php echo $currency;?> <?php echo $post_price;?></h2>
 				</div>
 				
+				<?php if(strtolower($post_category)<>'pesawat'){?>
 				<div class="line3 margtop20"></div>
-				
 				<div class="col-md-6 bordertype1 padding20">
 					<img src="<?php echo BLUE_THEME_DIR;?>/images/user-rating-<?php if($review_status=='200') echo $user_rating_rounded; else echo '0';?>.png" alt=""/><br/>
 					<?php if($review_status=='200') echo $total_review; else echo '0';?> review
@@ -182,18 +182,12 @@
 					Rating pelanggan
 				</div>
 				<div class="clearfix"></div>
+				<?php } ?>
 				<div class="hpadding50">
 					<h2 class="opensans slim green2"><?php echo ucwords($post_mini_slogan);?></h2>
 				</div>
 				
 				<div class="line3 margtop20"></div>
-				<!--<div class="col-md-12 bordertype3">
-					<span class="opensans size30 bold grey2"><?php echo $post_mini_slogan;?></span><br/>
-					segera pesan!
-				</div>
-				<div class="col-md-6 bordertype3">
-					<a href="#" class="grey">+Add review</a>
-				</div>-->
 				<div class="clearfix"></div><br/>
 				
 				<div class="hpadding20">
@@ -212,7 +206,9 @@
 		
 				<ul class="nav nav-tabs" id="myTab">
 					<li onclick="mySelectUpdate()" class="active"><a data-toggle="tab" href="#summary"><span class="summary"></span><span class="hidetext">Summary</span>&nbsp;</a></li>
+					<?php if(strtolower($post_category)<>'pesawat'){?>
 					<li onclick="mySelectUpdate();" class=""><a data-toggle="tab" href="#reviews"><span class="reviews"></span><span class="hidetext">Reviews</span>&nbsp;</a></li>
+					<?php } ?>
 				</ul>			
 				<div class="tab-content4" >
 					<!-- TAB 1 -->				
@@ -223,7 +219,8 @@
 						</script>
 					</div>
 					
-					<!-- TAB 5 -->					
+					<!-- TAB 5 -->	
+					<?php if(strtolower($post_category)<>'pesawat'){?>
 					<div id="reviews" class="tab-pane fade ">
 						<?php if($review_status=='200'){?>
 						<div class="hpadding20">
@@ -335,7 +332,8 @@
 						</div>
 						<div class="clearfix"></div>
 
-					</div>								
+					</div>	
+					<?php } ?>					
 				</div>
 			</div>
 			

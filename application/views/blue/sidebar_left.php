@@ -14,300 +14,7 @@
 					<div class="tip-arrow"></div>
 				</div>
 				<div class="line2"></div>
-				<button type="button" class="collapsebtn" data-toggle="collapse" data-target="#tiketing">
-				  Tiket <span class="collapsearrow"></span>
-				</button>
-				<div id="tiketing" class="collapse in">
-					<div class="bookfilters hpadding20">
-						
-							<div class="w100percent">
-								<div class="radio">
-								  <label>
-									<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-									<!--<span class="hotel-ico"></span>--> Hotel
-								  </label>
-								</div>
-								<div class="radio">
-								  <label>
-									<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-									Pesawat
-								  </label>
-								</div>
-								<div class="radio">
-								  <label>
-									<input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
-									Kereta
-								  </label>
-								</div>
-							</div>
-							
-							<div class="clearfix"></div><br/>
-							
-							<!-- HOTELS TAB -->
-							<div class="hotelstab2 none">
-								<span class="opensans size13">Kota/Nama Hotel</span>
-								<input type="text" class="form-control" placeholder="denpasar">
-								
-								<div class="clearfix pbottom15"></div>
-								
-								<div class="w50percent">
-									<div class="wh90percent textleft">
-										<span class="opensans size13">Check in</span>
-										<input type="text" class="form-control mySelectCalendar" id="datepicker" placeholder="yyyy-mm-dd"/>
-									</div>
-								</div>
-
-								<div class="w50percentlast">
-									<div class="wh90percent textleft right">
-										<span class="opensans size13">Check out</span>
-										<input type="text" class="form-control mySelectCalendar" id="datepicker2" placeholder="yyyy-mm-dd"/>
-									</div>
-								</div>
-								
-								<div class="clearfix pbottom15"></div>
-								
-								<div class="room1" >
-									<div class="w50percent">
-										<div class="wh90percent textleft right">
-												<div class="w50percent">
-													<div class="wh90percent textleft left">
-														<span class="opensans size13"><b>Kamar</b></span>
-														<select class="form-control mySelectBoxClass">
-														  <option selected>1</option>
-														  <option>2</option>
-														  <option>3</option>
-														  <option>4</option>
-														  <option>5</option>
-														</select>
-													</div>
-												</div>							
-												<div class="w50percentlast">
-													<div class="wh90percent textleft right">
-													<span class="opensans size13"><b>Malam</b></span>
-														<select class="form-control mySelectBoxClass">
-														  <option>0</option>
-														  <option selected>1</option>
-														  <option>2</option>
-														  <option>3</option>
-														  <option>4</option>
-														  <option>5</option>
-														</select>
-													</div>
-												</div>
-											</div>
-									</div>
-
-									<div class="w50percentlast">	
-										<div class="wh90percent textleft right ohidden">
-											<div class="w50percent">
-												<div class="wh90percent textleft left">
-													<span class="opensans size13">Dewasa</span>
-													<select class="form-control mySelectBoxClass">
-													  <option selected>1</option>
-													  <option>2</option>
-													  <option>3</option>
-													  <option>4</option>
-													  <option>5</option>
-													</select>
-												</div>
-											</div>							
-											<div class="w50percentlast">
-												<div class="wh90percent textleft right ohidden">
-												<span class="opensans size13">Anak</span>
-													<select class="form-control mySelectBoxClass">
-													  <option selected>0</option>
-													  <option>1</option>
-													  <option>2</option>
-													  <option>3</option>
-													  <option>4</option>
-													  <option>5</option>
-													</select>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>		
-
-								<div class="clearfix"></div>
-								<button type="submit" class="btn-search3">Search</button>
-							</div>
-							<!-- END OF HOTELS TAB -->
-							
-							<!-- FLIGHTS TAB -->
-							<div class="flightstab2 none">
-								<div class="w50percent">
-									<div class="wh90percent textleft">
-										<span class="opensans size13">Dari</span>
-										<select name="dari" id="flight-from" class="form-control"></select>
-									</div>
-								</div>
-
-								<div class="w50percentlast">
-									<div class="wh90percent textleft right">
-										<span class="opensans size13">Ke</span>
-										<select name="ke" id="flight-to" class="form-control"></select>
-									</div>
-								</div>
-								
-								
-								<div class="clearfix pbottom15"></div>
-								
-								<div class="w50percent">
-									<div class="wh90percent textleft">
-										<span class="opensans size13">Berangkat</span>
-										<input type="text" class="form-control mySelectCalendar" id="datepicker3" placeholder="yyyy-mm-dd"/>
-									</div>
-								</div>
-
-								<div class="w50percentlast">
-									<div class="wh90percent textleft right">
-										<span class="opensans size13">Kembali</span>
-										<input type="text" class="form-control mySelectCalendar" id="datepicker4" placeholder="yyyy-mm-dd"/>
-									</div>
-								</div>
-								
-								<div class="clearfix pbottom15"></div>
-								
-								<div class="room1" >
-									<div class="w40percent">
-										<div class="wh90percent textleft">
-											<span class="opensans size13">Dewasa</span>
-											<select class="form-control mySelectBoxClass">
-											  <option>1</option>
-											  <option selected>2</option>
-											  <option>3</option>
-											  <option>4</option>
-											  <option>5</option>
-											</select>
-										</div>
-									</div>
-
-									<div class="w60percentlast">	
-										<div class="wh90percent textleft right">
-												<div class="w50percent">
-													<div class="wh90percent textleft left">
-														<span class="opensans size13"><b>Anak</b></span>
-														<select class="form-control mySelectBoxClass">
-														  <option selected>1</option>
-														  <option>2</option>
-														  <option>3</option>
-														  <option>4</option>
-														  <option>5</option>
-														  <option>6</option>
-														</select>
-													</div>
-												</div>							
-												<div class="w50percentlast">
-													<div class="wh90percent textleft right">
-													<span class="opensans size13"><b>Bayi</b></span>
-														<select class="form-control mySelectBoxClass">
-														  <option>0</option>
-														  <option selected>1</option>
-														  <option>2</option>
-														  <option>3</option>
-														  <option>4</option>
-														  <option>5</option>
-														  <option>6</option>
-														</select>
-													</div>
-												</div>
-											</div>
-									</div>
-								</div><div class="clearfix"></div>
-								<button type="submit" class="btn-search3">Search</button>
-							</div>
-							<!-- END OF FLIGHTS TAB -->
-							
-							<!-- TRAINS TAB -->
-							<div class="vacationstab2 none">
-								<div class="w50percent">
-									<div class="wh90percent textleft">
-										<span class="opensans size13">Dari</span>
-										<select name="dari" id="train-from" class="form-control"></select>
-									</div>
-								</div>
-
-								<div class="w50percentlast">
-									<div class="wh90percent textleft right">
-										<span class="opensans size13">Ke</span>
-										<select name="ke" id="train-to" class="form-control"></select>
-									</div>
-								</div>
-								
-								
-								<div class="clearfix pbottom15"></div>
-								
-								<div class="w50percent">
-									<div class="wh90percent textleft">
-										<span class="opensans size13">Berangkat</span>
-										<input type="text" class="form-control mySelectCalendar" id="datepicker5" placeholder="yyyy-mm-dd"/>
-									</div>
-								</div>
-
-								<div class="w50percentlast">
-									<div class="wh90percent textleft right">
-										<span class="opensans size13">Kembali</span>
-										<input type="text" class="form-control mySelectCalendar" id="datepicker6" placeholder="yyyy-mm-dd"/>
-									</div>
-								</div>
-								
-								<div class="clearfix pbottom15"></div>
-								
-								<div class="room1" >
-									<div class="w40percent">
-										<div class="wh90percent textleft">
-											<span class="opensans size13">Dewasa</span>
-											<select class="form-control mySelectBoxClass">
-											  <option>1</option>
-											  <option selected>2</option>
-											  <option>3</option>
-											  <option>4</option>
-											  <option>5</option>
-											</select>
-										</div>
-									</div>
-
-									<div class="w60percentlast">	
-										<div class="wh90percent textleft right">
-												<div class="w50percent">
-													<div class="wh90percent textleft left">
-														<span class="opensans size13"><b>Anak</b></span>
-														<select class="form-control mySelectBoxClass">
-														  <option selected>1</option>
-														  <option>2</option>
-														  <option>3</option>
-														  <option>4</option>
-														  <option>5</option>
-														  <option>6</option>
-														</select>
-													</div>
-												</div>							
-												<div class="w50percentlast">
-													<div class="wh90percent textleft right">
-													<span class="opensans size13"><b>Bayi</b></span>
-														<select class="form-control mySelectBoxClass">
-														  <option>0</option>
-														  <option selected>1</option>
-														  <option>2</option>
-														  <option>3</option>
-														  <option>4</option>
-														  <option>5</option>
-														  <option>6</option>
-														</select>
-													</div>
-												</div>
-											</div>
-									</div>
-								</div><div class="clearfix"></div>
-								<button type="submit" class="btn-search3">Search</button>
-							</div>
-							<!-- END OF TRAINS TAB -->
-							
-					</div>
-				</div>
-				
-				<div class="line2"></div>
-				<!-- END OF BOOK FILTERS -->	
+					
 				<?php if($pesawat_status=='200'){?>
 				<button type="button" class="collapsebtn" data-toggle="collapse" data-target="#promo-pesawat">
 				  Promo Penerbangan <span class="collapsearrow"></span>
@@ -326,6 +33,52 @@
 				</div>
 				<div class="line2"></div>
 				<?php } ?>
+				<button type="button" class="collapsebtn" data-toggle="collapse" data-target="#paket-promo">
+				  Paket Promo <span class="collapsearrow"></span>
+				</button>
+				<div id="paket-promo" class="collapse in">
+					<div class="padding20">
+						<div style="width:100%; font-size:12px">
+                            <ul style="list-style-type:none;padding-left:5px">
+							<?php for($i=0;$i<sizeof($promo);$i++){?>
+								<li style="padding-bottom:45px"> <a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>"><img src="<?php echo base_url();?>/assets/uploads/posts/<?php echo $promo[$i]['image'];?>" width="100%" height="134" /></a>
+								<a style="float:left" href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[$i]['id'];?>"><?php echo $promo[$i]['title'];?></a>
+								<span style="float:right;color:green"><?php echo $promo[$i]['currency'].' '.$promo[$i]['price'];?></span><br/><br/>
+								<span class="grey" style="float:left"><?php echo $promo[$i]['category'];?></span>
+								<?php if($promo[$i]['star_rating']<>'') {?>
+									<img style="float:right;padding-top:15px" src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $promo[$i]['star_rating'];?>.png" alt="" class="mt-10"/>
+								<?php } //end of checking star rating ?>
+								</li>
+								
+							<?php } ?>
+							</ul>
+                        </div>
+					</div>
+				</div>
+				<div class="line2"></div>
+				<button type="button" class="collapsebtn" data-toggle="collapse" data-target="#paket-regular">
+				  Paket Reguler <span class="collapsearrow"></span>
+				</button>
+				<div id="paket-regular" class="collapse in">
+					<div class="padding20">
+						<div style="width:100%; font-size:12px">
+                            <ul style="list-style-type:none;padding-left:5px">
+							<?php for($i=0;$i<sizeof($regular);$i++){?>
+								<li style="padding-bottom:45px"> <a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $regular[$i]['id'];?>"><img src="<?php echo base_url();?>/assets/uploads/posts/<?php echo $regular[$i]['image'];?>" width="100%" height="134" /></a>
+								<a style="float:left" href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $regular[$i]['id'];?>"><?php echo $regular[$i]['title'];?></a>
+								<span style="float:right;color:green"><?php echo $regular[$i]['currency'].' '.$regular[$i]['price'];?></span><br/><br/>
+								<span class="grey" style="float:left"><?php echo $regular[$i]['category'];?></span>
+								<?php if($regular[$i]['star_rating']<>'') {?>
+									<img style="float:right;padding-top:15px" src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $regular[$i]['star_rating'];?>.png" alt="" class="mt-10"/>
+								<?php } //end of checking star rating ?>
+								</li>
+								
+							<?php } ?>
+							</ul>
+                        </div>
+					</div>
+				</div>
+				<div class="line2"></div>
 				
 				<div class="clearfix"></div>
 				<br/>

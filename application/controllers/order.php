@@ -1069,7 +1069,12 @@ class Order extends CI_Controller {
 		$query_price = $this->general->get_afield_by_id('posts', 'post_id', $this->input->post('post_id',TRUE), 'price');
 		foreach($query_price->result_array() as $row)
 			$price = $row['price'];
-			
+		
+		//get the purchasing price (harga beli)
+		$query_purchase_price = $this->general->get_afield_by_id('posts', 'post_id', $this->input->post('post_id',TRUE), 'purchasing_price');
+		foreach($query_purchase_price->result_array() as $row)
+			$purchase_price = $row['purchasing_price'];
+		
 		$query_post_cat = $this->posts->get_post_cat_by_id($this->input->post('post_id',TRUE));
 		foreach($query_post_cat->result_array() as $row)
 			$post_cat = $row['category'];
@@ -1102,7 +1107,8 @@ class Order extends CI_Controller {
 			'order_status' => 'Registered',
 			'registered_date' => date('Y-m-d H:i:s'),
 			'total_price' => $price,
-			'commission_to_agent' => $comm
+			'commission_to_agent' => $comm,
+			'purchasing_price' => $purchase_price
 		);
 		$order_id = $this->orders->add_order($data_order);
 		

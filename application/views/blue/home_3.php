@@ -588,7 +588,7 @@
 				<div class="row">
 					<div class="col-md-4">
 						<div class="lbl">
-							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[0]['image'];?>" width="360" height="134" alt="" class="fwimg"/></a>
+							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[0]['image'];?>" width="360" height="184" alt="" class="fwimg"/></a>
 							<div class="smallblacklabel">Paket Terbaru</div>
 						</div>
 					<?php
@@ -613,7 +613,7 @@
 					
 					<div class="col-md-4">
 						<div class="lbl">
-							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $umrah[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $umrah[0]['image'];?>" width="360" height="134" alt="" class="fwimg"/></a>
+							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $umrah[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $umrah[0]['image'];?>" width="360" height="184" alt="" class="fwimg"/></a>
 							<div class="smallblacklabel">Paket Umrah</div>
 						</div>
 					<?php
@@ -638,7 +638,7 @@
 					
 					<div class="col-md-4">
 						<div class="lbl">
-							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $promo[0]['image'];?>" width="360" height="134" alt="" class="fwimg"/></a>
+							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $promo[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $promo[0]['image'];?>" width="360" height="184" alt="" class="fwimg"/></a>
 							<div class="smallblacklabel">Promo Terbaru</div>
 						</div>
 					<?php
@@ -689,7 +689,7 @@
 		<div class="container cstyle06">	
 
 			<div class="row anim2">
-			  <h2>Paket Promo</h2>
+			  <h2>&nbsp;&nbsp;Paket Promo</h2>
 			  
 			  <div class="col-md-12">
 			  

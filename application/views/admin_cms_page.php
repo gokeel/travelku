@@ -41,7 +41,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {id:parseInt(datajson[i].id), category:datajson[i].category, title: datajson[i].title, rating: datajson[i].star_rating, is_promo: datajson[i].is_promo, price: currency_separator(datajson[i].price, '.'), author: datajson[i].author, status: datajson[i].status, enabled: datajson[i].enabled, point_reward: datajson[i].point_reward, creation_date: datajson[i].creation_date, publish_date: datajson[i].publish_date, image_slider: datajson[i].image_slider};
+					data[i] = {id:parseInt(datajson[i].id), category:datajson[i].category, title: datajson[i].title, rating: datajson[i].star_rating, is_promo: datajson[i].is_promo, price: currency_separator(datajson[i].price, '.'), author: datajson[i].author, status: datajson[i].status, enabled: datajson[i].enabled, point_reward: datajson[i].point_reward, creation_date: datajson[i].creation_date, publish_date: datajson[i].publish_date, image_slider: datajson[i].image_slider, purchasing_price: datajson[i].purchasing_price};
 			}
 		});
 		var column_paket ;
@@ -59,7 +59,7 @@ YUI().use('tabview', function(Y) {
 								o.cell.set('text', 'Tidak');
 						}
 					},
-					{label:"Image Slider?",
+					{label:"Banner",
 						nodeFormatter:function(o){
 							if(o.data.image_slider=="true")
 								o.cell.set('text', 'Ya');
@@ -67,7 +67,8 @@ YUI().use('tabview', function(Y) {
 								o.cell.set('text', 'Tidak');
 						}
 					},
-					{key:"price", label:"Harga"},
+					{key:"price", label:"Harga Jual"},
+					{key:"purchasing_price", label:"Harga Beli"},
 					{key:"author", label:"Penulis"},
 					{key:"status", label:"Status"},
 					{key:"creation_date", label:"Tgl Dibuat"},
@@ -82,7 +83,7 @@ YUI().use('tabview', function(Y) {
 					},
 					{
 						key:"id", 
-						label: "Detail/Ubah",
+						label: "Detil/Ubah",
 						formatter:'<a href="<?php echo base_url();?>index.php/admin/content_modify/{value}"><img src="<?php echo IMAGES_DIR;?>/edit.ico"/ class="crud-btn"></a>&nbsp;&nbsp;&nbsp;&nbsp;',
 						allowHTML: true
 					},

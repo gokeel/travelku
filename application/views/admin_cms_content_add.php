@@ -34,7 +34,7 @@
 							<input name="shown_in_image_slider" id="is_promo" type="radio" value="false">Tidak</td>
 					</tr>
 					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto (ukuran max 1MB)</td>
+						<td class="tdTitle">Pasang Foto (max size 1MB, min 620 x 413, max 1140 x 600)</td>
 						<td><input name="image" id="image" type="file" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
@@ -46,7 +46,11 @@
 						</td>
 					</tr>
 					<tr class="editTR" >
-						<td class="tdTitle">Harga</td>
+						<td class="tdTitle">Harga Pembelian</td>
+						<td><input name="purchasing_price" id="purchasing_price" type="text" value="" size="60"></td>
+					</tr>
+					<tr class="editTR" >
+						<td class="tdTitle">Harga Penjualan</td>
 						<td><input name="price" id="price" type="text" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
@@ -80,23 +84,23 @@
 							<input name="enabled" id="enabled" type="radio" value="false">Tidak</td>
 					</tr>
 					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 1 (ukuran max 1MB)</td>
+						<td class="tdTitle">Pasang Foto Tambahan 1 (max size 1MB, min 620 x 413, max 1140 x 600)</td>
 						<td><input name="image_1" id="image_1" type="file" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 2 (ukuran max 1MB)</td>
+						<td class="tdTitle">Pasang Foto Tambahan 2 (max size 1MB, min 620 x 413, max 1140 x 600)</td>
 						<td><input name="image_2" id="image_2" type="file" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 3 (ukuran max 1MB)</td>
+						<td class="tdTitle">Pasang Foto Tambahan 3 (max size 1MB, min 620 x 413, max 1140 x 600)</td>
 						<td><input name="image_3" id="image_3" type="file" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 4 (ukuran max 1MB)</td>
+						<td class="tdTitle">Pasang Foto Tambahan 4 (max size 1MB, min 620 x 413, max 1140 x 600)</td>
 						<td><input name="image_4" id="image_4" type="file" value="" size="60"></td>
 					</tr>
 					<tr class="editTR" >
-						<td class="tdTitle">Pasang Foto Tambahan 5 (ukuran max 1MB)</td>
+						<td class="tdTitle">Pasang Foto Tambahan 5 (max size 1MB, min 620 x 413, max 1140 x 600)</td>
 						<td><input name="image_5" id="image_5" type="file" value="" size="60"></td>
 					</tr>
 				</table>

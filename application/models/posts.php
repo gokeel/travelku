@@ -12,8 +12,12 @@ class Posts extends CI_Model {
 		else return false;
 	}
 	
-	function get_categories($is_paket){
-		$this->db->select('*')->from('post_categories')->where('is_package', $is_paket)->order_by('id asc');
+	function get_categories($is_paket=''){
+		$this->db->select('*');
+		$this->db->from('post_categories');
+		if($is_paket<>'')
+			$this->db->where('is_package', $is_paket);
+		$this->db->order_by('id asc');
 		$get = $this->db->get();
 		if ($get->num_rows() > 0)
 			return $get;
@@ -98,10 +102,14 @@ class Posts extends CI_Model {
 			return false;
 	}
 	
-	function get_post_by_id($id, $review=false){
-		$this->db->select('*');
+	function get_post_by_id($id, $images_additional=false){
+		$select = 'posts.*, post_categories.category as category_name';
+		if($images_additional)
+			$select .= ', post_additional_images.*';
+		$this->db->select($select);
 		$this->db->from('posts');
-		if($review)
+		$this->db->join('post_categories', 'posts.category=post_categories.id');
+		if($images_additional)
 			$this->db->join('post_additional_images', 'posts.post_id = post_additional_images.post_id','left');
 		$this->db->where('posts.post_id', $id);
 		$get = $this->db->get();

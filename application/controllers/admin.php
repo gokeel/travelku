@@ -1676,36 +1676,48 @@ class Admin extends CI_Controller {
 		$config['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config['overwrite']	= TRUE;
 		$config['max_size']	= '1000';
+		$config['max_width']	= '1140';
+		$config['max_height']	= '600';
 		
 		$config_1['upload_path'] = './assets/uploads/posts';
 		$config_1['file_name'] = 'pic_'.$this->input->post('post_id').'_1';
 		$config_1['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_1['overwrite']	= TRUE;
 		$config_1['max_size']	= '1000';
+		$config_1['max_width']	= '1140';
+		$config_1['max_height']	= '600';
 		
 		$config_2['upload_path'] = './assets/uploads/posts';
 		$config_2['file_name'] = 'pic_'.$this->input->post('post_id').'_2';
 		$config_2['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_2['overwrite']	= TRUE;
 		$config_2['max_size']	= '1000';
+		$config_2['max_width']	= '1140';
+		$config_2['max_height']	= '600';
 		
 		$config_3['upload_path'] = './assets/uploads/posts';
 		$config_3['file_name'] = 'pic_'.$this->input->post('post_id').'_3';
 		$config_3['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_3['overwrite']	= TRUE;
 		$config_3['max_size']	= '1000';
+		$config_3['max_width']	= '1140';
+		$config_3['max_height']	= '600';
 		
 		$config_4['upload_path'] = './assets/uploads/posts';
 		$config_4['file_name'] = 'pic_'.$this->input->post('post_id').'_4';
 		$config_4['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_4['overwrite']	= TRUE;
 		$config_4['max_size']	= '1000';
+		$config_4['max_width']	= '1140';
+		$config_4['max_height']	= '600';
 		
 		$config_5['upload_path'] = './assets/uploads/posts';
 		$config_5['file_name'] = 'pic_'.$this->input->post('post_id').'_5';
 		$config_5['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_5['overwrite']	= TRUE;
 		$config_5['max_size']	= '1000';
+		$config_5['max_width']	= '1140';
+		$config_5['max_height']	= '600';
 		
 		$id = $this->input->post('post_id');
 		
@@ -1831,6 +1843,7 @@ class Admin extends CI_Controller {
 				'star_rating' => $row['star_rating'],
 				'is_promo' => $row['is_promo'],
 				'price' => $row['price'],
+				'purchasing_price' => $row['purchasing_price'],
 				'author' => $row['user_name'],
 				'status' => $row['status'],
 				'enabled' => $row['enabled'],
@@ -1853,36 +1866,48 @@ class Admin extends CI_Controller {
 		$config['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config['overwrite']	= TRUE;
 		$config['max_size']	= '1000';
+		$config['max_width']	= '1140';
+		$config['max_height']	= '600';
 		
 		$config_1['upload_path'] = './assets/uploads/posts';
 		$config_1['file_name'] = 'pic_'.$id.'_1';
 		$config_1['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_1['overwrite']	= TRUE;
 		$config_1['max_size']	= '1000';
+		$config_1['max_width']	= '1140';
+		$config_1['max_height']	= '600';
 		
 		$config_2['upload_path'] = './assets/uploads/posts';
 		$config_2['file_name'] = 'pic_'.$id.'_2';
 		$config_2['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_2['overwrite']	= TRUE;
 		$config_2['max_size']	= '1000';
+		$config_2['max_width']	= '1140';
+		$config_2['max_height']	= '600';
 		
 		$config_3['upload_path'] = './assets/uploads/posts';
 		$config_3['file_name'] = 'pic_'.$id.'_3';
 		$config_3['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_3['overwrite']	= TRUE;
 		$config_3['max_size']	= '1000';
+		$config_3['max_width']	= '1140';
+		$config_3['max_height']	= '600';
 		
 		$config_4['upload_path'] = './assets/uploads/posts';
 		$config_4['file_name'] = 'pic_'.$id.'_4';
 		$config_4['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_4['overwrite']	= TRUE;
 		$config_4['max_size']	= '1000';
+		$config_4['max_width']	= '1140';
+		$config_4['max_height']	= '600';
 		
 		$config_5['upload_path'] = './assets/uploads/posts';
 		$config_5['file_name'] = 'pic_'.$id.'_5';
 		$config_5['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config_5['overwrite']	= TRUE;
 		$config_5['max_size']	= '1000';
+		$config_5['max_width']	= '1140';
+		$config_5['max_height']	= '600';
 		
 		$image_file = '';
 		if ($_FILES['image']['name']<>''){
@@ -1996,7 +2021,8 @@ class Admin extends CI_Controller {
 			'is_promo' => $this->input->post('is_promo'),
 			'shown_in_image_slider' => $this->input->post('shown_in_image_slider'),
 			'mini_slogan' => $this->input->post('mini_slogan'),
-			'currency' => $this->input->post('currency')
+			'currency' => $this->input->post('currency'),
+			'purchasing_price' => $this->input->post('purchasing_price')
 		);
 		if($image_file <> '')
 			$data['image_file'] = $image_file;
@@ -2068,6 +2094,7 @@ class Admin extends CI_Controller {
 				'is_promo' => $row['is_promo'],
 				'currency' => $row['currency'],
 				'price' => $row['price'],
+				'purchasing_price' => $row['purchasing_price'],
 				'status' => $row['status'],
 				'enabled' => $row['enabled']				,
 				'image' => $row['image_file'],
