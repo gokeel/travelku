@@ -23,7 +23,7 @@
 				<ul class="footerlistblack">
 					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/faq">Frequently Asked Questions</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/tentang-kami">Tentang Kami</a></li>
-					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/agent-information">Keagenan</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/menjadi-agen">Keagenan</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/syarat-ketentuan">Syarat dan Ketentuan</a></li>
 				</ul>
 			</div>
