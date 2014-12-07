@@ -305,6 +305,28 @@ class Posts extends CI_Model {
 		else
 			return false;
 	}
+	
+	function show_non_paket_by_type($type){
+		$this->db->select('posts.title, posts.content, post_categories.category, post_categories.description');
+		$this->db->from('posts');
+		$this->db->join('post_categories', 'posts.category=post_categories.id');
+		$this->db->where('is_package', 'false');
+		$this->db->where('post_categories.category', $type);
+		$get = $this->db->get();
+		if ($get->num_rows() > 0)
+			return $get;
+		else
+			return false;
+	}
+	
+	function nonpaket_categories_exclude_existing(){
+		//this procedure will load the categories for non paket, AND exclude categories that already exist in posts
+		$get = $this->db->query("select * from post_categories where id not in (select category from posts) and is_package = 'false'");
+		if ($get->num_rows() > 0)
+			return $get;
+		else
+			return false;
+	}
 }
 
 ?>

@@ -359,7 +359,7 @@
 						</div>\
 						<div class="line3"></div>\
 						<div class="padding30">\
-							<span class="left size14 dark">Trip Total:</span>\
+							<span class="left size14 dark">Trip Total:</span><br/><span style="font-size:9px"><i>*sebelum kena pajak dan biaya servis</i></span>\
 							<span class="right lred2 bold size18">IDR '+currency_separator(total_price,'.')+'</span>\
 							<div class="clearfix"></div>\
 						</div>\

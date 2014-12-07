@@ -381,16 +381,6 @@ class Webfront extends CI_Controller {
 				$data[$key] = $val;
 		}
 		
-		// get bank list
-		$this->load->model('bank');
-		$bank = $this->bank->get_all_bank();
-		$index = 0;
-		foreach ($bank->result_array() as $row){
-			$data['bank'][$index]['id'] = $row['bank_id'];
-			$data['bank'][$index]['image'] = $row['bank_logo'];
-			$index++;
-		}
-		
 		$this->load->view($theme_name.'/'.$view, $data);
 	}
 	public function show_packages(){
@@ -550,7 +540,8 @@ class Webfront extends CI_Controller {
 		
 		$this->load_theme('package_details', $data);
 	}
-	function get_paket_pesawat_list(){
+	
+	public function get_paket_sidebar_left(){
 		//get paket pesawat
 		$this->load->model('posts');
 		$pesawat = $this->posts->show_post_by_category(explode('-','pesawat'), '0', '20');
@@ -566,30 +557,58 @@ class Webfront extends CI_Controller {
 		}
 		else
 			$data['pesawat_status'] = '204';
-	
+			
+		//get the promo content
+		$index = 0;
+		$promo = $this->posts->show_post_in_promo('0', '3');
+		foreach($promo->result_array() as $row){
+			$data['promo'][$index]['id'] = $row['post_id'];
+			$data['promo'][$index]['category'] = ucwords($row['category_name']);
+			$data['promo'][$index]['image'] = $row['image_file'];
+			$data['promo'][$index]['title'] = $row['title'];
+			$data['promo'][$index]['star_rating'] = $row['star_rating'];
+			$data['promo'][$index]['currency'] = $row['currency'];
+			$data['promo'][$index]['price'] = number_format($row['price'],0,',','.');
+			$index++;
+		}
+		//get regular packages
+		$index = 0;
+		$regular = $this->posts->show_package_regular('0', '3');
+		foreach($regular->result_array() as $row){
+			$data['regular'][$index]['id'] = $row['post_id'];
+			$data['regular'][$index]['category'] = ucwords($row['category_name']);
+			$data['regular'][$index]['image'] = $row['image_file'];
+			$data['regular'][$index]['title'] = $row['title'];
+			$data['regular'][$index]['star_rating'] = $row['star_rating'];
+			$data['regular'][$index]['currency'] = $row['currency'];
+			$data['regular'][$index]['price'] = number_format($row['price'],0,',','.');
+			$index++;
+		}
+		
 		return $data;
 	}
+	
 	public function show_flight_list(){
-		//get pesawat list
-		$data = $this->get_paket_pesawat_list();
+		//get sidebar list
+		$data = $this->get_paket_sidebar_left();
 		
 		$this->load_theme('flight_list', $data);
 	}
 	public function show_flight_return_list(){
-		//get pesawat list
-		$data = $this->get_paket_pesawat_list();
+		//get sidebar list
+		$data = $this->get_paket_sidebar_left();
 		
 		$this->load_theme('flight_list_return', $data);
 	}
 	public function show_hotel_tiketcom_list(){
-		//get pesawat list
-		$data = $this->get_paket_pesawat_list();
+		//get sidebar list
+		$data = $this->get_paket_sidebar_left();
 		
 		$this->load_theme('hotel_tiketcom_list', $data);
 	}
 	public function hotel_tiketcom_detail(){
-		//get pesawat list
-		$data = $this->get_paket_pesawat_list();
+		//get sidebar list
+		$data = $this->get_paket_sidebar_left();
 		
 		$this->load_theme('hotel_tiketcom_room_detail', $data);
 	}
@@ -607,6 +626,28 @@ class Webfront extends CI_Controller {
 	}
 	public function agent_registration(){
 		$this->load_theme('agent_registration');
+	}
+	public function load_non_paket(){
+		$type = $this->uri->segment(3);
+		$this->load->model('posts');
+		$query = $this->posts->show_non_paket_by_type($type);
+		if($query==false){
+			$data = array(
+					'title' => 'Not Found',
+					'content' => 'Halaman tidak ditemukan'
+				);
+		}
+		else{
+			foreach($query->result_array() as $row){
+				$data = array(
+					'title' => $row['title'],
+					'content' => $row['content'],
+					'category' => $row['category']
+				);
+			}
+		}
+				
+		$this->load_theme('content_non_paket', $data);
 	}
 	public function load_faq_content(){
 		$this->load_theme('faq');

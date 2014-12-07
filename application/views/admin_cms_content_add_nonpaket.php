@@ -40,6 +40,6 @@
 	$(".editor").jqte();
 	
 	$( window ).load(function() {
-		simple_load('<?php echo base_url();?>index.php/admin/get_content_categories/false', '#category', '');
+		simple_load('<?php echo base_url();?>index.php/admin/get_nonpaket_categories', '#category', '');
 	})
 </script>

@@ -109,15 +109,11 @@
 					else if($status=='200' and $category=='hotel'){
 						echo '<ul class="leftatr">
 								<li>ID Pesanan</li>
-								<li>Harga Tiket</li>
-								<li>Pajak</li>
-								<li>Total</li>
+								<li>Total <span style="font-size:9px;"><i>*Termasuk pajak</i></span></li>
 							</ul>';
 									
 						echo '<ul class="rightatr">
 								<li>'.$order_id.'</li>
-								<li>IDR '.number_format($price,0,',','.').'</li>
-								<li>IDR '.number_format($tax,0,',','.').'</li>
 								<li>IDR '.number_format($total_price,0,',','.').'</li>
 							</ul>';
 									

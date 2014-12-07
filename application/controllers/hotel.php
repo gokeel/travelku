@@ -149,7 +149,7 @@ class Hotel extends CI_Controller {
 						'category' => 'hotel',
 						'token' => $response_order->token,
 						'delete_uri' => $myorder->data[0]->delete_uri,
-						'price_no_discount' => $total_before,
+						'price_no_discount' => intval($myorder->total_without_tax),
 						'price_with_discount' => $total_before - intval($myorder->discount_amount),
 						'status' => 'checkout'
 					);
@@ -163,9 +163,7 @@ class Hotel extends CI_Controller {
 						'category' => 'hotel',
 						'internal_order_id' => $internal_order_id,
 						'order_id' => $myorder->order_id,
-						'price' => $myorder->total_without_tax,
-						'tax' => $myorder->total_tax,
-						'total_price' => $total_before,
+						'total_price' => $myorder->total,
 						'checkout_uri' => $response_order->checkout,
 						'token' => $response_order->token,
 						'detail_id' => $myorder->data[0]->order_detail_id,

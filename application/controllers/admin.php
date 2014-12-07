@@ -386,8 +386,8 @@ class Admin extends CI_Controller {
 	public function content_add_nonpaket_page(){
 		if($this->check_session('administrator')){
 			//create a blank row and insert to post, finally get the inserted ID
-		$get_id = $this->posts->add_blank_post();
-		$this->page('admin_cms_content_add_nonpaket', array('id' => $get_id));
+			$get_id = $this->posts->add_blank_post();
+			$this->page('admin_cms_content_add_nonpaket', array('id' => $get_id));
 		}
 		else
 			$this->no_right_access();
@@ -1490,6 +1490,25 @@ class Admin extends CI_Controller {
 	public function get_content_categories(){
 		$is_paket = $this->uri->segment(3);
 		$get = $this->posts->get_categories($is_paket);
+		$number_row=0;
+		foreach ($get->result_array() as $row){
+			$number_row++;
+			$data[] = array(
+				'number_row' => $number_row,
+				'id' => $row['id'],
+				'category' => $row['category'],
+				'description' => $row['description'],
+				'removable' => $row['removable'],
+				'value' => $row['id'],
+				'name' => $row['category'],
+				'is_package' => $row['is_package']
+			);
+		}
+		echo json_encode($data);
+	}
+	
+	public function get_nonpaket_categories(){
+		$get = $this->posts->nonpaket_categories_exclude_existing();
 		$number_row=0;
 		foreach ($get->result_array() as $row){
 			$number_row++;

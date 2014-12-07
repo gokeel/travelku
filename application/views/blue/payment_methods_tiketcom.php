@@ -202,7 +202,7 @@
 					var nav_konten_index = 0;
 					var nav_konten = '<div class="tab-content4">';
 					for(var i=0;i<data.list.length;i++){
-						if(data.list[i].link!="#"){
+						if(data.list[i].text=="KlikBCA"){
 							nav_index += 1;
 							nav_konten_index += 1;
 							if(nav_index==1){
@@ -214,6 +214,8 @@
 								nav_konten += '<div class="tab-pane" id="method'+i+'">';
 							}
 							
+							discount = parseInt(data.price_no_discount) - parseInt(data.price_with_discount);
+							
 							nav_konten += '<div class="col-md-4 textright">\
 												<div class="margtop15"><span class="dark">ID Pesanan:</span></div>\
 											</div>\
@@ -222,20 +224,34 @@
 											</div>\
 											<div class="col-md-4 textleft"></div>\
 											<div class="clearfix"></div><br/>';
-							if(data.list[i].text=="Kartu Kredit" || data.list[i].text=="Credit Card")
-								price = data.price_no_discount;
-							else
-								price = data.price_with_discount;
 								
+							nav_konten += '<div class="col-md-4 textright">\
+												<div class="margtop15"><span class="dark">Harga + Bagasi + Pajak:</span></div>\
+											</div>\
+											<div class="col-md-4">\
+												<div class="margtop15"><span class="dark">IDR '+currency_separator(data.price_no_discount, '.')+'</span></div>\
+											</div>\
+											<div class="col-md-4 textleft"></div>\
+											<div class="clearfix"></div><br/>';
+							
+							nav_konten += '<div class="col-md-4 textright">\
+												<div class="margtop15"><span class="dark">Diskon Pembayaran:</span></div>\
+											</div>\
+											<div class="col-md-4">\
+												<div class="margtop15"><span class="dark">IDR '+currency_separator(discount, '.')+'</span></div>\
+											</div>\
+											<div class="col-md-4 textleft"></div>\
+											<div class="clearfix"></div><br/>';
+							
 							nav_konten += '<div class="col-md-4 textright">\
 												<div class="margtop15"><span class="dark">Total:</span></div>\
 											</div>\
 											<div class="col-md-4">\
-												<div class="margtop15"><span class="dark">IDR '+currency_separator(price, '.')+'</span></div>\
+												<div class="margtop15"><span class="dark">IDR '+currency_separator(data.price_with_discount, '.')+'</span></div>\
 											</div>\
 											<div class="col-md-4 textleft"></div>\
 											<div class="clearfix"></div><br/>';
-											
+														
 							nav_konten += '<div class="col-md-4 textright">\
 												<div class="margtop15"><span class="dark">Catatan:</span></div>\
 											</div>\
@@ -244,7 +260,7 @@
 											</div>\
 											<div class="clearfix"></div><br/>';
 							
-							if(data.list[i].text=="CIMB Clicks" || data.list[i].text=="ePay BRI" || data.list[i].text=="BCA KlikPay" || data.list[i].text=="Kartu Kredit" || data.list[i].text=="Credit Card"){
+							/*if(data.list[i].text=="CIMB Clicks" || data.list[i].text=="ePay BRI" || data.list[i].text=="BCA KlikPay" || data.list[i].text=="Kartu Kredit" || data.list[i].text=="Credit Card"){
 								nav_konten += '<form method="post" action="'+data.list[i].link+'&checkouttoken='+data.token+'">\
 												<div class="alert alert-info">\
 													Petunjuk cara pembayaran:<br/>\
@@ -255,7 +271,7 @@
 												</div>';
 							}
 							
-							else if(data.list[i].text=="KlikBCA"){
+							else */if(data.list[i].text=="KlikBCA"){
 								nav_konten += '<form method="post" action="<?php echo base_url();?>index.php/order/tiketcom_checkout_payment">\
 												<input type="hidden" name="method" value="'+data.list[i].text+'">\
 												<input type="hidden" name="token" value="'+data.token+'">\
@@ -281,7 +297,7 @@
 												</div>';
 							}
 							
-							else if(data.list[i].text=="ATM Transfer"){
+							/*else if(data.list[i].text=="ATM Transfer"){
 								nav_konten += '<form method="post" action="<?php echo base_url();?>index.php/order/tiketcom_checkout_payment">\
 												<input type="hidden" name="method" value="'+data.list[i].text+'">\
 												<input type="hidden" name="token" value="'+data.token+'">\
@@ -363,7 +379,7 @@
 												<button type="submit" class="bluebtn margtop20">Complete booking</button>\
 												</form>\
 											</div>';
-							}
+							}*/
 						}
 						
 					}
@@ -379,10 +395,10 @@
 											<div class="col-md-4 textleft"></div>\
 											<div class="clearfix"></div><br/>\
 											<div class="col-md-4 textright">\
-												<div class="margtop15"><span class="dark">Total:</span></div>\
+												<div class="margtop15"><span class="dark">Harga + Bagasi + Pajak:</span></div>\
 											</div>\
 											<div class="col-md-4">\
-												<div class="margtop15"><span class="dark">IDR '+currency_separator(price, '.')+'</span></div>\
+												<div class="margtop15"><span class="dark">IDR '+currency_separator(data.price_no_discount, '.')+'</span></div>\
 											</div>\
 											<div class="col-md-4 textleft"></div>\
 											<div class="clearfix"></div><br/>';

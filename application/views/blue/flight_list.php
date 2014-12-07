@@ -9,7 +9,7 @@
   <head>
   	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><?php echo $this->uri->segment(3);?> List</title>
+	<title><?php echo ucwords($this->uri->segment(3));?> List</title>
 	
     <!-- Bootstrap -->
     <link href="<?php echo BLUE_THEME_DIR;?>/dist/css/bootstrap.css" rel="stylesheet" media="screen">
@@ -96,7 +96,7 @@
 			<div class="left">
 				<ul class="bcrumbs">
 					<li>/</li>
-					<li><a href="#"><?php echo $this->uri->segment(3);?></a></li>
+					<li><a href="#"><?php echo ucwords($this->uri->segment(3));?></a></li>
 					<li>/</li>
 					<li><a href="#">Departing</a></li>
 				</ul>				

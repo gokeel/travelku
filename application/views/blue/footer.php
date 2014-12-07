@@ -18,13 +18,13 @@
 			<!-- End of column 1-->
 			
 			<div class="col-md-3">
-				<span class="ftitleblack">Travel Specialists</span>
+				<span class="ftitleblack">Informasi Umum</span>
 				<br/><br/>
 				<ul class="footerlistblack">
-					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/umrah/0/9">Paket Umroh & Haji</a></li>
-					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/tour/0/9">Paket Tour</a></li>
-					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/promo/0/9">Paket Promo</a></li>
-					<li><a href="<?php echo base_url();?>index.php/webfront/show_packages/hotel/0/9">Paket Hotel</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/faq">Frequently Asked Questions</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/tentang-kami">Tentang Kami</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/agent-information">Keagenan</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/syarat-ketentuan">Syarat dan Ketentuan</a></li>
 				</ul>
 			</div>
 			<!-- End of column 2-->		
@@ -33,7 +33,6 @@
 				<span class="ftitleblack">Layanan Tambahan</span>
 				<br/><br/>
 				<ul class="footerlistblack">
-					<li><a href="<?php echo base_url();?>index.php/webfront/load_faq_content">Keagenan</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/agent_registration">Registrasi Agen</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/confirm_payment_tiketcom">Konfirmasi Pembayaran Tiket</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/confirm_payment">Konfirmasi Pembayaran Paket</a></li>
