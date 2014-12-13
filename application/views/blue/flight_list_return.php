@@ -354,6 +354,107 @@
 			}		
 		}
 	}
+	
+	
+	function search_train(){
+		var trip = '<?php echo $this->input->get('train-trip',TRUE);?>';
+		var dari = '<?php echo $this->input->get('dari',TRUE);?>';	
+		var ke = '<?php echo $this->input->get('ke',TRUE);?>';
+		var pergi = '<?php echo $this->input->get('train-pergi',TRUE);?>';
+		var pulang = '<?php echo $this->input->get('train-pulang',TRUE);?>';
+		var dewasa = '<?php echo $this->input->get('dewasa',TRUE);?>';
+		var anak = '<?php echo $this->input->get('anak',TRUE);?>';
+		var bayi = '<?php echo $this->input->get('bayi',TRUE);?>';
+		var tid_dep = '<?php echo $this->input->get('tid_dep',TRUE);?>';
+		var dep_date = '<?php echo $this->input->get('dep_date',TRUE);?>';
+		var sc_dep = '<?php echo $this->input->get('sc_dep',TRUE);?>';
+		
+		$('#list').empty();
+		$('#result-header').empty();
+		$('#result-header').append('Hasil Pencarian Data Kereta Api "Pulang Pergi" (Urutan dari harga termurah), '+ke+' - '+dari+' Tanggal Pulang: '+pulang);
+		$('#result-header').append('<img id="progress" src="<?php echo IMAGES_DIR; ?>/spiffygif_34x34.gif" />');
+		$("#progress").show();
+		
+		var uri_pulang = (pulang!="" ? "&train-pulang="+pulang : "");
+		$.ajax({
+			type : "GET",
+			url: '<?php echo base_url();?>index.php/train/search_trains',
+			data: 'dari='+dari+'&ke='+ke+'&train-pergi='+pergi+'&train-pulang='+pulang+'&dewasa='+dewasa+'&anak='+anak+'&bayi='+bayi,
+			cache: false,
+			dataType: "json",
+			success:function(data){
+				if(data.items[0].diagnostic.status=="200"){
+					if(data.items[0].returns.result.length==0){
+						$('#result-header').append('<p>Maaf, data tidak ada untuk rute ini.<p>');
+					} 
+					else{
+						var div = $("#list");
+						var collapse_index = 0;
+						for(var i=0; i<data.items[0].returns.result.length;i++){
+							var next_url = '<?php echo base_url();?>index.php/webfront/form_passenger_tiket/train?tid_dep='+tid_dep+'&dep_date='+dep_date+'&sc_dep='+sc_dep+'&tid_ret='+data.items[0].returns.result[i].train_id+'&ret_date='+data.items[0].search_queries.return_date+'&sc_ret='+data.items[0].returns.result[i].subclass_name+'&dari='+dari+'&ke='+ke+'&dewasa='+dewasa+'&anak='+anak+'&bayi='+bayi;
+							
+							collapse_index += 1;
+							var total_price = parseInt(data.items[0].departures.result[i].price_adult)*data.items[0].search_queries.count_adult + parseInt(data.items[0].departures.result[i].price_child)*data.items[0].search_queries.count_child + parseInt(data.items[0].departures.result[i].price_infant)*data.items[0].search_queries.count_infant;
+							
+							div.append('<div id="ticketid0123" class="offset-2" >\
+								<div class="fgreenline"><b>'+data.items[0].search_queries.arr_city+'</b> <span class="farrow"></span> <b>'+data.items[0].search_queries.dep_city+'</b></div>\
+									<div class="frow1">\
+										<ul class="flightstable mt20">\
+											<li class="ft1">\
+												<span class="grey">'+data.items[0].returns.result[i].train_name+'</span><br/>\
+												Kelas <span class="grey">'+toTitleCase(data.items[0].returns.result[i].detail_class_name)+'</span><br/>\
+											</li>\
+											<li class="ft2">\
+												Berangkat<br/>\
+														<span class="grey">'+data.items[0].search_queries.return_date+'</span><br/>\
+														<span class="size16 dark bold">'+data.items[0].returns.result[i].departure_time+'</span><br/>\
+											</li>\
+											<li class="ft3">\
+												Tiba<br/>\
+														<span class="grey"></span><br/>\
+														<span class="size16 dark bold">'+data.items[0].returns.result[i].arrival_time+'</span><br/>\
+											</li>\
+											<li class="ft4">\
+												Dewasa IDR '+currency_separator(parseInt(data.items[0].returns.result[i].price_adult),'.')+'<br/><br/>Anak IDR '+currency_separator(parseInt(data.items[0].returns.result[i].price_child),'.')+'<br/><br/>Bayi IDR '+currency_separator(parseInt(data.items[0].returns.result[i].price_infant),'.')+'\
+											</li>\
+											<li class="ft5">\
+												<button class="lightbtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">More</button>\
+											</li>\
+										</ul>\
+										<div class="clearfix"></div><br/><br/>\
+										</div>\
+										<div  class="collapse frowexpand" id="collapse'+collapse_index+'">\
+											<ul class="flightstable mt20">\
+												<li class="ft1">\
+												</li>\
+												<li class="ft2">\
+													Durasi<br/>\
+													<b>'+data.items[0].returns.result[i].duration+'</b><br/>\
+												</li>\
+												<li class="ft3">Tempat Duduk Tersedia<br/><span class="grey">'+data.items[0].returns.result[i].detail_availability+'</span><br/><br/>\
+												</li>\
+												<li class="ft4">\
+												</li>\
+												<li class="ft5"><button class="hidebtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">Hide</button>\
+												</li>\
+											</ul>\
+											<div class="clearfix"></div><br/><br/>\
+										</div>\
+										<div class="fselect">\
+											<span class="size12 lightgrey">Total Harga</span> <span class="size18 green bold">IDR '+currency_separator(total_price,'.')+'</span>&nbsp; <a href="'+next_url+'"><button class="selectbtn mt1" type="button">Select</button></a>	\
+										</div>');
+							div.append('<div class="clearfix"></div><div class="offset-2"><hr class="featurette-divider3"></div>');
+						}
+					}	
+				}
+				else {
+					$('#result-header').append('<p style="color:red">'+data.items[0].diagnostic.error_msgs+'</p>');
+				}
+				$("#progress").hide();
+			}
+		})
+	}	
+
 </script>	
 
 </body>

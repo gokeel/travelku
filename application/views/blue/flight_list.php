@@ -381,8 +381,8 @@
 			foreach($get as $key => $value)
 				$input .= $key.'='.$value.'&';
 			echo 'var param = "'.$input.'";';
-			if($this->input->get('flight-trip')=='single-trip'){
-				$url = base_url('index.php/webfront/form_passenger_tiket/train/');
+			if($this->input->get('train-trip')=='single-trip'){
+				$url = base_url('index.php/webfront/form_passenger_tiket/train?'.$input);
 				$translate = 'Sekali Jalan';
 			}
 			else{
@@ -412,26 +412,34 @@
 			var compare_date;
 			<?php
 				$pergi = date_create($this->input->get('train-pergi', TRUE));
-				$pulang = date_create($this->input->get('train-pulang', TRUE));
-				if($pulang >= $pergi)
-					echo 'compare_date = "ok";';
+				if ($this->input->get('train-pulang', TRUE)<>''){
+					$pulang = date_create($this->input->get('train-pulang', TRUE));
+					if($pulang >= $pergi)
+						echo 'compare_date = "ok";';
+					else
+						echo 'compare_date = "Tanggal pulang minimal harus sama atau lebih besar dari tanggal pergi. Silahkan pilih tanggal lain.";';
+				}
 				else
-					echo 'compare_date = "Tanggal pulang minimal harus sama atau lebih besar dari tanggal pergi. Silahkan pilih tanggal lain.";';
+					echo 'compare_date = "ok";';
 			?>
 			if(compare_date!='ok')
 				$('#result-header').append('<p style="color:red">'+compare_date+'</p>');
 			else{
+				var diff_date_pulang = 0; // dideklarasi untuk date pulang
 				<?php
 					$now = date_create(date('Y-m-d'));
 							
 					$interval_pergi = date_diff($now, $pergi);
-					$interval_pulang = date_diff($now, $pulang);
 					$diff_pergi = intval($interval_pergi->format('%a'));
-					$diff_pulang = intval($interval_pulang->format('%a'));
 					echo 'var diff_date_pergi = '.$diff_pergi.';';
-					echo 'var diff_date_pulang = '.$diff_pulang.';';
+					
+					if ($this->input->get('train-pulang', TRUE)<>''){
+						$interval_pulang = date_diff($now, $pulang);
+						$diff_pulang = intval($interval_pulang->format('%a'));
+						echo 'diff_date_pulang = '.$diff_pulang.';';
+					}
 				?>
-				if(diff_date_pergi>90 || diff_date_pulang>90)
+				if(diff_date_pergi>90 || (diff_date_pulang>90 && diff_date_pulang != 0))
 					$('#result-header').append('<p style="color:red">Tanggal keberangkatan/kepulangan tidak lebih dari 90 hari</p>');
 				else{
 					var uri_pulang = (pulang!="" ? "&train-pulang="+pulang : "");
@@ -451,11 +459,12 @@
 								var collapse_index = 0;
 								for(var i=0; i<data.items[0].departures.result.length;i++){
 									if(trip=='single-trip')
-										var next_url = '<?php echo $url;?>/'+data.items[0].departures.result[i].train_id+'/'+data.items[0].search_queries.date;
+										var next_url = '<?php echo $url;?>tid_dep='+data.items[0].departures.result[i].train_id+'&dep_date='+data.items[0].search_queries.date+'&sc_dep='+data.items[0].departures.result[i].subclass_name;
 									else
-										var next_url = '<?php echo $url;?>flight_id='+data.items[0].departures.result[i].train_id+'&dep_date='+data.items[0].search_queries.date;
+										var next_url = '<?php echo $url;?>tid_dep='+data.items[0].departures.result[i].train_id+'&dep_date='+data.items[0].search_queries.date+'&sc_dep='+data.items[0].departures.result[i].subclass_name;
 									
-									var total_price = parseInt(data.items[0].departures.result[i].price_adult)*data.items[0].search_queries.count_adult + parseInt(data.items[0].departures.result[i].price_child)*data.items[0].search_queries.count_child + parseInt(data.items[0].departures.result[i].price_infant)*data.items[0].search_queries.count_infant;									
+									var total_price = parseInt(data.items[0].departures.result[i].price_adult)*data.items[0].search_queries.count_adult + parseInt(data.items[0].departures.result[i].price_child)*data.items[0].search_queries.count_child + parseInt(data.items[0].departures.result[i].price_infant)*data.items[0].search_queries.count_infant;
+									
 									collapse_index += 1;
 									div.append('<div id="ticketid0123" class="offset-2" >\
 										<div class="fblueline"><b>'+data.items[0].search_queries.dep_city+'</b> <span class="farrow"></span> <b>'+data.items[0].search_queries.arr_city+'</b></div>\
@@ -463,6 +472,7 @@
 												<ul class="flightstable mt20">\
 													<li class="ft1">\
 														<span class="grey">'+data.items[0].departures.result[i].train_name+'</span><br/>\
+														Kelas: <span class="grey">'+toTitleCase(data.items[0].departures.result[i].detail_class_name)+'</span>\
 													</li>\
 													<li class="ft2">\
 														Berangkat<br/>\
@@ -475,8 +485,7 @@
 														<span class="size16 dark bold">'+data.items[0].departures.result[i].arrival_time+'</span><br/>\
 													</li>\
 													<li class="ft4">\
-														Kelas<br/>\
-														<span class="grey">'+toTitleCase(data.items[0].departures.result[i].detail_class_name)+'</span><br/>\
+														Dewasa IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_adult),'.')+'<br/><br/>Anak IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_child),'.')+'<br/><br/>Bayi IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_infant),'.')+'\
 													</li>\
 													<li class="ft5">\
 														<button class="lightbtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">More</button>\
@@ -494,7 +503,7 @@
 														</li>\
 														<li class="ft3">Tempat Duduk Tersedia<br/><span class="grey">'+data.items[0].departures.result[i].detail_availability+'</span><br/><br/>\
 														</li>\
-														<li class="ft4">Dewasa IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_adult),'.')+'<br/><br/>Anak IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_child),'.')+'<br/><br/>Bayi IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_infant),'.')+'<br/><br/>\
+														<li class="ft4">\
 														</li>\
 														<li class="ft5"><button class="hidebtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">Hide</button>\
 														</li>\

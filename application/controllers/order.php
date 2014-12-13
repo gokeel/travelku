@@ -272,7 +272,7 @@ class Order extends CI_Controller {
 				list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-order-request');
 				//sending email
 				$email_config = array(
-					'protocol' => 'sendmail',
+					'protocol' => 'mail',
 					'mailpath' => '/usr/sbin/sendmail',
 					'charset' => 'iso-8859-1',
 					'wordwrap' => TRUE,
@@ -452,7 +452,7 @@ class Order extends CI_Controller {
 				list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-order-request');
 				//sending email
 				$email_config = array(
-					'protocol' => 'sendmail',
+					'protocol' => 'mail',
 					'mailpath' => '/usr/sbin/sendmail',
 					'charset' => 'iso-8859-1',
 					'wordwrap' => TRUE,
@@ -600,7 +600,7 @@ class Order extends CI_Controller {
 				list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-order-request');
 				//sending email
 				$email_config = array(
-					'protocol' => 'sendmail',
+					'protocol' => 'mail',
 					'mailpath' => '/usr/sbin/sendmail',
 					'charset' => 'iso-8859-1',
 					'wordwrap' => TRUE,
@@ -1137,7 +1137,7 @@ class Order extends CI_Controller {
 		list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-order-request');
 		//sending email
 		$email_config = array(
-			'protocol' => 'sendmail',
+			'protocol' => 'mail',
 			'mailpath' => '/usr/sbin/sendmail',
 			'charset' => 'iso-8859-1',
 			'wordwrap' => TRUE,
@@ -1294,18 +1294,19 @@ class Order extends CI_Controller {
 				);
 			}
 			else{ //jika sukses
-				$total_before = intval($myorder->total_without_tax) + intval($myorder->total_tax);
+				$total_before_discount = intval($myorder->total_without_tax) + intval($myorder->total_tax);
+				$total_after_discount = $total_before_discount - intval($myorder->discount_amount);
 					//save to db
 				$data_insert = array(
 					'order_id' => $response_order->myorder->order_id,
 					'category' => 'train',
 					'token' => $response_order->token,
 					'delete_uri' => $myorder->data[0]->delete_uri,
-					'price_no_discount' => $total_before,
+					'price_no_discount' => $total_before_discount,
+					'price_with_discount' => $total_after_discount,
 					'status' => 'checkout'
 				);
 				$internal_order_id = $this->orders->add_order_tiketcom($data_insert);
-					
 				//generate success page
 					
 				$response = array(
@@ -1316,10 +1317,11 @@ class Order extends CI_Controller {
 					'order_id' => $myorder->order_id,
 					'price' => $myorder->total_without_tax,
 					'tax' => $myorder->total_tax,
-					'total_price' => $total_before,
-					'checkout_uri' => $response_order->checkout,
-					'token' => $response_order->token,
-					'detail_id' => $myorder->data[0]->order_detail_id
+					'total_price' => $total_before_discount,
+					'checkout_uri' => 'checkout_uri='.$response_order->checkout.'&token='.$response_order->token,
+					'detail_id' => $myorder->data[0]->order_detail_id,
+					'discount' => $myorder->discount_amount,
+					'after_discount' => $total_before_discount - intval($myorder->discount_amount)
 				);
 			}
 		}
@@ -1344,7 +1346,7 @@ class Order extends CI_Controller {
 		else{ //jika sukses
 			$cc_uri = $response->next_checkout_uri.'?';
 			$token = $response->token;
-			$param = 'token='.$token.'&salutation=Mr&firstName=admin&lastName=hellotraveler&emailAddress=tiketcom@hellotraveler.co.id&phone=%2B628123081785&saveContinue=2&lang=id&output=json';
+			$param = 'token='.$token.'&salutation=Mr&firstName=admin&lastName=travelku&emailAddress=tiketcom@travelku.co&phone=%2B628123081785&saveContinue=2&lang=id&output=json';
 			$cc_url = $cc_uri.$param;
 			$send_request_2 = file_get_contents($cc_url);
 			$response_2 = json_decode($send_request_2);

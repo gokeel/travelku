@@ -6,7 +6,7 @@
 		Username: <?php echo $username;?><br />
 		Password: <?php echo $password;?></p>
 		<p></p>
-		<p>Proses pengadaan web subdomain anda akan kami proses secepatnya, paling lambat 1x24 jam.</p>
+		<p>Proses pengadaan web subdomain anda akan kami proses secepatnya, paling lambat 1x24 jam setelah melalui proses <i>approval</i>.</p>
 		<p></p>
 		<p>Salam,<br />
 			Admin</p>

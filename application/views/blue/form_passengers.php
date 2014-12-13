@@ -488,7 +488,7 @@
 			}
 		});
 	}
-	/*function get_detail_train(){
+	function get_detail_train(){
 		<?php
 			$train_id = $this->input->get('tid_dep', TRUE);
 			echo 'var train_id = "'.$train_id.'";';
@@ -498,11 +498,11 @@
 			echo 'var from = "'.$from.'";';
 			$to = $this->input->get('ke', TRUE);
 			echo 'var to = "'.$to.'";';
-			$adult = $this->input->get('adult', TRUE);
+			$adult = $this->input->get('dewasa', TRUE);
 			echo 'var adult = "'.$adult.'";';
-			$child = $this->input->get('child', TRUE);
+			$child = $this->input->get('anak', TRUE);
 			echo 'var child = "'.$child.'";';
-			$infant = $this->input->get('infant', TRUE);
+			$infant = $this->input->get('bayi', TRUE);
 			echo 'var infant = "'.$infant.'";';
 			$train_id_ret = $this->input->get('tid_ret', TRUE);
 			echo 'var train_id_ret = "'.$train_id_ret.'";';
@@ -515,6 +515,8 @@
 			$request = 'dari='.$from.'&ke='.$to.'&train-pergi='.$date_dep.'&dewasa='.$adult.'&anak='.$child.'&bayi='.$infant.'&train-pulang='.$date_ret;
 			echo 'var train_id = "'.$train_id.'";';
 		?>
+		$('#form-passenger').empty();
+		var total_price = 0;
 		$.ajax({
 			type : "GET",
 			url: "<?php echo base_url('index.php/train/search_trains');?>",
@@ -524,13 +526,31 @@
 			success:function(data){
 				for(var i=0; i<data.items[0].departures.result.length;i++){
 					if (train_id == data.items[0].departures.result[i].train_id && subclass_dep==data.items[0].departures.result[i].subclass_name){
-						var total_price_adult = adult * data.items[0].departures.result[i].price_adult;
-						var total_price_child = child * data.items[0].departures.result[i].price_child;
-						var total_price_infant = infant * data.items[0].departures.result[i].price_infant;
-						var total_price = total_price_adult + total_price_child + total_price_infant;// + admin_fee;
-						$('#detail').empty();
+						var total_price_adult_dep = adult * data.items[0].departures.result[i].price_adult;
+						var total_price_child_dep = child * data.items[0].departures.result[i].price_child;
+						var total_price_infant_dep = infant * data.items[0].departures.result[i].price_infant;
+						var total_price_dep = total_price_adult_dep + total_price_child_dep + total_price_infant_dep;// + admin_fee;
+						total_price += total_price_dep;
+						
+						var departure_summary = '<div>\
+								<p>'+data.items[0].departures.result[i].train_name+'</p><br/>\
+								<div class="wh33percent left size12 bold dark">'+data.items[0].search_queries.dep_city+'</div>\
+								<div class="wh33percent left center size12 bold dark">Durasi</div>\
+								<div class="wh33percent right textright size12 bold dark">'+data.items[0].search_queries.arr_city+'</div>\
+								<div class="clearfix"></div>\
+								<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
+								<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
+								<div class="clearfix"></div>\
+								<div class="fline2px"></div>\
+								<div class="wh33percent left size12">'+data.items[0].departures.result[i].departure_time+'</div>\
+								<div class="wh33percent left center size12">'+data.items[0].departures.result[i].duration+'</div>\
+								<div class="wh33percent right textright size12">'+data.items[0].departures.result[i].arrival_time+'</div>\
+								<div class="clearfix"></div>\
+							</div>';
+						
+						
 						/*create input contains data*/
-	/*					$('#detail').append('\
+						$('#form-passenger').append('\
 						<input type="hidden" name="train_id" value="'+data.items[0].departures.result[i].train_id+'">\
 						<input type="hidden" name="subclass" value="'+data.items[0].departures.result[i].subclass_name+'">\
 						<input type="hidden" name="d" value="'+data.items[0].search_queries.dep_station+'">\
@@ -540,70 +560,241 @@
 						<input type="hidden" name="adult" value="'+adult+'">\
 						<input type="hidden" name="child" value="'+child+'">\
 						<input type="hidden" name="infant" value="'+infant+'">\
+						<input type="hidden" name="train_id_ret" value="'+train_id_ret+'">\
+						<input type="hidden" name="subclass_ret" value="'+subclass_ret+'">\
+						<input type="hidden" name="ret_date" value="'+date_ret+'">\
 						');
-						/*fetch data*/
-	/*					var table_start = '<table id="passenger">';
-						var content = '<tr>\
-									<td><p><strong>'+data.items[0].departures.result[i].train_name+' (subclass: '+data.items[0].departures.result[i].subclass_name+')</strong></p>\
-										<p>Tanggal: '+date_dep+'</p>\
-										<p>Departure-Arrival: '+data.items[0].departures.result[i].departure_time+'-'+data.items[0].departures.result[i].arrival_time+'</p>\
-									</td>\
-									<td style="padding-left:15px;">\
-									<p><strong>Rincian Harga:</strong></p>\
-										<ul style="list-style-type:square; margin-left: 20px;">\
-										<li>Dewasa: '+adult+' x '+currency_separator(data.items[0].departures.result[i].price_adult, '.')+' = '+currency_separator(total_price_adult, '.')+'</li>\
-										<li>Anak: '+child+' x '+currency_separator(data.items[0].departures.result[i].price_child, '.')+' = '+currency_separator(total_price_child, '.')+'</li>\
-										<li>Bayi: '+infant+' x '+currency_separator(data.items[0].departures.result[i].price_infant, '.')+' = '+currency_separator(total_price_infant, '.')+'</li>\
-										</ul>\
-									<p>Total harus dibayar: IDR <strong>'+currency_separator(total_price, '.')+'</strong></p>\
-									</td>\
-								</tr>';
-						var table_end = '</table>';
 					}
-					if(train_id_ret!=''){
+					
+						
+				} // end for
+				var return_summary ='';var return_price_summary ='';
+				if(train_id_ret!=''){
+					for(var i=0; i<data.items[0].departures.result.length;i++){
 						if (train_id_ret == data.items[0].returns.result[i].train_id  && subclass_ret==data.items[0].returns.result[i].subclass_name){
 							var total_price_adult_ret = adult * data.items[0].returns.result[i].price_adult;
 							var total_price_child_ret = child * data.items[0].returns.result[i].price_child;
 							var total_price_infant_ret = infant * data.items[0].returns.result[i].price_infant;
 							var total_price_ret = total_price_adult_ret + total_price_child_ret + total_price_infant_ret;// + admin_fee;
-							
-							/*create input contains data*/
-	/*						$('#detail').append('\
-							<input type="hidden" name="train_id_ret" value="'+data.items[0].returns.result[i].train_id+'">\
-							<input type="hidden" name="subclass_ret" value="'+data.items[0].returns.result[i].subclass_name+'">\
-							<input type="hidden" name="ret_date" value="'+data.items[0].search_queries.return_date+'">\
-							');
-							/*fetch data*/
-	/*						content = content + '<tr>\
-										<td style="padding-top:15px"><p><strong>'+data.items[0].returns.result[i].train_name+' (subclass: '+data.items[0].returns.result[i].subclass_name+')</strong></p>\
-											<p>Tanggal: '+date_ret+'</p>\
-											<p>Departure-Arrival: '+data.items[0].returns.result[i].departure_time+'-'+data.items[0].returns.result[i].arrival_time+'</p>\
-										</td>\
-										<td style="padding-top:15px";padding-left:15px;">\
-										<p><strong>Rincian Harga:</strong></p>\
-											<ul style="list-style-type:square; margin-left: 20px;">\
-											<li>Dewasa: '+adult+' x '+currency_separator(data.items[0].returns.result[i].price_adult, '.')+' = '+currency_separator(total_price_adult, '.')+'</li>\
-											<li>Anak: '+child+' x '+currency_separator(data.items[0].returns.result[i].price_child, '.')+' = '+currency_separator(total_price_child, '.')+'</li>\
-											<li>Bayi: '+infant+' x '+currency_separator(data.items[0].returns.result[i].price_infant, '.')+' = '+currency_separator(total_price_infant, '.')+'</li>\
-											</ul>\
-										<p>Total harus dibayar: IDR <strong>'+currency_separator(total_price, '.')+'</strong></p>\
-										</td>\
-									</tr>';
+							total_price += total_price_ret;
+								
+							return_summary = '<div>\
+								<p>'+data.items[0].returns.result[i].train_name+'</p><br/>\
+								<div class="wh33percent left size12 bold dark">'+data.items[0].search_queries.arr_city+'</div>\
+								<div class="wh33percent left center size12 bold dark">Durasi</div>\
+								<div class="wh33percent right textright size12 bold dark">'+data.items[0].search_queries.dep_city+'</div>\
+								<div class="clearfix"></div>\
+								<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
+								<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
+								<div class="clearfix"></div><div class="fline2px"></div>\
+								<div class="wh33percent left size12">'+data.items[0].returns.result[i].departure_time+'</div>\
+								<div class="wh33percent left center size12">'+data.items[0].returns.result[i].duration+'</div>\
+								<div class="wh33percent right textright size12">'+data.items[0].returns.result[i].arrival_time+'</div>\
+								<div class="clearfix"></div>\
+							</div>';
+							//check total passenger by age
+							var penumpang = '';var harga = '';
+							if(adult > 0){
+								penumpang += adult + ' x Dewasa<br/>';
+								harga += 'IDR '+currency_separator(total_price_adult_ret,'.')+'<br/>';
+							}
+							if(child > 0){
+								penumpang += child + ' x Anak<br/>';
+								harga += 'IDR '+currency_separator(total_price_child_ret,'.')+'<br/>';
+							}
+							if(infant > 0){
+								penumpang += infant + ' x Anak';
+								harga += 'IDR '+currency_separator(total_price_infant_ret,'.');
+							}
+							return_price_summary = 'Returning: Total <span class="right bold green">IDR '+currency_separator(total_price_ret,'.')+'</span>\
+								<button type="button" class="collapsebtn3 collapsed mt-5" data-toggle="collapse" data-target="#collapse2"></button>\
+								<div id="collapse2" class="collapse">\
+									<div class="left size14">\
+										'+penumpang+'\
+									</div>\
+									<div class="right size14">\
+										'+harga+'\
+									</div><div class="clearfix"></div>\
+								</div>';
 						}
+					}						
+				} // end if returning
+				
+				//create trip summary
+				$('#trip-summary').empty();
+				/* TRIP SUMMARY*/
+				//check total passenger by age
+				var penumpang = '';var harga = '';
+				if(adult > 0){
+					penumpang += adult + ' x Dewasa<br/>';
+					harga += 'IDR '+currency_separator(total_price_adult_dep,'.')+'<br/>';
+				}
+				if(child > 0){
+					penumpang += child + ' x Anak<br/>';
+					harga += 'IDR '+currency_separator(total_price_child_dep,'.')+'<br/>';
+				}
+				if(infant > 0){
+					penumpang += infant + ' x Anak';
+					harga += 'IDR '+currency_separator(total_price_infant_dep,'.');
+				}
+				$('#trip-summary').append('<div class="padding20"><span class="opensans size18 dark bold">Trip Summary</span></div>\
+					<div class="line3"></div>\
+					<div class="hpadding30 margtop30">\
+					'+departure_summary+'<br/><br/>\
+					'+return_summary+'\
+					<br/>\
+					<div class="fdash mt10"></div><br/>\
+					Departing: Total <span class="right bold green">IDR '+currency_separator(total_price_dep,'.')+'</span>\
+					<button type="button" class="collapsebtn3 collapsed mt-5" data-toggle="collapse" data-target="#collapse1"></button>\
+					<div id="collapse1" class="collapse">\
+						<div class="left size14">\
+							'+penumpang+'\
+						</div>\
+						<div class="right size14">\
+							'+harga+'\
+						</div><div class="clearfix"></div>\
+					</div>\
+					<div class="fdash mt10"></div><br/>\
+					'+return_price_summary+'\
+					<br/><br/>\
+					</div>\
+					<div class="line3"></div>\
+					<div class="padding30">\
+						<span class="left size14 dark">Trip Total:</span><br/><span style="font-size:9px"><i>*sebelum kena pajak dan biaya servis</i></span>\
+						<span class="right lred2 bold size18">IDR '+currency_separator(total_price,'.')+'</span>\
+						<div class="clearfix"></div>\
+					</div>\
+				');
+					
+				//create the forms
+				var numbering = 1;
+				var form = '<div class="padding30 grey">\
+								<span class="size16px bold dark left">Informasi Kontak</span>\
+								<div class="roundstep right">'+numbering+'</div>\
+								<div class="clearfix"></div>\
+								<div class="line4"></div>\
+								<span class="size13 dark">Titel</span>\
+								<select required class="form-control mySelectBoxClass" name=conSalutation>\
+									<option value="">--Pilih Title--</option><option value="Mr">Tuan</option><option value="Mrs">Nyonya</option><option value="Ms">Nona</option>\
+								</select>\
+								<span class="size13 dark">ID (KTP/SIM)</span>\
+									<input type="text" class="form-control" name="conId" placeholder="" required>\
+								<span class="size13 dark">Nama Depan</span>\
+									<input type="text" class="form-control" name="conFirstName" placeholder="" required>\
+								<span class="size13 dark">Nama Belakang</span>\
+									<input type="text" class="form-control" name="conLastName" placeholder="" required>\
+								<span class="size13 dark">Email</span>\
+									<input type="text" class="form-control" name="conEmailAddress" placeholder="" required>\
+								<span class="size13 dark">Telepon/HP</span>\
+									<input type="text" class="form-control" name="conPhone" placeholder="" required>\
+								<br/><br/>';
+				if(parseInt(adult) > 0){
+					var idx = 0;
+					for(var i=0; i<parseInt(adult); i++){
+						idx = i + 1;
+						numbering += 1;
+						form += '<span class="size16px bold dark left">Data Penumpang Dewasa</span>\
+									<div class="roundstep right">'+numbering+'</div>\
+									<div class="clearfix"></div>\
+									<div class="line4"></div>';
+						form += '<span class="size13 dark">Titel</span>\
+									<select required class="form-control mySelectBoxClass" name=salutationAdult'+idx+'>\
+										<option value="">--Pilih Title--</option><option value="Mr">Tuan</option><option value="Mrs">Nyonya</option><option value="Ms">Nona</option>\
+									</select>\
+								<span class="size13 dark">ID (KTP/ SIM/ Kartu Pelajar)</span>\
+									<input type="text" class="form-control" name="IdCardAdult'+idx+'" placeholder="" required>\
+								<span class="size13 dark">Nama Lengkap</span>\
+									<input type="text" class="form-control" name="nameAdult'+idx+'" placeholder="" required>\
+								<span class="size13 dark">Tanggal Lahir</span>\
+									<input type="text" class="form-control mySelectCalendar" name="birthDateAdult'+idx+'" id="birthDateAdult'+idx+'" placeholder="" required>\
+								<span class="size13 dark">Telepon/HP</span>\
+									<input type="text" class="form-control" name="noHpAdult'+idx+'" placeholder="" required>\
+								<br/><br/>';
+					}
+				}
+				if(parseInt(child) > 0){
+					var idx = 0;
+					for(var i=0; i<parseInt(adult); i++){
+						idx = i + 1;
+						numbering += 1;
+						form += '<span class="size16px bold dark left">Data Penumpang Anak</span>\
+									<div class="roundstep right">'+numbering+'</div>\
+									<div class="clearfix"></div>\
+									<div class="line4"></div>';
+						form += '<span class="size13 dark">Titel</span>\
+									<select required class="form-control mySelectBoxClass" name=salutationChild'+idx+'>\
+										<option value="">--Pilih Title--</option><option value="Mstr">Tuan</option><option value="Miss">Nona</option>\
+									</select>\
+								<span class="size13 dark">Nama Lengkap</span>\
+									<input type="text" class="form-control" name="nameChild'+idx+'" placeholder="" required>\
+								<span class="size13 dark">Tanggal Lahir</span>\
+									<input type="text" class="form-control mySelectCalendar" name="birthDateChild'+idx+'" id="birthDateChild'+idx+'" placeholder="" required>\
+								<br/><br/>';
+					}
+				}
+				if(parseInt(infant) > 0){
+					var idx = 0;
+					for(var i=0; i<parseInt(infant); i++){
+						idx = i + 1;
+						numbering += 1;
+						form += '<span class="size16px bold dark left">Data Penumpang Bayi</span>\
+									<div class="roundstep right">'+numbering+'</div>\
+									<div class="clearfix"></div>\
+									<div class="line4"></div>';
+						form += '<span class="size13 dark">Titel</span>\
+									<select required class="form-control mySelectBoxClass" name=salutationInfant'+idx+'>\
+										<option value="">--Pilih Title--</option><option value="Mstr">Tuan</option><option value="Miss">Nona</option>\
+									</select>\
+								<span class="size13 dark">Nama Lengkap</span>\
+									<input type="text" class="form-control" name="nameInfant'+idx+'" placeholder="" required>\
+								<span class="size13 dark">Tanggal Lahir</span>\
+									<input type="text" class="form-control mySelectCalendar" name="birthDateInfant'+idx+'" id="birthDateInfant'+idx+'" placeholder="" required>';
 						
 					}
-				} // end for
-				//create the details
-				$('#detail').append(table_start+content+table_end);
+				}
+				numbering += 1;
+				form += '<br/><br/>\
+						<span class="size16px bold dark left">Review and book your trip</span>\
+						<div class="roundstep right">'+numbering+'</div>\
+						<div class="clearfix"></div>\
+						<div class="line4"></div>\
+						<div class="alert alert-info">\
+						Perhatian! Mohon untuk membaca informasi berikut.<br/>\
+						<p class="size12">• Tiket yang anda beli akan langsung berhubungan dengan pihak maskapai/kereta api/hotel terkait. Segala hal yang berhubungan dengan pembatalan atau perubahan jadwal atau yang lainnya, mengikuti dengan peraturan perusahaan terkait.</p>\
+						</div>\
+						By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
+						restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
+						<button type="submit" class="bluebtn margtop20">Lanjut -> Issued & Pembayaran</button>\
+						</div>';
 				
-				create_form('#pemesan', 1, 'con', 0, 'train');
-				create_form('#passenger-adult', adult, 'a', 0, 'train');
-				create_form('#passenger-child', child, 'c', 0, 'train');
-				create_form('#passenger-infant', infant, 'i', adult, 'train');
+				var first_number_adult = 2;
+				var first_number_child = (child=="0" ? first_number_adult : 2 + parseInt(adult) );
+				var first_number_infant = (infant=="0" ? first_number_child : first_number_child + parseInt(infant) );
+				var number_book = first_number_infant + 1;
+				
+				$('#form-passenger').append(form);
+				for (var i=0; i<parseInt(adult); i++){
+					idx = i+1;
+					$(function() {
+						$( "#birthDateAdult"+idx ).datepicker({"dateFormat": "yy-mm-dd"});
+					});
+				}
+				for (var i=0; i<parseInt(child); i++){
+					idx = i+1;
+					$(function() {
+						$( "#birthDateChild"+idx ).datepicker({"dateFormat": "yy-mm-dd"});
+					});
+				}
+				for (var i=0; i<parseInt(infant); i++){
+					idx = i+1;
+					$(function() {
+						$( "#birthDateInfant"+idx ).datepicker({"dateFormat": "yy-mm-dd"});
+					});
+				}
 			}
 		});
 	};
-	*/
+	
 	function get_detail_hotel(){
 		
 		//fetch the get parameters
@@ -618,22 +809,55 @@
 			
 		?>
 		$('#form-passenger').empty();
+		var form = '<div class="padding30 grey">\
+			<span class="size16px bold dark left">Informasi Kontak</span>\
+			<div class="roundstep right">1</div>\
+			<div class="clearfix"></div>\
+			<div class="line4"></div>\
+			<span class="size13 dark">Titel</span>\
+			<select required class="form-control mySelectBoxClass" name=conSalutation>\
+				<option value="">--Pilih Title--</option><option value="Mr">Tuan</option><option value="Mrs">Nyonya</option><option value="Ms">Nona</option>\
+			</select>\
+			<span class="size13 dark">ID (KTP/SIM)</span>\
+				<input type="text" class="form-control" name="conId" placeholder="" required>\
+			<span class="size13 dark">Nama Depan</span>\
+				<input type="text" class="form-control" name="conFirstName" placeholder="" required>\
+			<span class="size13 dark">Nama Belakang</span>\
+				<input type="text" class="form-control" name="conLastName" placeholder="" required>\
+			<span class="size13 dark">Email</span>\
+				<input type="text" class="form-control" name="conEmailAddress" placeholder="" required>\
+			<span class="size13 dark">Telepon/HP</span>\
+				<input\ type="text" class="form-control" name="conPhone" placeholder="" required>\
+			<br/><br/>\
+			<span class="size16px bold dark left">Review and book your trip</span>\
+			<div class="roundstep right">2</div>\
+			<div class="clearfix"></div>\
+			<div class="line4"></div>\
+			<div class="alert alert-info">\
+				Perhatian! Mohon untuk membaca informasi berikut.<br/>\
+				<p class="size12">• Tiket yang anda beli akan langsung berhubungan dengan pihak maskapai/kereta api/hotel terkait. Segala hal yang berhubungan dengan pembatalan atau perubahan jadwal atau yang lainnya, mengikuti dengan peraturan perusahaan terkait.</p>\
+			</div>\
+			By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
+			restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
+			<button type="submit" class="bluebtn margtop20">Lanjut -> Issued & Pembayaran</button>\
+		</div>';
 		/*create input contains data*/
 		$('#form-passenger').append(inputs);
-		create_form('#form-passenger', 1, 'con', 0, 'hotel');
+		$('#form-passenger').append(form);
 	};
 	
-	function create_form(el_div, n, who, tot_adult, category){
+	function create_form(el_div, n, who, tot_adult, category, numbering, last){
+		var top = '';var konten = '';var bottom = '';
 		if (n>0){
 			for (var i=0; i<n; i++){
 				idx = i + 1;
 				if (who=='con'){
-					var top = '<div class="padding30 grey">\
+					top += '<div class="padding30 grey">\
 									<span class="size16px bold dark left">Informasi Kontak</span>\
-									<div class="roundstep right">1</div>\
+									<div class="roundstep right">'+numbering+'</div>\
 									<div class="clearfix"></div>\
 									<div class="line4"></div>';
-					var konten = '<span class="size13 dark">Titel</span>\
+					konten += '<span class="size13 dark">Titel</span>\
 									<select required class="form-control mySelectBoxClass" name=conSalutation>\
 										<option value="">--Pilih Title--</option><option value="Mr">Tuan</option><option value="Mrs">Nyonya</option><option value="Ms">Nona</option>\
 									</select>\
@@ -648,105 +872,17 @@
 								<span class="size13 dark">Telepon/HP</span>\
 									<input type="text" class="form-control" name="conPhone" placeholder="" required>\
 								';
-					var bottom = '<br/><br/>\
-						<span class="size16px bold dark left">Review and book your trip</span>\
-						<div class="roundstep right">2</div>\
-						<div class="clearfix"></div>\
-						<div class="line4"></div>\
-						<div class="alert alert-info">\
-						Perhatian! Mohon untuk membaca informasi berikut.<br/>\
-						<p class="size12">• Tiket yang anda beli akan langsung berhubungan dengan pihak maskapai/kereta api/hotel terkait. Segala hal yang berhubungan dengan pembatalan atau perubahan jadwal atau yang lainnya, mengikuti dengan peraturan perusahaan terkait.</p>\
-						</div>\
-						By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
-						restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
-						<button type="submit" class="bluebtn margtop20">Lanjut -> Issued & Pembayaran</button>\
-						</div>';
-					$(el_div).append(top+konten+bottom);
 				}
-				else if(who=='a'){
-					var div = '<p align="justify"><span class="judul18">Data Penumpang Dewasa</span><br /><br /></p>\
-								<div id="passenger-adult"></div>\
-								<br /><br />';
-					var top = '<fieldset style="margin-top: 10px;">\
-						<table id="passenger">';
-					if(category=="train"){
-						var konten = '<tr>\
-								<td>Titel<span style="color:red">*</span></td>\
-								<td><select id="salutationAdult'+idx+'" name="salutationAdult'+idx+'"><option value="Mr">Tuan</option><option value="Mrs">Nyonya</option><option value="Ms">Nona</option></select></td>\
-								<td>ID Card(KTP/ SIM/ Kartu Pelajar)<span style="color:red">*</span></td>\
-								<td><input type="text" name="IdCardAdult'+idx+'"></td>\
-							</tr>\
-							<tr>\
-								<td>Nama Lengkap<span style="color:red">*</span></td>\
-								<td><input type="text" name="nameAdult'+idx+'"></td>\
-								<td></td>\
-								<td></td>\
-							</tr>\
-							<tr>\
-								<td>Tanggal Lahir<span style="color:red">*</span></td>\
-								<td><input type="text" name="birthDateAdult'+idx+'" id="birthDateAdult'+idx+'"></td>\
-								<td>Telepon/HP<span style="color:red">*</span></td>\
-								<td><input type="text" name="noHpAdult'+idx+'"></td>\
-							</tr>';
-					}
-					var bottom = '</table></fieldset>';
-					$('#input_fields').append(div+top+konten+bottom);
-					//create_select_nationality('passportnationalitya'+idx);
-					$(function() {
+				$(el_div).append(top+konten);
+				/*$(function() {
 						$( "#birthDateAdult"+idx ).datepicker({"dateFormat": "yy-mm-dd"});
 					});
-				}
-				else if(who=='c'){
-					var div = '<p align="justify"><span class="judul18">Data Penumpang Anak</span><br /><br /></p>\
-								<div id="passenger-child"></div>\
-								<br /><br />';
-					var top = '<fieldset style="margin-top: 10px;">\
-						<table id="passenger">';
-					if(category=="train"){
-						var konten = '<tr>\
-								<td>Titel<span style="color:red">*</span></td>\
-								<td><select id="salutationChild'+idx+'" name="salutationChild'+idx+'"><option value="Mstr">Tuan</option><option value="Miss">Nona</option></select></td>\
-								<td>Nama Lengkap<span style="color:red">*</span></td>\
-								<td><input type="text" name="nameChild'+idx+'"></td>\
-							</tr>\
-							<tr>\
-								<td>Tanggal Lahir<span style="color:red">*</span></td>\
-								<td><input type="text" name="birthDateChild'+idx+'" id="birthDateChild'+idx+'"></td>\
-							</tr>';
-					}
-					var bottom = '</table></fieldset>';
-					$('#input_fields').append(div+top+konten+bottom);
-					//create_select_nationality('passportnationalityc'+idx);
-					$(function() {
+				$(function() {
 						$( "#birthDateChild"+idx ).datepicker({"dateFormat": "yy-mm-dd"});
 					});
-				}
-				else if(who=='i'){
-					var div = '<p align="justify"><span class="judul18">Data Penumpang Bayi</span><br /><br /></p>\
-								<div id="passenger-infant"></div>\
-								<br /><br />';
-					var top = '<fieldset style="margin-top: 10px;">\
-						<table id="passenger">';
-					if(category=="train"){
-						var konten = '<tr>\
-								<td>Titel<span style="color:red">*</span></td>\
-								<td><select id="salutationInfant'+idx+'" name="salutationInfant'+idx+'"><option value="Mstr">Tuan</option><option value="Miss">Nona</option></select></td>\
-								<td>Nama Lengkap<span style="color:red">*</span></td>\
-								<td><input type="text" name="nameInfant'+idx+'"></td>\
-							</tr>\
-							<tr>\
-								<td>Tanggal Lahir<span style="color:red">*</span></td>\
-								<td><input type="text" name="birthDateInfant'+idx+'" id="birthDateInfant'+idx+'"></td>\
-							</tr>';
-					}
-					var bottom = '</table></fieldset>';
-					$('#input_fields').append(div+top+konten+bottom);
-					//create_select_nationality('passportnationalityi'+idx);
-					$(function() {
+				$(function() {
 						$( "#birthDateInfant"+idx ).datepicker({"dateFormat": "yy-mm-dd"});
-					});
-				}
-				
+					});*/
 			}
 		}
 	}

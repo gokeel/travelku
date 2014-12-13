@@ -122,7 +122,7 @@ class Agent extends CI_Controller {
 			list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-topup-request');
 			//sending email
 			$email_config = array(
-				'protocol' => 'sendmail',
+				'protocol' => 'mail',
 				'mailpath' => '/usr/sbin/sendmail',
 				'charset' => 'iso-8859-1',
 				'wordwrap' => TRUE,
@@ -187,7 +187,7 @@ class Agent extends CI_Controller {
 				list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-withdraw-request');
 				//sending email
 				$email_config = array(
-					'protocol' => 'sendmail',
+					'protocol' => 'mail',
 					'mailpath' => '/usr/sbin/sendmail',
 					'charset' => 'iso-8859-1',
 					'wordwrap' => TRUE,

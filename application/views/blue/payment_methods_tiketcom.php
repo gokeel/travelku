@@ -226,7 +226,7 @@
 											<div class="clearfix"></div><br/>';
 								
 							nav_konten += '<div class="col-md-4 textright">\
-												<div class="margtop15"><span class="dark">Harga + Bagasi + Pajak:</span></div>\
+												<div class="margtop15"><span class="dark">Harga + Pajak:</span></div>\
 											</div>\
 											<div class="col-md-4">\
 												<div class="margtop15"><span class="dark">IDR '+currency_separator(data.price_no_discount, '.')+'</span></div>\
@@ -395,7 +395,7 @@
 											<div class="col-md-4 textleft"></div>\
 											<div class="clearfix"></div><br/>\
 											<div class="col-md-4 textright">\
-												<div class="margtop15"><span class="dark">Harga + Bagasi + Pajak:</span></div>\
+												<div class="margtop15"><span class="dark">Harga + Pajak:</span></div>\
 											</div>\
 											<div class="col-md-4">\
 												<div class="margtop15"><span class="dark">IDR '+currency_separator(data.price_no_discount, '.')+'</span></div>\
@@ -405,10 +405,10 @@
 					nav_konten += '<form method="post" action="<?php echo base_url();?>index.php/order/tiketcom_checkout_payment">\
 										<input type="hidden" name="method" value="Deposit">\
 										<input type="hidden" name="token" value="<?php echo $this->uri->segment(3);?>">\
-										<input type="hidden" name="link" value="<?php echo $this->config->item('api_server');?>/checkout/checkout_payment/8">\
+										<input type="hidden" name="link" value="http://api.sandbox.tiket.com/checkout/checkout_payment/8">\
 										<div class="alert alert-info">\
 											Petunjuk cara pembayaran:<br/>\
-											<p class="size12">• Segera lakukan pembayaran dalam 60 menit.</p>\
+											<p class="size12">• Segera lakukan pembayaran dalam 180 menit.</p>\
 											<p class="size12">• Segera lakukan konfirmasi ulang melalui halaman konfirmasi pembayaran yang akan ditampilkan setelah menekan tombol di bawah ini.</p>\
 										</div>\
 										<button type="submit" class="bluebtn margtop20">Complete booking</button>\

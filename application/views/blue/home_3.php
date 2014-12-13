@@ -125,7 +125,7 @@
 							<div class="hotelstab none">
 								<form method="get" action="<?php echo base_url();?>index.php/webfront/show_hotel_tiketcom_list">
 									<span class="opensans size18" >Kota/Nama Hotel</span>
-									<input type="text" class="form-control" placeholder="denpasar" id="query" name="query">
+									<input type="text" class="form-control" placeholder="contoh:denpasar" id="query" name="query">
 									
 									<br/>
 									

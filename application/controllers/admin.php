@@ -559,7 +559,7 @@ class Admin extends CI_Controller {
 		list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-agent-register');
 		//sending email
 		$email_config = array(
-			'protocol' => 'sendmail',
+			'protocol' => 'mail',
 			'mailpath' => '/usr/sbin/sendmail',
 			'charset' => 'iso-8859-1',
 			'wordwrap' => TRUE,
@@ -633,7 +633,7 @@ class Admin extends CI_Controller {
 		list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-agent-register');
 		//sending email
 		$email_config = array(
-			'protocol' => 'sendmail',
+			'protocol' => 'mail',
 			'mailpath' => '/usr/sbin/sendmail',
 			'charset' => 'iso-8859-1',
 			'wordwrap' => TRUE,
@@ -5130,5 +5130,86 @@ class Admin extends CI_Controller {
 			);
 		}
 		echo json_encode($data);
+	}
+	
+	public function test_email(){
+		$this->load->library('email');
+
+		$this->email->from('noreply@travelku.co', 'No Reply');
+		$this->email->to('ocky.harli@gmail.com');
+		
+		$this->email->subject('Email Test');
+		$this->email->message('Testing the email class.');
+
+		$this->email->send();
+
+		echo $this->email->print_debugger();
+	}
+	
+	public function excel_all_transaction(){
+		//load from database
+		$list = $this->orders->get_order_list();
+		$number_row = 0;
+		$col_index = 0;
+		foreach ($list->result_array() as $row){
+			$number_row++;
+			$data[] = array(
+				'number_row' => $number_row,
+				'category' => $row['trip_category'],
+				'order_id' => $row['order_id'],
+				'total_price' => $row['total_price'],
+				'order_status' => $row['order_status'],
+				'timestamp' => $row['registered_date'],
+				'payment_status' => $row['status']
+			);
+		}
+		
+		$headers = array('Nomor', 'Username Agen','Nama Agen', 'Kategori Pembelian', 'ID Pesanan', 'Total Harga', 'Status Pesanan', 'Tanggal Pemesanan', 'Tanggal Issued', 'Status Pembayaran', 'Tanggal Transfer');
+		
+		//load our new PHPExcel library
+		$this->load->library('excel');
+		//activate worksheet number 1
+		$this->excel->setActiveSheetIndex(0);
+		//name the worksheet
+		$this->excel->getActiveSheet()->setTitle('data transaksi');
+		// set value for headers
+		
+		for($i=0;$i<sizeof($headers);$i++){
+			$idx = $i + 1;
+			$this->excel->getActiveSheet()->setCellValueByColumnAndRow($i, 1, $headers[$i]); // 1 is the row index, column starting from 0, column 0 is A
+		}
+		//fetch data and write to excel
+		$number_row = 0;
+		$row_index = 2;
+		foreach ($list->result_array() as $row){
+			$number_row++;
+			$this->excel->getActiveSheet()->setCellValue('A'.$row_index, $number_row);
+			$this->excel->getActiveSheet()->setCellValue('B'.$row_index, $row['agent_name']);
+			$this->excel->getActiveSheet()->setCellValue('C'.$row_index, $row['trip_category']);
+			$this->excel->getActiveSheet()->setCellValue('D'.$row_index, $row['order_id']);
+			$this->excel->getActiveSheet()->setCellValue('E'.$row_index, $row['total_price']);
+			$this->excel->getActiveSheet()->setCellValue('F'.$row_index, $row['order_status']);
+			$this->excel->getActiveSheet()->setCellValue('G'.$row_index, $row['registered_date']);
+			$this->excel->getActiveSheet()->setCellValue('H'.$row_index, $row['issued_date']);
+			$this->excel->getActiveSheet()->setCellValue('I'.$row_index, $row['status']);
+			$this->excel->getActiveSheet()->setCellValue('J'.$row_index, $row['transfer_date']);
+			
+			$row_index++;
+		}
+		
+		
+		//set aligment to center for that merged cell (A1 to D1)
+		$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+		$filename='data transaksi semua agen.xls'; //save our workbook as this file name
+		header('Content-Type: application/vnd.ms-excel'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+					
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+
 	}
 }

@@ -104,6 +104,8 @@
 					?>
 					Mohon untuk mengisi semua input berikut ini: <br/><br/>
 					<form action="<?php echo base_url();?>index.php/admin/agent_register" method="post" id="ContactForm">
+						<input type="hidden" name="member_type" value="2">
+						<input type="hidden" name="id_agen_upline" value="2">
 						<div class="col-md-4 textright">
 							<div class="margtop15"><span class="dark">Username:</span><span class="red">*tanpa spasi</span></div>
 						</div>
