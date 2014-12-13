@@ -74,7 +74,7 @@ class Orders extends CI_Model {
 	}
 	
 	function get_order_list(){
-		$this->db->select('orders.*, agents.agent_name, payments.status');
+		$this->db->select('orders.*, agents.agent_name, agents.agent_username, payments.status, payments.transfer_date');
 		$this->db->from('orders');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');

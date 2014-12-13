@@ -5150,18 +5150,9 @@ class Admin extends CI_Controller {
 		//load from database
 		$list = $this->orders->get_order_list();
 		$number_row = 0;
-		$col_index = 0;
 		foreach ($list->result_array() as $row){
 			$number_row++;
-			$data[] = array(
-				'number_row' => $number_row,
-				'category' => $row['trip_category'],
-				'order_id' => $row['order_id'],
-				'total_price' => $row['total_price'],
-				'order_status' => $row['order_status'],
-				'timestamp' => $row['registered_date'],
-				'payment_status' => $row['status']
-			);
+			$data[] = array($number_row,$row['agent_username'],$row['agent_name'],$row['trip_category'],$row['order_id'],$row['total_price'],$row['order_status'],$row['registered_date'],$row['issued_date'],$row['status'],$row['transfer_date']);
 		}
 		
 		$headers = array('Nomor', 'Username Agen','Nama Agen', 'Kategori Pembelian', 'ID Pesanan', 'Total Harga', 'Status Pesanan', 'Tanggal Pemesanan', 'Tanggal Issued', 'Status Pembayaran', 'Tanggal Transfer');
@@ -5175,25 +5166,15 @@ class Admin extends CI_Controller {
 		// set value for headers
 		
 		for($i=0;$i<sizeof($headers);$i++){
-			$idx = $i + 1;
 			$this->excel->getActiveSheet()->setCellValueByColumnAndRow($i, 1, $headers[$i]); // 1 is the row index, column starting from 0, column 0 is A
+			$this->excel->getActiveSheet()->getStyleByColumnAndRow($i, 1)->getFont()->setBold(true);
 		}
 		//fetch data and write to excel
-		$number_row = 0;
 		$row_index = 2;
-		foreach ($list->result_array() as $row){
-			$number_row++;
-			$this->excel->getActiveSheet()->setCellValue('A'.$row_index, $number_row);
-			$this->excel->getActiveSheet()->setCellValue('B'.$row_index, $row['agent_name']);
-			$this->excel->getActiveSheet()->setCellValue('C'.$row_index, $row['trip_category']);
-			$this->excel->getActiveSheet()->setCellValue('D'.$row_index, $row['order_id']);
-			$this->excel->getActiveSheet()->setCellValue('E'.$row_index, $row['total_price']);
-			$this->excel->getActiveSheet()->setCellValue('F'.$row_index, $row['order_status']);
-			$this->excel->getActiveSheet()->setCellValue('G'.$row_index, $row['registered_date']);
-			$this->excel->getActiveSheet()->setCellValue('H'.$row_index, $row['issued_date']);
-			$this->excel->getActiveSheet()->setCellValue('I'.$row_index, $row['status']);
-			$this->excel->getActiveSheet()->setCellValue('J'.$row_index, $row['transfer_date']);
-			
+		for($i=0;$i<sizeof($data);$i++){
+			for($j=0;$j<sizeof($data[$i]);$j++){
+				$this->excel->getActiveSheet()->setCellValueByColumnAndRow($j, $row_index, $data[$i][$j]); // 1 is the row index, column starting from 0, column 0 is A
+			}
 			$row_index++;
 		}
 		
@@ -5211,5 +5192,16 @@ class Admin extends CI_Controller {
 		//force user to download the Excel file without writing it to server's HD
 		$objWriter->save('php://output');
 
+	}
+	
+	public function test(){
+		$list = $this->orders->get_order_list();
+		$number_row = 0;
+		$col_index = 0;
+		foreach ($list->result_array() as $row){
+			$number_row++;
+			$data[] = array($number_row,$row['trip_category'],$row['order_id'],$row['total_price'],$row['order_status'],$row['registered_date'],$row['status']);
+		}
+		print_r($data);
 	}
 }

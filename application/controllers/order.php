@@ -952,6 +952,7 @@ class Order extends CI_Controller {
 			$number_row++;
 			$data[] = array(
 				'number_row' => $number_row,
+				'agent_name' => $row['agent_name'],
 				'category' => $row['trip_category'],
 				'order_id' => $row['order_id'],
 				'total_price' => $row['total_price'],

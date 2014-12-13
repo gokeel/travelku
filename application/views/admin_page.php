@@ -9,6 +9,7 @@
 
   <div class="frametab">
 		<h3 style="margin:5px 0 5px 5px;">Dashboard</h3>
+		Download <br/><a href="<?php echo base_url();?>index.php/admin/excel_all_transaction" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
 		<div id="data-booking"></div>
 	</div>
 	<div id="end"></div>
@@ -28,7 +29,7 @@
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row, payment_status: datajson[i].payment_status, order_id: datajson[i].order_id, category:datajson[i].category, total_price: datajson[i].total_price, order_status: datajson[i].order_status, timestamp: datajson[i].timestamp};
+					data[i] = {number_row:datajson[i].number_row, payment_status: datajson[i].payment_status, order_id: datajson[i].order_id, category:datajson[i].category, total_price: datajson[i].total_price, order_status: datajson[i].order_status, timestamp: datajson[i].timestamp, agent_name: datajson[i].agent_name};
 			}
 		});
 		
@@ -52,7 +53,8 @@
 			var data_order = data;
 			var table = new Y.DataTable({
 				columns: [
-					{key:"number_row", label:"No.", width:"10px"},
+					{key:"number_row", label:"No."},
+					{key:"agent_name", label:"Nama Agen"},
 					{key:"order_id", label:"ID Pesanan"},
 					{key:"category", label:"Kategori"},
 					{key:"total_price", label:"Total Harga", formatter:formatCurrency},
