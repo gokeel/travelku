@@ -225,7 +225,7 @@
 		if(adult==0 && child>0)
 			response = 'Penumpang dewasa minimal 1 orang.';
 		if(infant>adult)
-			response = 'Jumlah bayi tidak lebih dari jumlah dewasa / Satu anak minimal harus pergi dengan satu dewasa.';
+			response = 'Jumlah bayi tidak lebih dari jumlah dewasa.';
 		if(adult>4 || child>4 || infant>4)
 			response = 'Jumlah penumpang tiap kategori dewasa/anak/bayi tidak boleh melebihi 4 orang.';
 		if(adult+child+infant > max)
@@ -271,9 +271,9 @@
 		
 		$('#list').empty();
 		$('#result-header').empty();
-		$('#result-header').append('Hasil Pencarian Data Pesawat "<?php echo $translate;?>" (Urutan dari harga termurah), '+dari+' - '+ke+' Tanggal Berangkat: '+pergi);
+		$('#result-header').append('Hasil Pencarian Data Pesawat "<?php echo $translate;?>" (Urutan dari harga termurah), '+dari+' - '+ke+' Tanggal Berangkat: '+pergi+(pulang != "" ? '<br/>Pilih penerbangan berangkat dahulu' : ""));
 		$('#result-header').append('<img id="progress" src="<?php echo IMAGES_DIR; ?>/spiffygif_34x34.gif" />');
-		$("#progress").show();
+		
 		check_passenger = check_total_passenger('flight', parseInt(dewasa), parseInt(anak), parseInt(bayi));
 		<?php
 			$datetime1 = date_create(date('Y-m-d'));
@@ -289,88 +289,94 @@
 			if(diff_date>360)
 				$('#result-header').append('<p style="color:red">Tanggal keberangkatan tidak lebih dari 360 hari</p>');
 			else{
-				$.ajax({
-					type : "GET",
-					url: '<?php echo base_url();?>index.php/flight/search_flights',
-					data: 'dari='+dari+'&ke='+ke+'&flight-pergi='+pergi+'&dewasa='+dewasa+'&anak='+anak+'&bayi='+bayi,
-					cache: false,
-					dataType: "json",
-					success:function(data){
-						if(data.items[0].diagnostic.status=="200"){
-							if(data.items[0].departures.result.length==0){
-								$('#result-header').append('<p>Maaf, data tidak ada untuk rute ini.<p>');
-							} 
-						else{
-							var div = $("#list");
-							var collapse_index = 0;
-							for(var i=0; i<data.items[0].departures.result.length;i++){
-								if(trip=='single-trip')
-									var next_url = '<?php echo $url;?>/'+data.items[0].departures.result[i].flight_id+'/'+data.items[0].search_queries.date;
-								else
-									var next_url = '<?php echo $url;?>flight_id='+data.items[0].departures.result[i].flight_id+'&dep_date='+data.items[0].search_queries.date;
-												
-								collapse_index += 1;
-								var airline_name = data.items[0].departures.result[i].airlines_name;
-								div.append('<div id="ticketid0123" class="offset-2" >\
-									<div class="fblueline"><b>'+data.items[0].go_det.dep_airport.short_name+'</b> '+data.items[0].go_det.dep_airport.business_name+' <span class="farrow"></span> <b>'+data.items[0].go_det.arr_airport.short_name+'</b> '+data.items[0].go_det.arr_airport.business_name+'</div>\
-										<div class="frow1">\
-											<ul class="flightstable mt20">\
-												<li class="ft1">\
-													<img src="<?php echo base_url();?>assets/images/logomaskapai/'+airline_name.toLowerCase()+'.jpg" width="120" height="50" alt=""><br/>\
-													<span class="grey">'+data.items[0].departures.result[i].airlines_name+'</span><br/>\
-												</li>\
-												<li class="ft2">\
-													Departure<br/>\
-													<span class="grey">'+data.items[0].go_det.formatted_date+'</span><br/>\
-													<span class="size16 dark bold">'+data.items[0].departures.result[i].simple_departure_time+'</span><br/>\
-												</li>\
-												<li class="ft3">\
-													Arrival<br/>\
-													<span class="grey"></span><br/>\
-													<span class="size16 dark bold">'+data.items[0].departures.result[i].simple_arrival_time+'</span><br/>\
-												</li>\
-												<li class="ft4">\
-													Flight<br/>\
-													<span class="grey">'+data.items[0].departures.result[i].flight_number+'</span><br/>\
-												</li>\
-												<li class="ft5">\
-													<button class="lightbtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">More</button>\
-												</li>\
-											</ul>\
-											<div class="clearfix"></div><br/><br/>\
-											</div>\
-											<div  class="collapse frowexpand" id="collapse'+collapse_index+'">\
+				if(pulang != '' && pulang < pergi)
+					$('#result-header').append('<p style="color:red">Tanggal pulang minimal harus sama atau lebih besar dari tanggal pergi. Silahkan pilih tanggal lain.</p>');
+				else{
+					$("#progress").show();
+					$.ajax({
+						type : "GET",
+						url: '<?php echo base_url();?>index.php/flight/search_flights',
+						data: 'dari='+dari+'&ke='+ke+'&flight-pergi='+pergi+'&dewasa='+dewasa+'&anak='+anak+'&bayi='+bayi,
+						cache: false,
+						dataType: "json",
+						success:function(data){
+							if(data.items[0].diagnostic.status=="200"){
+								if(data.items[0].departures.result.length==0){
+									$('#result-header').append('<p>Maaf, data tidak ada untuk rute ini.<p>');
+								} 
+							else{
+								var div = $("#list");
+								var collapse_index = 0;
+								for(var i=0; i<data.items[0].departures.result.length;i++){
+									if(trip=='single-trip')
+										var next_url = '<?php echo $url;?>/'+data.items[0].departures.result[i].flight_id+'/'+data.items[0].search_queries.date;
+									else
+										var next_url = '<?php echo $url;?>flight_id='+data.items[0].departures.result[i].flight_id+'&dep_date='+data.items[0].search_queries.date;
+													
+									collapse_index += 1;
+									var airline_name = data.items[0].departures.result[i].airlines_name;
+									div.append('<div id="ticketid0123" class="offset-2" >\
+										<div class="fblueline"><b>'+data.items[0].go_det.dep_airport.business_name+'</b> '+data.items[0].go_det.dep_airport.location_name+' <span class="farrow"></span> <b>'+data.items[0].go_det.arr_airport.business_name+'</b> '+data.items[0].go_det.arr_airport.location_name+'</div>\
+											<div class="frow1">\
 												<ul class="flightstable mt20">\
 													<li class="ft1">\
+														<img src="<?php echo base_url();?>assets/images/logomaskapai/'+airline_name.toLowerCase()+'.jpg" width="120" height="50" alt=""><br/>\
+														<span class="grey">'+data.items[0].departures.result[i].airlines_name+'</span><br/>\
 													</li>\
 													<li class="ft2">\
-														Durasi<br/>\
-														<b>'+data.items[0].departures.result[i].duration+'</b><br/>\
+														Departure<br/>\
+														<span class="grey">'+data.items[0].go_det.formatted_date+'</span><br/>\
+														<span class="size16 dark bold">'+data.items[0].departures.result[i].simple_departure_time+'</span><br/>\
 													</li>\
-													<li class="ft3">Transit<br/><span class="grey">'+data.items[0].departures.result[i].stop+'</span><br/><br/>\
+													<li class="ft3">\
+														Arrival<br/>\
+														<span class="grey"></span><br/>\
+														<span class="size16 dark bold">'+data.items[0].departures.result[i].simple_arrival_time+'</span><br/>\
 													</li>\
-													<li class="ft4">Dewasa IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_adult),'.')+'<br/><br/>Anak IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_child),'.')+'<br/><br/>Bayi IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_infant),'.')+'<br/><br/>\
+													<li class="ft4">\
+														Flight<br/>\
+														<span class="grey">'+data.items[0].departures.result[i].flight_number+'</span><br/>\
 													</li>\
-													<li class="ft5"><button class="hidebtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">Hide</button>\
+													<li class="ft5">\
+														<button class="lightbtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">More</button>\
 													</li>\
 												</ul>\
 												<div class="clearfix"></div><br/><br/>\
-											</div>\
-											<div class="fselect">\
-												<span class="size12 lightgrey">Total Harga</span> <span class="size18 green bold">IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_value),'.')+'</span>&nbsp; <a href="'+next_url+'"><button class="selectbtn mt1" type="button">Select</button></a>\
-											</div>');
-									div.append('<div class="clearfix"></div><div class="offset-2"><hr class="featurette-divider3"></div>');
-								}
-							}	
+												</div>\
+												<div  class="collapse frowexpand" id="collapse'+collapse_index+'">\
+													<ul class="flightstable mt20">\
+														<li class="ft1">\
+														</li>\
+														<li class="ft2">\
+															Durasi<br/>\
+															<b>'+data.items[0].departures.result[i].duration+'</b><br/>\
+														</li>\
+														<li class="ft3">Transit<br/><span class="grey">'+data.items[0].departures.result[i].stop+'</span><br/><br/>\
+														</li>\
+														<li class="ft4">Dewasa IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_adult),'.')+'<br/><br/>Anak IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_child),'.')+'<br/><br/>Bayi IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_infant),'.')+'<br/><br/>\
+														</li>\
+														<li class="ft5"><button class="hidebtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">Hide</button>\
+														</li>\
+													</ul>\
+													<div class="clearfix"></div><br/><br/>\
+												</div>\
+												<div class="fselect">\
+													<span class="size12 lightgrey">Total Harga</span> <span class="size18 green bold">IDR '+currency_separator(parseInt(data.items[0].departures.result[i].price_value),'.')+'</span>&nbsp; <a href="'+next_url+'"><button class="selectbtn mt1" type="button">Select</button></a>\
+												</div>');
+										div.append('<div class="clearfix"></div><div class="offset-2"><hr class="featurette-divider3"></div>');
+									}
+								}	
+							}
+							else {
+								$('#result-header').append('<p style="color:red">'+data.items[0].diagnostic.error_msgs+'</p>');
+							}
 						}
-						else {
-							$('#result-header').append('<p style="color:red">'+data.items[0].diagnostic.error_msgs+'</p>');
-						}
-						$("#progress").hide();
-					}
-				})
+					})
+				}
+				
 			}
 		}
+		$("#progress").hide();
 	}
 	
 	function search_train(){

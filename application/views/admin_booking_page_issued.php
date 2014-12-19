@@ -10,13 +10,10 @@ YUI().use('tabview', function(Y) {
 		<h3 style="margin:5px 0 5px 5px;">Daftar Pesanan yang Sedang/Telah Issued</h3>
 		<div id="tabs">
 			<ul>
-				<li><a href="#tab-1">Pesawat</a></li>
-				<li><a href="#tab-2">Kereta Api</a></li>
-				<li><a href="#tab-3">Hotel</a></li>
-				<li><a href="#tab-4">Paket Tur</a></li>
-				<li><a href="#tab-5">Paket Pesawat</a></li>
-				<li><a href="#tab-6">Paket Hotel</a></li>
-				<!--<li><a href="#tab-7">Paket Promo</a></li>-->
+				<li><a href="#tab-1">Tiket Pesawat</a></li>
+				<li><a href="#tab-2">Tiket Kereta Api</a></li>
+				<li><a href="#tab-3">Tiket Hotel</a></li>
+				<li><a href="#tab-4">Paket</a></li>
 			</ul>
 			<div>
 				<div id="tab-1">
@@ -30,17 +27,8 @@ YUI().use('tabview', function(Y) {
 					<div id="order-hotel"></div>
 				</div>
 				<div id="tab-4">
-					<div id="order-paket-tour"></div>
+					<div id="order-paket"></div>
 				</div>
-				<div id="tab-5">
-					<div id="order-paket-pesawat"></div>
-				</div>
-				<div id="tab-6">
-					<div id="order-paket-hotel"></div>
-				</div>
-				<!--<div id="tab-7">
-					<div id="order-paket-promo"></div>
-				</div>-->
 			</div>
 		</div>
 		
@@ -55,16 +43,14 @@ YUI().use('tabview', function(Y) {
 		load_order_flight();
 		load_order_train();
 		load_order_hotel();
-		load_order_paket('tour-umrah-travel', 'tour');
-		load_order_paket('pesawat', 'pesawat');
-		load_order_paket('hotel', 'hotel');
+		load_order_paket();
 	});
-	function load_order_paket(category, list){
+	function load_order_paket(){
 		var data = [];
 		$.ajax({
 			type : "GET",
 			async: false,
-			url: '<?php echo base_url();?>index.php/admin/get_issued_order_paket/'+category,
+			url: '<?php echo base_url();?>index.php/admin/get_issued_order_paket',
 			dataType: "json",
 			success:function(datajson){
 				var div = $('#faqkonten');
@@ -120,7 +106,7 @@ YUI().use('tabview', function(Y) {
 				caption: "Daftar Pesanan",
 				rowsPerPage: 10
 			});
-			table.render("#order-paket-"+list);
+			table.render("#order-paket");
 		});
 	}
 	function load_order_flight(){

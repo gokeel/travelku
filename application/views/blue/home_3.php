@@ -163,7 +163,7 @@
 												<div class="w50percentlast">
 													<div class="wh90percent textleft right">
 													<span class="opensans size13"><b>Malam</b></span>
-														<select class="form-control mySelectBoxClass" id="malam" name="night">
+														<select class="form-control mySelectBoxClass" id="malam" name="night" disabled>
 														  <option selected>1</option>
 														  <option>2</option>
 														  <option>3</option>
@@ -257,7 +257,7 @@
 											<div class="wh90percent textleft">
 												<span class="opensans size13"><b>Dewasa</b></span>
 												<select class="form-control mySelectBoxClass" name="dewasa" id="flight-dewasa">
-												  <option>0</option>
+												  <!--<option>0</option>-->
 												  <option selected>1</option>
 												  <option>2</option>
 												  <option>3</option>
@@ -272,7 +272,7 @@
 											<div class="wh90percent textleft right">
 												<div class="w50percent">
 												<div class="wh90percent textleft left">
-													<span class="opensans size13"><b>Anak</b></span>
+													<span class="opensans size13"><b>Anak <span style="font-size:8px">(2-12 th)</span></b></span>
 													<select name="anak" id="flight-anak" class="form-control mySelectBoxClass">
 													  <option selected>0</option>
 													  <option>1</option>
@@ -282,11 +282,12 @@
 													  <option>5</option>
 													  <option>6</option>
 													</select>
+													
 												</div>
 											</div>							
 											<div class="w50percentlast">
 												<div class="wh90percent textleft right">
-												<span class="opensans size13"><b>Bayi</b></span>
+												<span class="opensans size13"><b>Bayi <span style="font-size:8px">(0-2 th)</span></b></span>
 													<select name="bayi" id="flight-bayi" class="form-control mySelectBoxClass">
 													  <option selected>0</option>
 													  <option>1</option>

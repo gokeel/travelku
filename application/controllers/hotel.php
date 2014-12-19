@@ -67,6 +67,7 @@ class Hotel extends CI_Controller {
 	//cindy nordiansyah
 	public function tiketcom_show_hotel_rooms() {
 		$nama_hotel = $this->uri->segment(3);
+		$this->session->set_userdata('hotel_name', $nama_hotel); // save data to session
 		
 		$checkin = $this->input->get('startdate', TRUE);
 		$checkout = $this->input->get('enddate', TRUE);
@@ -75,7 +76,7 @@ class Hotel extends CI_Controller {
 		$adult = $this->input->get('adult', TRUE);
 		$child = $this->input->get('child', TRUE);
 		$uid = $this->input->get('uid', TRUE);
-		$token = $this->input->get('uid', TRUE);
+		$token = '';
 		if ($token =='') {
 			$token = $this->get_token();
 			$this->session->set_userdata('token', $token);
@@ -392,6 +393,35 @@ class Hotel extends CI_Controller {
 		}
 		
 		$this->load->view($theme_name.'/'.$view, $data);
+	}
+	
+	public function tiketcom_detail_room() {
+		$nama_hotel = $this->session->userdata('hotel_name');
+		$checkin = $this->input->get('startdate', TRUE);
+		$checkout = $this->input->get('enddate', TRUE);
+		$room = $this->input->get('room', TRUE);
+		$night = $this->input->get('night', TRUE);
+		$adult = $this->input->get('adult', TRUE);
+		$child = $this->input->get('child', TRUE);
+		$uid = $this->input->get('uid', TRUE);
+		$token = $this->input->get('token', TRUE);
+		if ($token =='') {
+			$token = $this->get_token();
+			$this->session->set_userdata('token', $token);
+		}
+		$getdata = file_get_contents($this->config->item('api_server').'/'.$nama_hotel.'?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json');
+		$json = json_decode($getdata);
+		
+		$array = array();
+		$array[] = (object)$json;
+		 
+		if (isset($_GET['callback'])) {
+				echo $_GET['callback'] . '('.json_encode($array).')';
+			}
+		else{
+				echo '{"items":'. json_encode($array) .'}';
+			}
+		
 	}
 }
 

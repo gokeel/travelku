@@ -120,6 +120,17 @@
 						
 						<br/>
 						<div class="col-md-4 textright">
+							<div class="margtop15"><span class="dark">Jumlah Peserta:</span><span class="red">*</span></div>
+						</div>
+						<div class="col-md-4">
+							<input type="text" class="form-control " placeholder="angka" name="total_person_registered" id="total_person_registered" style="width:80px">
+						</div>
+						<div class="col-md-4 textleft margtop15">
+						</div>
+						<div class="clearfix"></div>
+						
+						<br/>
+						<div class="col-md-4 textright">
 							<div class="margtop15"><span class="dark">Nama Anda:</span><span class="red">*</span></div>
 						</div>
 						<div class="col-md-4">

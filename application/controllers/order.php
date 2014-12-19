@@ -76,10 +76,10 @@ class Order extends CI_Controller {
 	public function add_flight_order()
 	{
 		$response = '';
-		$flight_id = $this->input->post('id', TRUE);
+		$flight_id = $this->input->post('flight_id', TRUE);
 		//$ret_flight_id = $this->input->post('ret_flight_id', TRUE);
-		$airline_name = $this->input->post('airlines_name', TRUE);
-		$depart_date = $this->input->post('departing_date', TRUE);
+		$airline_name = $this->input->post('airline_name', TRUE);
+		$depart_date = $this->input->post('date_go', TRUE);
 		$route = $this->input->post('route', TRUE);
 		$time_travel = $this->input->post('time_travel', TRUE);
 		$tot_price = $this->input->post('total_price', TRUE);
@@ -87,17 +87,17 @@ class Order extends CI_Controller {
 		$price_adult = $this->input->post('price_adult', TRUE);
 		$price_child = $this->input->post('price_child', TRUE);
 		$price_infant = $this->input->post('price_infant', TRUE);
-		$tot_child = $this->input->post('tot_child', TRUE);
-		$tot_adult = $this->input->post('tot_adult', TRUE);
-		$tot_infant = $this->input->post('tot_infant', TRUE);
+		$tot_child = $this->input->post('child', TRUE);
+		$tot_adult = $this->input->post('adult', TRUE);
+		$tot_infant = $this->input->post('infant', TRUE);
 		$time_stamp = date ('Y-m-d H:i:s');
-		/*$conSalutation = $this->input->post('conSalutation', TRUE);
+		$conSalutation = $this->input->post('conSalutation', TRUE);
 		$conFirstName = $this->input->post('conFirstName', TRUE);
 		$conLastName = $this->input->post('conLastName', TRUE);
 		$conPhone = $this->input->post('conPhone', TRUE);
 		$conEmailAddress = $this->input->post('conEmailAddress', TRUE);
 		$conOtherPhone = $this->input->post('conOtherPhone', TRUE);
-		*/
+		
 		
 		/* for round trip*/
 		$flight_id_ret = $this->input->post('flight_id_ret', TRUE);
@@ -298,10 +298,22 @@ class Order extends CI_Controller {
 				);
 				$this->general->add_to_table('notifications', $notif);
 				//end notif
-				redirect(base_url('index.php/webfront/order_success/'.$order_id));
+				//redirect(base_url('index.php/webfront/order_success/'.$order_id));
+				$response = array(
+					'status' => '200',
+					'message' => 'Anda akan segera dihubungi oleh admin kami untuk proses lebih lanjut dalam 3 jam.',
+					'method' => 'tiket_internal',
+					'order_id' => $order_id,
+					'total' => $tot_price
+				);
 			}
-			else
-				redirect(base_url('index.php/webfront/order_failed'));
+			else{
+				$response = array(
+					'status' => '204'
+				);
+			}
+			$this->load_theme('booking_finished_page', $response);
+				//redirect(base_url('index.php/webfront/order_failed'));
 		}
 	}
 	
@@ -312,16 +324,16 @@ class Order extends CI_Controller {
 		$class = $this->input->post('class', TRUE);
 		$subclass = $this->input->post('subclass', TRUE);
 		$train_name = $this->input->post('train_name', TRUE);
-		$depart_date = $this->input->post('departing_date', TRUE);
+		$depart_date = $this->input->post('date', TRUE);
 		$route = $this->input->post('route', TRUE);
 		$time_travel = $this->input->post('time_travel', TRUE);
-		$tot_price = $this->input->post('total_price', TRUE);
+		$tot_price_dep = $this->input->post('total_price_dep', TRUE);
 		$price_adult = $this->input->post('price_adult', TRUE);
 		$price_child = $this->input->post('price_child', TRUE);
 		$price_infant = $this->input->post('price_infant', TRUE);
-		$tot_child = $this->input->post('tot_child', TRUE);
-		$tot_adult = $this->input->post('tot_adult', TRUE);
-		$tot_infant = $this->input->post('tot_infant', TRUE);
+		$tot_child = $this->input->post('child', TRUE);
+		$tot_adult = $this->input->post('adult', TRUE);
+		$tot_infant = $this->input->post('infant', TRUE);
 		$conSalutation = $this->input->post('conSalutation', TRUE);
 		$conFirstName = $this->input->post('conFirstName', TRUE);
 		$conLastName = $this->input->post('conLastName', TRUE);
@@ -353,7 +365,7 @@ class Order extends CI_Controller {
 			'route' => $route,
 			'departing_date' => $depart_date,
 			'time_travel' => $time_travel,
-			'total_price' => $tot_price,
+			'total_price' => $tot_price_dep,
 			'adult' => $tot_adult,
 			'price_adult' => $price_adult,
 			'child' => $tot_child,
@@ -361,7 +373,8 @@ class Order extends CI_Controller {
 			'infant' => $tot_infant,
 			'price_infant' => $price_infant,
 			'order_status' => 'Registered',
-			'registered_date' => $time_stamp
+			'registered_date' => $time_stamp,
+			'admin_fee' => '10000'
 		);
 		
 		$this->load->model('orders');
@@ -443,8 +456,8 @@ class Order extends CI_Controller {
 					'adult' => $tot_adult,
 					'child' => $tot_child,
 					'infant' => $tot_infant,
-					'total_price' => $tot_price,
-					'admin_fee' => $admin_fee
+					'total_price' => $tot_price_dep,
+					'admin_fee' => '10000'
 				);
 				
 				//get email disribution
@@ -478,10 +491,21 @@ class Order extends CI_Controller {
 				);
 				$this->general->add_to_table('notifications', $notif);
 				//end notif
-				redirect(base_url('index.php/webfront/order_success/'.$order_id));
+				$response = array(
+					'status' => '200',
+					'message' => 'Anda akan segera dihubungi oleh admin kami untuk proses lebih lanjut dalam 3 jam.',
+					'method' => 'tiket_internal',
+					'order_id' => $order_id,
+					'total' => $tot_price_dep
+				);
 			}
-			else
-				redirect(base_url('index.php/webfront/order_failed'));
+			else{
+				$response = array(
+					'status' => '204'
+				);
+			}
+			$this->load_theme('booking_finished_page', $response);
+				//redirect(base_url('index.php/webfront/order_failed'));
 		}
 	}
 	
@@ -491,13 +515,14 @@ class Order extends CI_Controller {
 		$name = $this->input->post('hotel_name', TRUE);
 		$address = $this->input->post('hotel_address', TRUE);
 		$regional = $this->input->post('regional', TRUE);
-		$checkin = $this->input->post('checkin', TRUE);
-		$checkout = $this->input->post('checkout', TRUE);
+		$checkin = $this->input->post('startdate', TRUE);
+		$checkout = $this->input->post('enddate', TRUE);
 		$night = $this->input->post('night', TRUE);
 		$room = $this->input->post('room', TRUE);
+		$room_name = $this->input->post('room_name', TRUE);
 		$price = $this->input->post('price', TRUE);
-		$tot_adult = $this->input->post('tot_adult', TRUE);
-		$tot_child = $this->input->post('tot_child', TRUE);
+		$tot_adult = $this->input->post('adult', TRUE);
+		$tot_child = $this->input->post('child', TRUE);
 		$conSalutation = $this->input->post('conSalutation', TRUE);
 		$conFirstName = $this->input->post('conFirstName', TRUE);
 		$conLastName = $this->input->post('conLastName', TRUE);
@@ -527,10 +552,12 @@ class Order extends CI_Controller {
 			'hotel_address' => $address,
 			'hotel_regional' => $regional,
 			'hotel_room' => $room,
+			'hotel_room_name' => $room_name,
 			'departing_date' => $checkin,
 			'returning_date' => $checkout,
 			'time_travel' => $night,
 			'total_price' => $price,
+			'admin_fee' => '10000',
 			'adult' => $tot_adult,
 			'child' => $tot_child,
 			'order_status' => 'Registered',
@@ -592,7 +619,7 @@ class Order extends CI_Controller {
 					'adult' => $tot_adult,
 					'child' => $tot_child,
 					'total_price' => $price,
-					'admin_fee' => $admin_fee
+					'admin_fee' => '10000'
 				);
 				
 				//get email disribution
@@ -627,10 +654,21 @@ class Order extends CI_Controller {
 				$this->general->add_to_table('notifications', $notif);
 				//end notif
 				
-				redirect(base_url('index.php/webfront/order_success/'.$order_id));
+				$response = array(
+					'status' => '200',
+					'message' => 'Anda akan segera dihubungi oleh admin kami untuk proses lebih lanjut dalam 3 jam.',
+					'method' => 'tiket_internal',
+					'order_id' => $order_id,
+					'total' => $price
+				);
 			}
-			else
-				redirect(base_url('index.php/webfront/order_failed'));
+			else{
+				$response = array(
+					'status' => '204'
+				);
+			}
+			$this->load_theme('booking_finished_page', $response);
+				//redirect(base_url('index.php/webfront/order_failed'));
 		}
 	}
 	
@@ -1101,15 +1139,20 @@ class Order extends CI_Controller {
 			}
 		}
 		
+		//total person registered, then count the total price
+		$total_person = intval($this->input->post('total_person_registered', TRUE));
+		$total_price = intval($price) * $total_person;
+		
 		$data_order = array(
 			'account_id' => $account_id,
 			'post_id' => $this->input->post('post_id',TRUE),
 			'trip_category' => 'paket',
 			'order_status' => 'Registered',
 			'registered_date' => date('Y-m-d H:i:s'),
-			'total_price' => $price,
+			'total_price' => $total_price,
 			'commission_to_agent' => $comm,
-			'purchasing_price' => $purchase_price
+			'purchasing_price' => $purchase_price,
+			'total_person_registered' => $total_person
 		);
 		$order_id = $this->orders->add_order($data_order);
 		
@@ -1130,7 +1173,7 @@ class Order extends CI_Controller {
 			'title' => $this->input->post('title', TRUE),
 			'first_name' => $this->input->post('first_name', TRUE),
 			'last_name' => $this->input->post('last_name', TRUE),
-			'total_price' => $price
+			'total_price' => $total_price
 		);
 			
 		//get email disribution

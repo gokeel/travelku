@@ -62,6 +62,9 @@
 			<?php echo ($uri2=='setting_kurs_page' ? '<li id="grp_426" class="selected">' : '<li id="grp_426">');?>
 				<a href="<?php echo base_url();?>index.php/admin/setting_kurs_page" >Kurs</a>
 			</li>
+			<?php echo ($uri2=='setting_switch_order_page' ? '<li id="grp_426" class="selected">' : '<li id="grp_426">');?>
+				<a href="<?php echo base_url();?>index.php/admin/setting_switch_order_page" >Switch Order System</a>
+			</li>
 		</ul>
 	</div>
 </div>

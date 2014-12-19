@@ -5,7 +5,7 @@
 | API key tiket.com
 |--------------------------------------------------------------------------
 */
-$config['api_server'] = 'https://api.master18.tiket.com';
+$config['api_server'] = 'http://api.sandbox.tiket.com';
 $config['api_key'] = 'cf7841dbb1aa1b0c690eaba15db54c70';
 $config['google_api_key'] = 'AIzaSyAUF_v0Ad2IWxyXHxdXCvELO2fPaLeSZ1Q';
 //$config['api_token'] = '0ebbf60e5813d152d079bea444c90238c42e3628';

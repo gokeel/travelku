@@ -271,7 +271,7 @@
 											<span class="size11 grey">'+data.items[0].results.result[i].room_available+' Kamar Tersedia</span><br/><br/>\
 											<span class="green size18"><b>IDR '+currency_separator(parseInt(data.items[0].results.result[i].price), '.')+'</b></span><br/>\
 											<span class="size11 grey">avg/night</span><br/><br/><br/>\
-											<a href="<?php echo base_url();?>index.php/webfront/form_passenger_tiket/hotel?'+book_uri_split[1]+'&token='+data.items[0].token+'">\
+											<a href="<?php echo base_url();?>index.php/webfront/form_passenger_tiket/hotel?'+book_uri_split[1]+'&token='+data.items[0].token+'&uid=<?php echo $this->input->get('uid',TRUE);?>">\
 											<button class="bookbtn mt1" type="submit">Select</button></a>\
 										</div>\
 										<div class="labelleft2">\

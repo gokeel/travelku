@@ -10,13 +10,10 @@ YUI().use('tabview', function(Y) {
 		<h3 style="margin:5px 0 5px 5px;">Daftar Antrian Pesanan</h3>
 		<div id="tabs">
 			<ul>
-				<li><a href="#tab-1">Pesawat</a></li>
-				<li><a href="#tab-2">Kereta Api</a></li>
-				<li><a href="#tab-3">Hotel</a></li>
-				<li><a href="#tab-4">Paket Tur</a></li>
-				<li><a href="#tab-5">Paket Pesawat</a></li>
-				<li><a href="#tab-6">Paket Hotel</a></li>
-				<!--<li><a href="#tab-7">Paket Promo</a></li>-->
+				<li><a href="#tab-1">Tiket Pesawat</a></li>
+				<li><a href="#tab-2">Tiket Kereta Api</a></li>
+				<li><a href="#tab-3">Tiket Hotel</a></li>
+				<li><a href="#tab-4">Paket</a></li>
 			</ul>
 			<div>
 				<div id="tab-1">
@@ -30,13 +27,7 @@ YUI().use('tabview', function(Y) {
 					<div id="order-hotel"></div>
 				</div>
 				<div id="tab-4">
-					<div id="order-paket-tour"></div>
-				</div>
-				<div id="tab-5">
-					<div id="order-paket-pesawat"></div>
-				</div>
-				<div id="tab-6">
-					<div id="order-paket-hotel"></div>
+					<div id="order-paket"></div>
 				</div>
 				<!--<div id="tab-7">
 					<div id="order-paket-promo"></div>
@@ -55,21 +46,19 @@ YUI().use('tabview', function(Y) {
 		load_order_flight();
 		load_order_train();
 		load_order_hotel();
-		load_order_paket('tour-umrah-travel', 'tour');
-		load_order_paket('pesawat', 'pesawat');
-		load_order_paket('hotel', 'hotel');
+		load_order_paket();
 	});
-	function load_order_paket(category, list){
+	function load_order_paket(){
 		var data = [];
 		$.ajax({
 			type : "GET",
 			async: false,
-			url: '<?php echo base_url();?>index.php/admin/get_registered_order_paket/'+category,
+			url: '<?php echo base_url();?>index.php/admin/get_registered_order_paket',
 			dataType: "json",
 			success:function(datajson){
 				var div = $('#faqkonten');
 				for(var i=0; i<datajson.length; i++){
-					data[i] = {number_row: datajson[i].number_row, order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, category: datajson[i].category, description: datajson[i].category, title: datajson[i].title, price: datajson[i].price, payment_status: datajson[i].payment_status};
+					data[i] = {number_row: datajson[i].number_row, order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, category: datajson[i].category, description: datajson[i].category, title: datajson[i].title, price: currency_separator(datajson[i].price, '.'), payment_status: datajson[i].payment_status, currency: datajson[i].currency, total_person: datajson[i].total_person};
 				}
 			}
 		});
@@ -94,12 +83,14 @@ YUI().use('tabview', function(Y) {
 			var table = new Y.DataTable({
 				columns: [
 					{key:"number_row", label:"No.", width:"10px"},
-					{key:"order_id", label:"ID Pesanan"},
-					{key:"agent_name", label:"Nama Agen"},
-					{key:"category", label:"Kategori Paket"},
+					{key:"order_id", label:"ID Pesanan", sortable:true},
+					{key:"agent_name", label:"Nama Agen", sortable:true},
+					{key:"category", label:"Kategori Paket", sortable:true},
 					{key:"description", label:"Paket"},
 					{key:"title", label:"Nama Paket"},
-					{key:"price", label:"Total Harga", formatter:formatCurrency},
+					{key:"total_person", label:"Jml Peserta"},
+					{key:"currency", label:"Mata Uang"},
+					{key:"price", label:"Total Harga"},
 					{key:"payment_status", label:"Status Pembayaran"},
 					{
 						key:"order_id", 
@@ -124,7 +115,7 @@ YUI().use('tabview', function(Y) {
 				caption: "Daftar Antrian Pesanan",
 				rowsPerPage: 10
 			});
-			table.render("#order-paket-"+list);
+			table.render("#order-paket");
 		});
 	}
 	function load_order_flight(){
@@ -136,7 +127,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, airline_name: datajson[i].airline_name, flight_id: datajson[i].flight_id, route: datajson[i].route, full_via: datajson[i].departing_date+'-'+datajson[i].time_travel, total_price: datajson[i].total_price, adult: datajson[i].adult, price_adult: datajson[i].price_adult, child: datajson[i].child, price_child: datajson[i].price_child, infant: datajson[i].infant, price_infant: datajson[i].price_infant, payment_status: datajson[i].payment_status};
+					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, airline_name: datajson[i].airline_name, flight_id: datajson[i].flight_id, route: datajson[i].route, full_via: datajson[i].departing_date+' '+datajson[i].time_travel, total_price: datajson[i].total_price, adult: datajson[i].adult, price_adult: datajson[i].price_adult, child: datajson[i].child, price_child: datajson[i].price_child, infant: datajson[i].infant, price_infant: datajson[i].price_infant, payment_status: datajson[i].payment_status};
 			}
 		});
 		
@@ -270,7 +261,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, name: datajson[i].name, hotel_id: datajson[i].id, address: datajson[i].address, regional: datajson[i].regional, book_date: datajson[i].checkin+' / '+datajson[i].checkout, night: datajson[i].night, room: datajson[i].room, total_price: datajson[i].total_price, adult: datajson[i].adult, child: datajson[i].child, payment_status: datajson[i].payment_status};
+					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, name: datajson[i].name, hotel_id: datajson[i].id, address: datajson[i].address, regional: datajson[i].regional, book_date: datajson[i].checkin+' / '+datajson[i].checkout, night: datajson[i].night, room: datajson[i].room, total_price: datajson[i].total_price, adult: datajson[i].adult, child: datajson[i].child, payment_status: datajson[i].payment_status, room_name: datajson[i].room_name};
 			}
 		});
 		
@@ -295,9 +286,10 @@ YUI().use('tabview', function(Y) {
 			var table = new Y.DataTable({
 				columns: [
 					{key:"number_row", label:"No.", width:"10px"},
-					{key:"order_id", label:"ID Pesanan"},
+					{key:"order_id", label:"ID"},
 					{key:"agent_name", label:"Nama Agen"},
 					{key:"name", label:"Hotel"},
+					{key:"room_name", label:"Kamar"},
 					{key:"address", label:"Alamat"},
 					{key:"regional", label:"Regional"},
 					{key:"book_date", label:"Checkin / Checkout"},

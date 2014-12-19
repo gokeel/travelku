@@ -287,11 +287,16 @@
 										var user_rating_image = 'user-rating-'+user_rating_internal+'.png';
 										var business_uri = data.items[0].results.result[i].business_uri;
 										var business_uri_split = business_uri.split("/");
-												
+										
+										/*this will replace https to http on images*/
+										var image_temp = data.items[0].results.result[i].photo_primary;
+										var image_primary = image_temp.replace("https", "http");
+										/*end replace*/
+										
 										div.append('<div class="offset-2">\
 											<div class="col-md-4 offset-0">\
 												<div class="listitem2">\
-													<a href="'+data.items[0].results.result[i].photo_primary+'" data-footer="A custom footer text" data-title="A random title" data-gallery="multiimages" data-toggle="lightbox"><img src="'+data.items[0].results.result[i].photo_primary+'" alt=""/></a>\
+													<a href="'+image_primary+'" data-footer="A custom footer text" data-title="A random title" data-gallery="multiimages" data-toggle="lightbox"><img src="'+image_primary+'" alt=""/></a>\
 													<div class="liover"></div>\
 												</div>\
 											</div>\

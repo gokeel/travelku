@@ -456,6 +456,13 @@ class Admin extends CI_Controller {
 		else
 			$this->no_right_access();
 	}
+	
+	public function setting_switch_order_page(){
+		if($this->check_session('administrator'))
+			$this->page('admin_setting_switch_order_system');
+		else
+			$this->no_right_access();
+	}
 	/******************************/
 	
 	/**		PAGES END			 **/
@@ -1120,6 +1127,7 @@ class Admin extends CI_Controller {
 					'checkout' => $row['returning_date'],
 					'night' => $row['time_travel'],
 					'room' => $row['hotel_room'],
+					'room_name' => $row['hotel_room_name'],
 					'total_price' => $row['total_price'],
 					'adult' => $row['adult'],
 					'child' => $row['child'],
@@ -2263,7 +2271,7 @@ class Admin extends CI_Controller {
 		$cat = $this->uri->segment(3);
 		$cat_array = explode('-',$cat);
 		
-		$query = $this->orders->get_registered_order_paket($cat_array);
+		$query = $this->orders->get_registered_order_paket_2();
 		$number_row=0;
 		foreach($query->result_array() as $row){
 			$number_row++;
@@ -2276,7 +2284,9 @@ class Admin extends CI_Controller {
 				'agent_name' => $row['agent_name'],
 				'payment_status' => $row['status'],
 				'order_status' => $row['order_status'],
-				'price' => $row['total_price']
+				'price' => $row['total_price'],
+				'currency' => $row['currency'],
+				'total_person' => $row['total_person_registered']
 			);
 		}
 		echo json_encode($data);
@@ -2286,7 +2296,7 @@ class Admin extends CI_Controller {
 		$cat = $this->uri->segment(3);
 		$cat_array = explode('-',$cat);
 		
-		$query = $this->orders->get_issued_order_paket($cat_array);
+		$query = $this->orders->get_issued_order_paket_2();
 		$number_row = 0;
 		foreach ($query->result_array() as $row){
 			$number_row ++;
@@ -2309,7 +2319,7 @@ class Admin extends CI_Controller {
 		$cat = $this->uri->segment(3);
 		$cat_array = explode('-',$cat);
 		
-		$query = $this->orders->get_cancelled_order_paket($cat_array);
+		$query = $this->orders->get_cancelled_order_paket_2();
 		$number_row = 0;
 		foreach ($query->result_array() as $row){
 			$number_row ++;
@@ -2322,7 +2332,8 @@ class Admin extends CI_Controller {
 				'agent_name' => $row['agent_name'],
 				'payment_status' => $row['status'],
 				'order_status' => $row['order_status'],
-				'price' => $row['total_price']
+				'price' => $row['total_price'],
+				'reason' => $row['reason']
 			);
 		}
 		echo json_encode($data);
@@ -5203,5 +5214,19 @@ class Admin extends CI_Controller {
 			$data[] = array($number_row,$row['trip_category'],$row['order_id'],$row['total_price'],$row['order_status'],$row['registered_date'],$row['status']);
 		}
 		print_r($data);
+	}
+	
+	public function get_running_system_order(){
+		$query = $this->general->get_afield_by_id('order_system_running', 'order', 'tiket', 'system');
+		foreach($query->result_array() as $row)
+			$data['running'] = $row['system'];
+			
+		echo json_encode($data); 
+	}
+	
+	public function change_system_order(){
+		$data = array('system' => $this->input->get('system', TRUE));
+		$upd = $this->general->update_data_on_table('order_system_running', 'order', 'tiket', $data);
+		
 	}
 }

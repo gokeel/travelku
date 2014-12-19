@@ -8,18 +8,12 @@
 	<div class="frametab">
 		<h3 style="margin:5px 0 5px 5px;">Proses Checkout</h3>
 		<div id="data-order">
-			<form name="form-checkout" method="post" action="<?php echo base_url();?>index.php/order/add_order_tiketcom/<?php echo $type.'/'.$id;?>">
+			<form name="form-checkout">
 				<div id="data-general"></div>
 				<div id="data-pemesan"></div>
 				<div id="data-adult"></div>
 				<div id="data-child"></div>
 				<div id="data-infant"></div>
-				<?php
-					//only hotel that do not need to be checkout using tiket.com
-					if ($type=='flight' or $type=='train')
-						echo '<input class="mybutton" style="float:right" type="submit" value="Issued via Tiket.com"/>';
-				?>
-				
 			</form>
 			<div class="formFooter" style="margin-top:50px;">
 				<input class="mybutton" style="float:left" name="dbproses" type="button" value="Kembali ke halaman pesanan" onclick="document.location.href='<?php echo base_url();?>index.php/admin/booking_page';" />

@@ -101,9 +101,16 @@
 		<div class="container mt25 offset-0">
 			
 		<form id="form-order" name="form-order" method="post" action="<?php 
-								if ($uri3=='flight') echo base_url('index.php/order/tiketcom_add_flight_order');
-								else if ($uri3=='train') echo base_url('index.php/order/tiketcom_add_train_order');
-								else if ($uri3=='hotel') echo base_url('index.php/hotel/tiketcom_add_order_hotel');
+								if($running_system_order=='tiketcom'){
+									if ($uri3=='flight') echo base_url('index.php/order/tiketcom_add_flight_order');
+									else if ($uri3=='train') echo base_url('index.php/order/tiketcom_add_train_order');
+									else if ($uri3=='hotel') echo base_url('index.php/hotel/tiketcom_add_order_hotel');
+								}
+								else if($running_system_order=='internal'){
+									if ($uri3=='flight') echo base_url('index.php/order/add_flight_order');
+									else if ($uri3=='train') echo base_url('index.php/order/add_train_order');
+									else if ($uri3=='hotel') echo base_url('index.php/order/add_hotel_order');
+								}
 								?>">	
 			<!-- LEFT CONTENT -->
 			<div class="col-md-8 pagecontainer2 offset-0" id="form-passenger">
@@ -294,7 +301,7 @@
 						var total_price_adult_ret = data.items[0].returns.count_adult * data.items[0].returns.price_adult;
 						var total_price_child_ret = data.items[0].returns.count_child * data.items[0].returns.price_child;
 						var total_price_infant_ret = data.items[0].returns.count_infant * data.items[0].returns.price_infant;
-						var total_price_ret = total_price_adult_dep + total_price_child_dep + total_price_infant_dep;// + admin_fee; //sementara tidak pake
+						var total_price_ret = total_price_adult_ret + total_price_child_ret + total_price_infant_ret;// + admin_fee; //sementara tidak pake
 						total_price += total_price_ret;
 						
 						return_price_summary = 'Returning: Total <span class="right bold green">IDR '+currency_separator(total_price_ret,'.')+'</span>\
@@ -364,7 +371,14 @@
 							<div class="clearfix"></div>\
 						</div>\
 					');
-						
+					var input_dep_additional = '<input type="hidden" name="route" value="'+data.items[0].departures.flight_infos.flight_info[0].departure_city+' - '+data.items[0].departures.flight_infos.flight_info[0].arrival_city+'">\
+						<input type="hidden" name="time_travel" value="'+data.items[0].departures.simple_departure_time+' - '+data.items[0].departures.simple_arrival_time+'">\
+						<input type="hidden" name="total_price" value="'+data.items[0].departures.price_value+'">\
+						<input type="hidden" name="admin_fee" value="10000">\
+						<input type="hidden" name="price_adult" value="'+data.items[0].departures.price_adult+'">\
+						<input type="hidden" name="price_child" value="'+data.items[0].departures.price_child+'">\
+						<input type="hidden" name="price_infant" value="'+data.items[0].departures.price_infant+'">\
+						';
 					/*create input contains data*/
 					var token = "<?php echo $this->session->userdata('token');?>";
 					$('#form-passenger').append('\
@@ -376,6 +390,7 @@
 						<input type="hidden" name="airline_name" value="'+data.items[0].departures.airlines_name+'">\
 						<input type="hidden" name="date_go" value="'+data.items[0].departures.flight_date+'">\
 						'+input_return+'\
+						'+input_dep_additional+'\
 						');
 					//belum
 					/* create mandatory input for passengers and contact person */
@@ -396,8 +411,7 @@
 								<div class="line4"></div>';
 							if(val.indexOf("separator_adult") >= 0){
 								adult+=1;
-								input_string += '<span class="size13 dark">ID (KTP/SIM)</span>\
-									<input type="text" class="form-control" name="ida'+adult+'" placeholder="" style="width:75%" required>';
+								
 							}
 							
 							separator_index += 1;
@@ -405,8 +419,17 @@
 						else {
 							if(data.items[0].required[val]["type"]=="textbox")
 							{
+								var teks = data.items[0].required[val]["FieldText"];
+								var tambahan = '';
+								if(teks.indexOf("Nama") >= 0)
+									tambahan = 'onBlur="return isValidCharacter(this.value)"';
+								if(teks.indexOf("Telepon") >= 0)
+									tambahan = 'onBlur="return isValidNumber(this.value)"';
 								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
-									<input type="text" class="form-control" name="'+val+'" placeholder="" style="width:75%" required>';
+									<input type="text" class="form-control" name="'+val+'" placeholder="" style="width:75%" maxlength="50" '+tambahan+' required>';
+								if(teks=="Nama Belakang" && separator_index > 2)
+									input_string += '<span class="size13 dark">ID (KTP/SIM)</span>\
+									<input type="text" class="form-control" name="ida'+adult+'" placeholder="" style="width:75%" maxlength="20" required>';
 							}
 							else if ( data.items[0].required[val]["type"]=="datetime"){
 								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'*</span>\
@@ -470,7 +493,7 @@
 						</div>\
 						By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
 						restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
-						<button type="submit" class="bluebtn margtop20">Lanjut -> Issued & Pembayaran</button>';
+						<button type="submit" class="bluebtn margtop20">Lanjut Booking</button>';
 						
 					div_input.append(input_string+'</div>');
 					for(x=1;x<=datepicker_index;x++){
@@ -522,6 +545,7 @@
 			url: "<?php echo base_url('index.php/train/search_trains');?>",
 			data: "<?php echo $request;?>",
 			cache: false,
+			async: false,
 			dataType: "json",
 			success:function(data){
 				for(var i=0; i<data.items[0].departures.result.length;i++){
@@ -564,6 +588,17 @@
 						<input type="hidden" name="subclass_ret" value="'+subclass_ret+'">\
 						<input type="hidden" name="ret_date" value="'+date_ret+'">\
 						');
+						/*input hidden additional*/
+						$('#form-passenger').append('\
+							<input type="hidden" name="class" value="'+data.items[0].departures.result[i].class_name_lang+'">\
+							<input type="hidden" name="train_name" value="'+data.items[0].departures.result[i].train_name+'">\
+							<input type="hidden" name="route" value="'+data.items[0].search_queries.dep_city+' - '+data.items[0].search_queries.arr_city+'">\
+							<input type="hidden" name="time_travel" value="'+data.items[0].departures.result[i].departure_time+' - '+data.items[0].departures.result[i].arrival_time+'">\
+							<input type="hidden" name="total_price_dep" value="'+total_price_dep+'">\
+							<input type="hidden" name="price_adult" value="'+data.items[0].departures.result[i].price_adult+'">\
+							<input type="hidden" name="price_child" value="'+data.items[0].departures.result[i].price_child+'">\
+							<input type="hidden" name="price_infant" value="'+data.items[0].departures.result[i].price_infant+'">\
+							');
 					}
 					
 						
@@ -678,11 +713,11 @@
 									<option value="">--Pilih Title--</option><option value="Mr">Tuan</option><option value="Mrs">Nyonya</option><option value="Ms">Nona</option>\
 								</select>\
 								<span class="size13 dark">ID (KTP/SIM)</span>\
-									<input type="text" class="form-control" name="conId" placeholder="" required>\
+									<input type="text" class="form-control" name="conId" placeholder="" maxlength="20" required>\
 								<span class="size13 dark">Nama Depan</span>\
-									<input type="text" class="form-control" name="conFirstName" placeholder="" required>\
+									<input type="text" class="form-control" name="conFirstName" placeholder="" maxlength="50" required>\
 								<span class="size13 dark">Nama Belakang</span>\
-									<input type="text" class="form-control" name="conLastName" placeholder="" required>\
+									<input type="text" class="form-control" name="conLastName" placeholder="" maxlength="50" required>\
 								<span class="size13 dark">Email</span>\
 									<input type="text" class="form-control" name="conEmailAddress" placeholder="" required>\
 								<span class="size13 dark">Telepon/HP</span>\
@@ -764,7 +799,7 @@
 						</div>\
 						By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
 						restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
-						<button type="submit" class="bluebtn margtop20">Lanjut -> Issued & Pembayaran</button>\
+						<button type="submit" class="bluebtn margtop20">Lanjut Booking</button>\
 						</div>';
 				
 				var first_number_adult = 2;
@@ -796,20 +831,57 @@
 	};
 	
 	function get_detail_hotel(){
-		
+		var form = '';
 		//fetch the get parameters
 		<?php
 			if($uri3=='hotel'){
 				$gets = $this->input->get(NULL,TRUE);
 				$inputs = '';
-				foreach($gets as $key => $value)
+				$get = '';
+				foreach($gets as $key => $value){
 					$inputs .= '<input type="hidden" name="'.$key.'" value="'.$value.'">';
+					$get .= $key.'='.$value.'&';
+				}
+					
 				echo "var inputs = '".$inputs."';";
+				echo "var gets = '".$get."';";
 			}
-			
+			echo 'var room_id = "'.$this->input->get('room_id',TRUE).'";';
 		?>
+		
+		$.ajax({
+			type : "GET",
+			url: '<?php echo base_url();?>index.php/hotel/tiketcom_detail_room',
+			data: gets,
+			cache: false,
+			async: false,
+			dataType: "json",
+			success:function(data){
+				if(data.items[0].diagnostic.status=="200"){
+					if(data.items[0].results.result.length==0){
+						$('#result-header').append('<p>Maaf, data tidak ada untuk rute ini.<p>');
+					} 
+					else{
+						form += '<input type="hidden" name="hotel_name" value="'+data.items[0].breadcrumb.business_name+'">\
+								<input type="hidden" name="hotel_id" value="'+data.items[0].breadcrumb.business_id+'">\
+								<input type="hidden" name="hotel_address" value="'+data.items[0].general.address+'">\
+								<input type="hidden" name="regional" value="'+data.items[0].breadcrumb.area_name+'">\
+								';
+						for(var i=0; i<data.items[0].results.result.length;i++){
+							if(data.items[0].results.result[i].room_id == room_id){
+								form += '<input type="hidden" name="room_name" value="'+data.items[0].results.result[i].room_name+'">\
+										<input type="hidden" name="price" value="'+data.items[0].results.result[i].price+'">\
+										';
+							}
+						}
+					}
+				}
+			}
+		});
+		
+		
 		$('#form-passenger').empty();
-		var form = '<div class="padding30 grey">\
+		form += '<div class="padding30 grey">\
 			<span class="size16px bold dark left">Informasi Kontak</span>\
 			<div class="roundstep right">1</div>\
 			<div class="clearfix"></div>\
@@ -839,7 +911,7 @@
 			</div>\
 			By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
 			restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
-			<button type="submit" class="bluebtn margtop20">Lanjut -> Issued & Pembayaran</button>\
+			<button type="submit" class="bluebtn margtop20">Lanjut Booking</button>\
 		</div>';
 		/*create input contains data*/
 		$('#form-passenger').append(inputs);
@@ -903,6 +975,26 @@
 		}
 		str = str + '</select>';
 		$('#'+name_input).append(str);
+	}
+	
+	function isValidCharacter(str) {
+		var iChars = "~`!#$%^&*+=-[]\\\';,/{}|\":<>?0123456789";
+
+		for (var i = 0; i < str.length; i++) {
+		   if (iChars.indexOf(str.charAt(i)) != -1) {
+			   alert ("Nama harus berupa huruf, mohon benahi input anda");
+		   }
+		}
+	}
+	
+	function isValidNumber(str) {
+		var iChars = "~`!#$%^&*+=-[]\\\';,/{}|\":<>?abcdefghijklmnopqrstuvwxyz";
+
+		for (var i = 0; i < str.length; i++) {
+		   if (iChars.indexOf(str.charAt(i)) != -1) {
+			   alert ("Telepon harus berupa angka, mohon benahi input anda");
+		   }
+		}
 	}
 </script>
 

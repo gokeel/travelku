@@ -405,7 +405,7 @@
 					nav_konten += '<form method="post" action="<?php echo base_url();?>index.php/order/tiketcom_checkout_payment">\
 										<input type="hidden" name="method" value="Deposit">\
 										<input type="hidden" name="token" value="<?php echo $this->uri->segment(3);?>">\
-										<input type="hidden" name="link" value="http://api.sandbox.tiket.com/checkout/checkout_payment/8">\
+										<input type="hidden" name="link" value="<?php echo $this->config->item('api_server');?>/checkout/checkout_payment/8">\
 										<div class="alert alert-info">\
 											Petunjuk cara pembayaran:<br/>\
 											<p class="size12">• Segera lakukan pembayaran dalam 180 menit.</p>\

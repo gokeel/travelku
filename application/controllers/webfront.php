@@ -613,7 +613,8 @@ class Webfront extends CI_Controller {
 		$this->load_theme('hotel_tiketcom_room_detail', $data);
 	}
 	public function form_passenger_tiket(){
-		$this->load_theme('form_passengers');
+		$data['running_system_order'] = $this->get_running_system_order();
+		$this->load_theme('form_passengers', $data);
 	}
 	public function show_payment_methods(){
 		$this->load_theme('payment_methods_tiketcom');
@@ -718,6 +719,14 @@ class Webfront extends CI_Controller {
 		}
 		else
 			redirect(base_url().'index.php/webfront/show_package_content/'.$data['post_id'].'/failed');
+	}
+	
+	function get_running_system_order(){
+		$this->load->model('general');
+		$query = $this->general->get_afield_by_id('order_system_running', 'order', 'tiket', 'system');
+		foreach($query->result_array() as $row)
+			$running = $row['system'];
+		return $running;
 	}
 }
 

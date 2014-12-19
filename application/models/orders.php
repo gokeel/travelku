@@ -222,6 +222,21 @@ class Orders extends CI_Model {
 		return $query;
 	}
 	
+	public function get_registered_order_paket_2(){
+		$this->db->select('orders.*, posts.currency, posts.title, post_categories.category, post_categories.description, agents.agent_name, payments.status');
+		$this->db->from('orders');
+		$this->db->join('posts', 'orders.post_id = posts.post_id');
+		$this->db->join('post_categories', 'posts.category = post_categories.id');
+		$this->db->join('agents', 'orders.account_id = agents.agent_id');
+		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
+		$where_string = "trip_category = 'paket' and (order_status = 'Registered' or order_status = 'Paid')";
+		$this->db->where($where_string);
+		$this->db->order_by('order_id desc');
+		
+		$query = $this->db->get();
+		return $query;
+	}
+	
 	function get_issued_order_paket($cat){
 		$cat_size = sizeof($cat); // jika hanya 1 kategori, select where untuk 1 kategori saja. jika lebih dari 1, where bersifat OR
 		
@@ -243,6 +258,21 @@ class Orders extends CI_Model {
 			$where_string .= rtrim($where, 'OR ').')';
 		}
 		$where_string .= " and trip_category = 'paket' and (order_status = 'Done' or order_status = 'Issued')";
+		$this->db->where($where_string);
+		$this->db->order_by('order_id desc');
+		
+		$query = $this->db->get();
+		return $query;
+	}
+	
+	function get_issued_order_paket_2(){
+		$this->db->select('orders.*, posts.title, post_categories.category, post_categories.description, agents.agent_name, payments.status');
+		$this->db->from('orders');
+		$this->db->join('posts', 'orders.post_id = posts.post_id');
+		$this->db->join('post_categories', 'posts.category = post_categories.id');
+		$this->db->join('agents', 'orders.account_id = agents.agent_id');
+		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
+		$where_string = "trip_category = 'paket' and (order_status = 'Done' or order_status = 'Issued')";
 		$this->db->where($where_string);
 		$this->db->order_by('order_id desc');
 		
@@ -272,6 +302,22 @@ class Orders extends CI_Model {
 			$where_string .= rtrim($where, 'OR ').')';
 		}
 		$where_string .= " and trip_category = 'paket' and (order_status = 'Cancelled' or order_status = 'Rejected')";
+		$this->db->where($where_string);
+		$this->db->order_by('orders.order_id desc');
+		
+		$query = $this->db->get();
+		return $query;
+	}
+	
+	function get_cancelled_order_paket_2(){
+		$this->db->select('orders.*, posts.title, post_categories.category, post_categories.description, agents.agent_name, payments.status, reasons.reason');
+		$this->db->from('orders');
+		$this->db->join('posts', 'orders.post_id = posts.post_id');
+		$this->db->join('post_categories', 'posts.category = post_categories.id');
+		$this->db->join('agents', 'orders.account_id = agents.agent_id');
+		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
+		$this->db->join('reasons', 'orders.order_id = reasons.order_id', 'left');
+		$where_string = "trip_category = 'paket' and (order_status = 'Cancelled' or order_status = 'Rejected')";
 		$this->db->where($where_string);
 		$this->db->order_by('orders.order_id desc');
 		

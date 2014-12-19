@@ -77,8 +77,16 @@
 				?>
 				
 			</div>
+			<?php
+				if($status=='200'){
+			?>
 			<button id="btn" class="bluebtn margtop20">Kembali ke Home</button>
-			
+			<?php
+				}
+				else {
+			?>
+			<button id="btn-back" class="bluebtn margtop20">Kembali ke Halaman Metode Pembayaran</button>
+			<?php } ?>
 			
 		</div>
 		<?php
@@ -125,6 +133,9 @@
 <script>
 	$('#btn').click(function(event) {
 		window.location.href = "<?php echo base_url();?>";
+	});
+	$('#btn-back').click(function(event) {
+		window.history.back();
 	});
 <?php
 if($status=='200'){	
