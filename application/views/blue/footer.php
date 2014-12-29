@@ -34,8 +34,9 @@
 				<br/><br/>
 				<ul class="footerlistblack">
 					<li><a href="<?php echo base_url();?>index.php/webfront/agent_registration">Registrasi Agen</a></li>
-					<li><a href="<?php echo base_url();?>index.php/webfront/confirm_payment">Konfirmasi Pembayaran Paket</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/confirm_payment">Konfirmasi Pembayaran Pesanan</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/cancel_order_tiketcom">Pembatalan Pesanan Tiket</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/general_payment_method">Metode Pembayaran ATM Transfer</a></li>
 				</ul>				
 			</div>
 			<!-- End of column 3-->		

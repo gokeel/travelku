@@ -1244,62 +1244,90 @@ class Order extends CI_Controller {
 			$url_param .= '&lang=id&output=json';
 			$url = $this->config->item('api_server').'/order/add/flight?'.$url_param;
 			
-			$send_request = file_get_contents($url);
-			$json = json_decode($send_request);
-			$diagnose = $json->diagnostic;
-			if($diagnose->status <> '200'){
+			$send_request = @file_get_contents($url, true);
+			if($send_request === FALSE){
 				$response = array(
-					'status' => $diagnose->status,
-					'error' => $diagnose->error_msgs,
+					'status' => '213',
+					'error' => 'Terjadi kesalahan saat add order.',
 					'category' => 'flight'
 				);
 			}
-			else {
-				// continue to order
-				$url_order = $this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
-				$send_order = file_get_contents($url_order);
-				$response_order = json_decode($send_order);
-				$diagnose_order = $response_order->diagnostic;
-				$myorder = $response_order->myorder;
-				if($diagnose_order->status<>'200'){
+			else{
+				//echo $send_request;
+				$json = json_decode($send_request);
+				$diagnose = $json->diagnostic;
+				if($diagnose->status <> '200'){
 					$response = array(
-						'status' => $diagnose_order->status,
-						'error' => $diagnose_order->error_msgs,
+						'status' => $diagnose->status,
+						'error' => $diagnose->error_msgs,
 						'category' => 'flight'
 					);
 				}
-				else{ //jika sukses
-					$total_before_discount = intval($myorder->total_without_tax) + intval($myorder->data[0]->detail->baggage_fee) + intval($myorder->total_tax);
-					//save to db
-					$data_insert = array(
-						'order_id' => $response_order->myorder->order_id,
-						'category' => 'flight',
-						'token' => $response_order->token,
-						'delete_uri' => $myorder->data[0]->delete_uri,
-						'price_no_discount' => $total_before_discount,
-						'price_with_discount' => $total_before_discount - intval($myorder->discount_amount),
-						'status' => 'checkout'
-					);
-					$internal_order_id = $this->orders->add_order_tiketcom($data_insert);
-					
-					//generate success page
-					
-					$response = array(
-						'status' => $diagnose->status,
-						'error' => '',
-						'category' => 'flight',
-						'internal_order_id' => $internal_order_id,
-						'order_id' => $myorder->order_id,
-						'price' => $myorder->total_without_tax,
-						'baggage' => $myorder->data[0]->detail->baggage_fee,
-						'tax' => $myorder->total_tax,
-						'total_price' => $total_before_discount,
-						'discount' => $myorder->discount_amount,
-						'after_discount' => $total_before_discount - intval($myorder->discount_amount),
-						'checkout_uri' => 'checkout_uri='.$response_order->checkout.'&token='.$response_order->token
-					);
+				else {
+					// continue to order
+					$url_order = $this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
+					$send_order = file_get_contents($url_order,true);
+					if($send_order === FALSE){
+						$response = array(
+							'status' => '213',
+							'error' => 'Terjadi kesalahan saat order.',
+							'category' => 'flight'
+						);
+					}
+					else{
+						$response_order = json_decode($send_order);
+						//echo $send_order;
+						$diagnose_order = $response_order->diagnostic;
+						$myorder = $response_order->myorder;
+						if($diagnose_order->status<>'200'){
+							$response = array(
+								'status' => $diagnose_order->status,
+								'error' => $diagnose_order->error_msgs,
+								'category' => 'flight'
+							);
+						}
+						else{ //jika sukses
+							$total_before_discount = intval($myorder->total_without_tax) + intval($myorder->data[0]->detail->baggage_fee) + intval($myorder->total_tax);
+							//save to db
+							$data_insert = array(
+								'order_id' => $response_order->myorder->order_id,
+								'category' => 'flight',
+								'token' => $response_order->token,
+								'delete_uri' => $myorder->data[0]->delete_uri,
+								'price_no_discount' => $total_before_discount,
+								'price_with_discount' => $total_before_discount - intval($myorder->discount_amount),
+								'status' => 'checkout'
+							);
+							$internal_order_id = $this->orders->add_order_tiketcom($data_insert);
+							
+							//generate success page
+							
+							$response = array(
+								'status' => $diagnose->status,
+								'error' => '',
+								'category' => 'flight',
+								'internal_order_id' => $internal_order_id,
+								'order_id' => $myorder->order_id,
+								'price' => $myorder->total_without_tax,
+								'baggage' => $myorder->data[0]->detail->baggage_fee,
+								'tax' => $myorder->total_tax,
+								'total_price' => $total_before_discount,
+								'discount' => $myorder->discount_amount,
+								'after_discount' => $total_before_discount - intval($myorder->discount_amount),
+								'checkout_uri' => 'checkout_uri='.$response_order->checkout.'&token='.$response_order->token
+							);
+							
+							//save data contact person to session
+							$this->session->set_userdata('con_salutation', $this->input->post('conSalutation'));
+							$this->session->set_userdata('con_firstname', $this->input->post('conFirstName'));
+							$this->session->set_userdata('con_lastname', $this->input->post('conLastName'));
+							$this->session->set_userdata('con_phone', $this->input->post('conPhone'));
+							$this->session->set_userdata('con_email', $this->input->post('conEmailAddress'));
+						}
+					}					
 				}
 			}
+			
 		}
 		$this->load_theme('issued_page', $response);
 	}
@@ -1390,7 +1418,7 @@ class Order extends CI_Controller {
 		else{ //jika sukses
 			$cc_uri = $response->next_checkout_uri.'?';
 			$token = $response->token;
-			$param = 'token='.$token.'&salutation=Mr&firstName=admin&lastName=travelku&emailAddress=tiketcom@travelku.co&phone=%2B628123081785&saveContinue=2&lang=id&output=json';
+			$param = 'token='.$token.'&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&saveContinue=2&lang=id&output=json';
 			$cc_url = $cc_uri.$param;
 			$send_request_2 = file_get_contents($cc_url);
 			$response_2 = json_decode($send_request_2);
@@ -1530,6 +1558,8 @@ class Order extends CI_Controller {
 			$param .= '&btn_booking=1&currency=IDR&lang=id&output=json';
 			$send_request = file_get_contents($url.$param);
 			$json = json_decode($send_request);
+			$order_id = $json->orderId;
+			$tot_price = $json->grand_total;
 			if($json->diagnostic->status<>'200'){
 				$response = array(
 					'status' => $json->diagnostic->status,
@@ -1544,15 +1574,64 @@ class Order extends CI_Controller {
 					'order_id' => $json->orderId,
 					'total' => $json->grand_total
 				);
+				
+				//get bank list
+				$query = $this->bank->get_all_bank();
+				$number_row = 0;
+				foreach ($query->result_array() as $row){
+					$response['banks'][$number_row]['bank_name'] = $row['bank_name'];
+					$response['banks'][$number_row]['account_number'] = $row['bank_account_number'];
+					$response['banks'][$number_row]['holder_name'] = $row['bank_holder_name'];
+					$response['banks'][$number_row]['branch'] = $row['bank_branch'];
+					$response['banks'][$number_row]['city'] = $row['bank_city'];
+					$number_row++;
+				}
+				
+				//preparing to send email
+				$content = array(
+					'title' => $this->session->userdata('con_salutation'),
+					'order_id' => $order_id,
+					'first_name' => $this->session->userdata('con_firstname'),
+					'last_name' => $this->session->userdata('con_lastname'),
+					'total_price' => $tot_price,
+					'admin_fee' => '10000'
+				);
+				
+				//get email disribution
+				$this->load->model('notification');
+				list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-order-request');
+				//sending email
+				$email_config = array(
+					'protocol' => 'mail',
+					'mailpath' => '/usr/sbin/sendmail',
+					'charset' => 'iso-8859-1',
+					'wordwrap' => TRUE,
+					'mailtype' => 'html'
+				);
+				$this->load->library('email', $email_config);
+				
+				$this->email->from($email_sender, $sender_name);
+				$this->email->to($this->session->userdata('con_email'));
+				$this->email->cc($cc);
+				$this->email->bcc($bcc);
+				
+				$this->email->subject('Pesanan Tiket Pesawat Berhasil');
+				$messages = $this->load->view('email_tpl/new_flight_order_request', $content, TRUE);
+				$this->email->message($messages);
+
+				$this->email->send();
+				//insert notification
+				$notif = array(
+					'category' => 'new-order-request',
+					'message' => 'Order baru - Pesawat',
+					'created_datetime' => date('Y-m-d H:i:s')
+				);
+				$this->general->add_to_table('notifications', $notif);
+				//end notif
+				
 			}
 		}
 		
-		/*$this->load->view('front_header');
-		$this->load->view('front_after_choose_payment_tiketcom', $response);
-		$data['column'] = (strpos('-second-faq', 'second')!==false ? '-second-faq' : '');
-		$data['footer_column'] = (strpos('-second-faq', 'second')!==false ? '-second' : '');
-		$this->load->view('front_right_sidebar', $data);
-		$this->load->view('front_footer', $data);*/
 		$this->load_theme('booking_finished_page', $response);
 	}
 	

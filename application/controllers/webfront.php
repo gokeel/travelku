@@ -165,9 +165,7 @@ class Webfront extends CI_Controller {
 		$this->load_general_page('front_cancel_order_tiketcom', '-second-contact');
 	}*/
 	
-	public function payment_method(){
-		$this->load_general_page('front_payment_methods', '-second-contact');
-	}
+	
 	
 	public function tiketcom_choose_payment(){
 		$this->load_general_page('front_tiketcom_choose_payment', '-second-faq');
@@ -615,6 +613,9 @@ class Webfront extends CI_Controller {
 	public function form_passenger_tiket(){
 		$data['running_system_order'] = $this->get_running_system_order();
 		$this->load_theme('form_passengers', $data);
+	}
+	public function general_payment_method(){
+		$this->load_theme('payment_methods_general');
 	}
 	public function show_payment_methods(){
 		$this->load_theme('payment_methods_tiketcom');

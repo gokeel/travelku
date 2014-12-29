@@ -98,10 +98,11 @@
 					<div class="line4"></div>
 					<?php
 						if ($this->uri->segment(4)=="success")
-							echo '**Terima kasih, masukan anda telah kami terima. Kami akan segera menghubungi anda pada jam kerja.<br/><br/>';
+							echo '**Terima kasih, masukan anda telah kami terima. Mohon cek email anda untuk detil harga yang harus dibayar, dan klik berikut untuk melihat metode pembayaran yang disediakan.<br/>
+							<a href="'.base_url().'index.php/webfront/general_payment_method">Metode Pembayaran ATM Transfer</a><br/><div class="line4"></div>';
 									
 					?>
-					Mohon isi data berikut ini untuk dapat kami hubungi secara langsung. <br/><br/>
+					Mohon isi data berikut. <br/><br/>
 					<form action="<?php echo base_url();?>index.php/order/add_order_paket" method="post" id="ContactForm">
 						<input type="hidden" name="post_id" value="<?php echo $this->uri->segment(3); ?>">
 						<div class="col-md-4 textright">
@@ -198,31 +199,6 @@
 				
 				<?php include_once('box_call_support.php');?>
 				<br/>
-				
-				<div class="pagecontainer2 loginbox">
-					<div class="cpadding1">
-						<span class="icon-lockk"></span>
-						<h3 class="opensans">Log in</h3>
-						<input type="text" class="form-control logpadding" placeholder="Username">
-						<br/>
-						<input type="text" class="form-control logpadding" placeholder="Password">
-						<div class="margtop20">
-							<div class="left">
-								<div class="checkbox padding0">
-									<label>
-									  <input type="checkbox">Remember
-									</label>
-								</div>
-								<a href="#" class="greylink">Lost password?</a><br/>
-							</div>
-							<div class="right">
-								<button class="btn-search5" type="submit" onclick="errorMessage()">Login</button>	
-							</div>
-						</div>
-						<div class="clearfix"></div><br/>
-					</div>
-				</div><br/>
-			
 			</div>
 			<!-- END OF RIGHT CONTENT -->
 			

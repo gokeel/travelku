@@ -109,6 +109,14 @@
 						echo '</ol><br /><br />';
 					}
 				}
+				else if($method=='Deposit'){
+					echo '<h3>Lakukan pengiriman ke salah satu bank berikut:</h3>';
+					foreach($banks as $index){
+						echo '<ul style="list-style-type: none">';
+						echo '<li>'.$index['bank_name'].'<br/>a/n. '.$index['holder_name'].'<br/>No. Rekening '.$index['account_number'].'<br/>Cabang '.$index['branch'].', '.$index['city'];
+						echo '</ul><br /><br />';
+					}
+				}
 				echo '</div></div>';
 			}
 		?>

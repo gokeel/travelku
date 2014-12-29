@@ -305,9 +305,9 @@
 													<div class="labelright">\
 														<img src="<?php echo BLUE_THEME_DIR;?>/images/'+star_image+'" width="60" alt=""/><br/><br/>\
 														<img src="<?php echo BLUE_THEME_DIR;?>/images/'+user_rating_image+'" width="60" alt=""/><br/><br/>\
-														<span class="size11 grey">'+data.items[0].results.result[i].room_available+' Kamar Tersedia</span><br/><br/>\
+														<span class="size11 grey">'+data.items[0].results.result[i].room_available+' Kamar Tersedia<br/><br/>Harga mulai:<br/></span>\
 														<span class="green size18"><b>IDR '+currency_separator(parseInt(data.items[0].results.result[i].price), '.')+'</b></span><br/>\
-														<span class="size11 grey">avg/night</span><br/><br/><br/>\
+														<span class="size11 grey">/night</span><br/><br/>\
 														<a href="<?php echo base_url();?>index.php/webfront/hotel_tiketcom_detail/'+business_uri_split[7]+'">\
 														<button class="bookbtn mt1" type="submit">Select</button></a>\
 													</div>\

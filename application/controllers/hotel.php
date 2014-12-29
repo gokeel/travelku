@@ -174,6 +174,13 @@ class Hotel extends CI_Controller {
 						'conPhone' => $this->input->post('conPhone', TRUE),
 						'conSalutation' => $this->input->post('conSalutation', TRUE)
 					);
+					
+					//save data contact person to session
+					$this->session->set_userdata('con_salutation', $this->input->post('conSalutation'));
+					$this->session->set_userdata('con_firstname', $this->input->post('conFirstName'));
+					$this->session->set_userdata('con_lastname', $this->input->post('conLastName'));
+					$this->session->set_userdata('con_phone', $this->input->post('conPhone'));
+					$this->session->set_userdata('con_email', $this->input->post('conEmailAddress'));
 				}
 			}
 		$this->load_theme('issued_page', $response);
@@ -343,7 +350,7 @@ class Hotel extends CI_Controller {
 		{ //jika sukses, checkout login
 			$cl_url = $response_1->next_checkout_uri.'?';
 			$token = $response_1->token;
-			$param = 'token='.$token. '&salutation=Mr&firstName=admin&lastName=hellotraveler&emailAddress=tiketcom@hellotraveler.co.id&phone=%2B628123081785&saveContinue=2&lang=id&output=json';
+			$param = 'token='.$token. '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&saveContinue=2&lang=id&output=json';
 			$cl_url .= $param;
 			//print_r($cc_url);
 			$send_request_2 = file_get_contents($cl_url);
@@ -357,7 +364,7 @@ class Hotel extends CI_Controller {
 			}
 			else{//jika sukses, checkout customer
 				$cc_url = $response_1->next_checkout_uri.'?';
-				$params .=  '&salutation=Mr&firstName=admin&lastName=hellotraveler&emailAddress=tiketcom@hellotraveler.co.id&phone=%2B628123081785&country=id&lang=id&output=json';
+				$params .=  '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&country=id&lang=id&output=json';
 				$cc_url .= $params;
 				//print_r($cc_url);
 				$send_request_3 = file_get_contents($cc_url);
