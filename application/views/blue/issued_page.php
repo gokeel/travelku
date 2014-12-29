@@ -57,9 +57,12 @@
 				
 
 			</div>
+			<?php
+				if($status=='200'){
+			?>
 			<div class="searchingbg">
 				<?php
-					if($status=='200' and $category=='flight'){
+					if($category=='flight'){
 						echo '<ul class="leftatr">
 								<li>ID Pesanan</li>
 								<li>Harga Tiket</li>
@@ -88,7 +91,7 @@
 						echo '<button id="btn" class="bluebtn margtop20">Lanjut ke Pembayaran</button>';
 						echo '<div id="messages"></div>';
 					}
-					else if($status=='200' and $category=='train'){
+					else if($category=='train'){
 						echo '<ul class="leftatr">
 								<li>ID Pesanan</li>
 								<li>Harga Tiket</li>
@@ -115,7 +118,7 @@
 						echo '<button id="btn" class="bluebtn margtop20">Lanjut ke Pembayaran</button>';
 						echo '<div id="messages"></div>';
 					}
-					else if($status=='200' and $category=='hotel'){
+					else if($category=='hotel'){
 						echo '<ul class="leftatr">
 								<li>ID Pesanan</li>
 								<li>Total <span style="font-size:9px;"><i>*Termasuk pajak</i></span></li>
@@ -131,6 +134,12 @@
 					}
 				?>
 			</div>
+			<?php
+			}
+			else{
+				echo '<button id="btn-back" class="bluebtn margtop20">Kembali ke Pengisian Data</button>';
+			}
+			?>
 		</div>
 		<!-- End of Login Wrap  -->
 	
@@ -146,6 +155,9 @@
 	function errorMessage(){
 		$('.login-wrap').animo( { animation: 'tada' } );
 	}
+	$('#btn-back').click(function(event) {
+		window.history.back();
+	});
 	</script>
 	
 	<!-- Include all compiled plugins (below), or include individual files as needed -->

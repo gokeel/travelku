@@ -1227,14 +1227,37 @@ class Order extends CI_Controller {
 				$datetime2 = date_create($value);
 				$interval = date_diff($datetime1, $datetime2);
 				$diff = intval($interval->format('%a'));
-				if($diff<=240)
+				if($diff<=240){
+					$error_message = 'Masa berakhir passport untuk maskapai LION harus lebih dari 6 bulan dari tanggal keberangkatan';
 					$error_passport_date = true;
+				}
+			}
+			if(strpos($key,'passportissueddate') !== false){
+				$datetime1 = date_create($date_go);
+				$datetime2 = date_create($value);
+				$interval = date_diff($datetime1, $datetime2);
+				$diff = intval($interval->format('%a'));
+				if($diff<0){
+					$error_passport_date = true;
+					$error_message = 'Tanggal penerbitan passport tidak boleh lebih dari hari ini.';
+				}
+			}
+			//checking for ages
+			if(strpos($key,'birthdatei') !== false){
+				$datetime1 = date_create($date_go);
+				$datetime2 = date_create($value);
+				$interval = date_diff($datetime1, $datetime2);
+				$diff = intval($interval->format('%a'));
+				if($diff>720 and $diff<-10){
+					$error_passport_date = true;
+					$error_message = 'Tanggal lahir bayi harus berumur kurang dari 2tahun di tanggal keberangkatan.';
+				}
 			}
 		}
 		if($error_passport_date){
 			$response = array(
 				'status' => '210',
-				'error' => 'Masa berakhir passport untuk maskapai LION harus lebih dari 6 bulan dari tanggal keberangkatan',
+				'error' => $error_message,
 				'category' => 'flight'
 			);
 		}
