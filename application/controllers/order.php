@@ -1657,17 +1657,6 @@ class Order extends CI_Controller {
 					'total' => $json->grand_total
 				);
 				
-				//get bank list
-				$query = $this->bank->get_all_bank();
-				$number_row = 0;
-				foreach ($query->result_array() as $row){
-					$response['banks'][$number_row]['bank_name'] = $row['bank_name'];
-					$response['banks'][$number_row]['account_number'] = $row['bank_account_number'];
-					$response['banks'][$number_row]['holder_name'] = $row['bank_holder_name'];
-					$response['banks'][$number_row]['branch'] = $row['bank_branch'];
-					$response['banks'][$number_row]['city'] = $row['bank_city'];
-					$number_row++;
-				}
 				
 				//preparing to send email
 				$content = array(
@@ -1678,6 +1667,24 @@ class Order extends CI_Controller {
 					'total_price' => $tot_price,
 					'admin_fee' => '10000'
 				);
+				
+				//get bank list
+				$query = $this->bank->get_all_bank();
+				$number_row = 0;
+				foreach ($query->result_array() as $row){
+					$response['banks'][$number_row]['bank_name'] = $row['bank_name'];
+					$response['banks'][$number_row]['account_number'] = $row['bank_account_number'];
+					$response['banks'][$number_row]['holder_name'] = $row['bank_holder_name'];
+					$response['banks'][$number_row]['branch'] = $row['bank_branch'];
+					$response['banks'][$number_row]['city'] = $row['bank_city'];
+					//for in email
+					$content['banks'][$number_row]['bank_name'] = $row['bank_name'];
+					$content['banks'][$number_row]['account_number'] = $row['bank_account_number'];
+					$content['banks'][$number_row]['holder_name'] = $row['bank_holder_name'];
+					$content['banks'][$number_row]['branch'] = $row['bank_branch'];
+					$content['banks'][$number_row]['city'] = $row['bank_city'];
+					$number_row++;
+				}
 				
 				//get email disribution
 				$this->load->model('notification');

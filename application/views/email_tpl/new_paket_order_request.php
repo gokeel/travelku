@@ -33,6 +33,6 @@
 		<p><a href="<?php echo base_url();?>index.php/webfront/confirm_payment">Konfirmasi Pembayaran</a></p>
 		<p></p>
 		<p>Salam,<br />
-			Admin</p>
+			Admin Ticketing</p>
 	</body>
 </html>
