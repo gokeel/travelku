@@ -125,21 +125,21 @@
 							<div class="hotelstab none">
 								<form method="get" action="<?php echo base_url();?>index.php/webfront/show_hotel_tiketcom_list">
 									<span class="opensans size18" >Kota/Nama Hotel</span>
-									<input type="text" class="form-control" placeholder="contoh:denpasar" id="query" name="query">
+									<input type="text" class="form-control" placeholder="contoh:denpasar" id="query" name="query" required>
 									
 									<br/>
 									
 									<div class="w50percent">
 										<div class="wh90percent textleft">
 											<span class="opensans size13"><b>Check in</b></span>
-											<input type="text" class="form-control mySelectCalendar" name="checkin" id="datepicker" placeholder="yyyy-mm-dd"/>
+											<input type="text" class="form-control mySelectCalendar" name="checkin" id="datepicker" value="<?php $d=strtotime("tomorrow"); echo date('Y-m-d',$d);?>"/>
 										</div>
 									</div>
 
 									<div class="w50percentlast">
 										<div class="wh90percent textleft right">
 											<span class="opensans size13"><b>Check out</b></span>
-											<input type="text" class="form-control mySelectCalendar" name="checkout" id="datepicker2" placeholder="yyyy-mm-dd"/>
+											<input type="text" class="form-control mySelectCalendar" name="checkout" id="datepicker2" value="<?php $d=strtotime("tomorrow"); echo date('Y-m-d',$d);?>"/>
 										</div>
 									</div>
 									
@@ -151,24 +151,22 @@
 												<div class="w50percent">
 													<div class="wh90percent textleft left">
 														<span class="opensans size13"><b>Kamar</b></span>
-														<select class="form-control mySelectBoxClass" id="kamar" name="room">
-														  <option selected>1</option>
-														  <option>2</option>
-														  <option>3</option>
-														  <option>4</option>
-														  <option>5</option>
+														<select class="form-control" id="kamar" name="room">
+														  <option selected value="1">1</option>
+														  <?php for($i=2; $i<9; $i++){ 
+														  echo '<option value="'.$i.'">'.$i.'</option>';
+														  } ?>
 														</select>
 													</div>
 												</div>							
 												<div class="w50percentlast">
 													<div class="wh90percent textleft right">
 													<span class="opensans size13"><b>Malam</b></span>
-														<select class="form-control mySelectBoxClass" id="malam" name="night" disabled>
+														<select class="form-control" id="malam" name="night">
 														  <option selected>1</option>
-														  <option>2</option>
-														  <option>3</option>
-														  <option>4</option>
-														  <option>5</option>
+														  <?php for($i=2; $i<16; $i++){ 
+														  echo '<option value="'.$i.'">'.$i.'</option>';
+														  } ?>
 														</select>
 													</div>
 												</div>
@@ -180,7 +178,7 @@
 												<div class="w50percent">
 													<div class="wh90percent textleft left">
 														<span class="opensans size13"><b>Dewasa</b></span>
-														<select class="form-control mySelectBoxClass" id="hotel-dewasa" name="dewasa">
+														<select class="form-control" id="hotel-dewasa" name="dewasa">
 														  <option>0</option>
 														  <option>1</option>
 														  <option selected>2</option>
@@ -193,7 +191,7 @@
 												<div class="w50percentlast">
 													<div class="wh90percent textleft right">
 													<span class="opensans size13"><b>Anak</b></span>
-														<select class="form-control mySelectBoxClass" id="hotel-anak" name="anak">
+														<select class="form-control" id="hotel-anak" name="anak">
 														  <option selected>0</option>
 														  <option>1</option>
 														  <option>2</option>
@@ -350,7 +348,6 @@
 											<div class="wh90percent textleft">
 												<span class="opensans size13"><b>Dewasa</b></span>
 												<select class="form-control mySelectBoxClass" name="dewasa" id="train-dewasa" >
-												  <option>0</option>
 												  <option selected>1</option>
 												  <option>2</option>
 												  <option>3</option>
@@ -797,7 +794,49 @@
 		load_all_station('<?php echo base_url();?>index.php/train/get_all_station', "#train-from");
 		load_all_station('<?php echo base_url();?>index.php/train/get_all_station', "#train-to");
 	});
+
+	//event on hotel checkout change the night
+	jQuery("#datepicker2").change(function(){
+		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+		var checkin = document.getElementById("datepicker").value;
+		var checkout = document.getElementById("datepicker2").value;
+		var firstDate = new Date(checkin);
+		var secondDate = new Date(checkout);
+
+		var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+		if(diffDays<=15)
+			document.getElementById("malam").value = diffDays.toString();
+		else{
+			alert("Lama menginap tidak lebih dari 15 hari");
+			document.getElementById("datepicker2").value = checkin;
+			document.getElementById("malam").value = "1";
+		}
+	});
 	
+	jQuery("#datepicker").change(function(){
+		changeDateCheckout("datepicker", "datepicker2", "malam");
+	});
+	
+	//event on night changed, change the checkout
+	jQuery("#malam").change(function(){
+		changeDateCheckout("datepicker", "datepicker2", "malam");
+	});
+	
+	function changeDateCheckout(from, to, malam){
+		var checkin = document.getElementById(from).value;
+		var firstDate = new Date(checkin);
+		var night = document.getElementById(malam).value;
+		var numberOfDaysToAdd = parseInt(night);
+		
+		var someDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), firstDate.getDate() + numberOfDaysToAdd);
+		
+		var dd = someDate.getDate();
+		var mm = someDate.getMonth() + 1;
+		var yy = someDate.getFullYear();
+		
+		var someFormattedDate = yy+'-'+(mm < 10 ? "0"+mm : mm)+'-'+(dd < 10 ? "0"+dd : dd);
+		jQuery("#"+to).val(someFormattedDate);
+	}
 </script>	
 
   </body>

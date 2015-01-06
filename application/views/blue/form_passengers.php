@@ -397,14 +397,14 @@
 								var teks = data.items[0].required[val]["FieldText"];
 								var tambahan = '';
 								if(teks.indexOf("Nama") >= 0)
-									tambahan = 'onBlur="return isValidCharacter(this.value)"';
+									tambahan = 'onBlur="return nameIsCharacter(this.value)"';
 								if(teks.indexOf("Telepon") >= 0)
 									tambahan = 'onBlur="return isValidNumber(this.value)"';
 								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'</span>\
 									<input type="text" class="form-control" name="'+val+'" placeholder="" style="width:75%" maxlength="50" '+tambahan+' required>';
-								if(teks=="Nama Belakang" && separator_index > 2)
+								/*if(teks=="Nama Belakang" && separator_index == 2)
 									input_string += '<span class="size13 dark">ID (KTP/SIM)</span>\
-									<input type="text" class="form-control" name="ida'+adult+'" placeholder="" style="width:75%" maxlength="20" required>';
+									<input type="text" class="form-control" name="ida'+adult+'" placeholder="" style="width:75%" maxlength="20">';*/
 							}
 							else if ( data.items[0].required[val]["type"]=="datetime"){
 								input_string += '<span class="size13 dark">'+data.items[0].required[val]["FieldText"]+'*</span>\
@@ -531,14 +531,15 @@
 						var total_price_dep = total_price_adult_dep + total_price_child_dep + total_price_infant_dep;// + admin_fee;
 						total_price += total_price_dep;
 						
-						var departure_summary = '<div>\
-								<p>'+data.items[0].departures.result[i].train_name+'</p><br/>\
+						var departure_summary = '<div><b>Pergi</b>\
+								<p>'+data.items[0].departures.result[i].train_name+'<br/>\
+								Kelas: '+data.items[0].departures.result[i].subclass_name+'</p><br/>\
 								<div class="wh33percent left size12 bold dark">'+data.items[0].search_queries.dep_city+'</div>\
 								<div class="wh33percent left center size12 bold dark">Durasi</div>\
 								<div class="wh33percent right textright size12 bold dark">'+data.items[0].search_queries.arr_city+'</div>\
 								<div class="clearfix"></div>\
-								<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
-								<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
+								<div class="wh33percent left"><div class="fcircle"></div></div>\
+								<div class="wh33percent right"><div class="fcircle right"></div></div>\
 								<div class="clearfix"></div>\
 								<div class="fline2px"></div>\
 								<div class="wh33percent left size12">'+data.items[0].departures.result[i].departure_time+'</div>\
@@ -588,14 +589,15 @@
 							var total_price_ret = total_price_adult_ret + total_price_child_ret + total_price_infant_ret;// + admin_fee;
 							total_price += total_price_ret;
 								
-							return_summary = '<div>\
-								<p>'+data.items[0].returns.result[i].train_name+'</p><br/>\
+							return_summary = '<div><b>Kembali</b>\
+								<p>'+data.items[0].returns.result[i].train_name+'<br/>\
+								Kelas: '+data.items[0].returns.result[i].subclass_name+'</p><br/>\
 								<div class="wh33percent left size12 bold dark">'+data.items[0].search_queries.arr_city+'</div>\
 								<div class="wh33percent left center size12 bold dark">Durasi</div>\
 								<div class="wh33percent right textright size12 bold dark">'+data.items[0].search_queries.dep_city+'</div>\
 								<div class="clearfix"></div>\
-								<div class="wh33percent left"><div class="fcircle"><span class="fdeparture"></span></div></div>\
-								<div class="wh33percent right"><div class="fcircle right"><span class="farrival"></span></div></div>\
+								<div class="wh33percent left"><div class="fcircle"></div></div>\
+								<div class="wh33percent right"><div class="fcircle right"></div></div>\
 								<div class="clearfix"></div><div class="fline2px"></div>\
 								<div class="wh33percent left size12">'+data.items[0].returns.result[i].departure_time+'</div>\
 								<div class="wh33percent left center size12">'+data.items[0].returns.result[i].duration+'</div>\
@@ -768,6 +770,34 @@
 						<div class="roundstep right">'+numbering+'</div>\
 						<div class="clearfix"></div>\
 						<div class="line4"></div>\
+						<div class="alert alert-info">\
+						PERSYARATAN DAN KETENTUAN ANGKUTAN PENUMPANG KERETA API<br/>\
+    1. Setiap penumpang wajib memiliki tiket yaitu dokumen angkutan yang sah berupa tiket komputer, tiket tercetak, atau bentuk lainnya yang ditetapkan PT Kereta Api Indonesia (PT KAI) sebagai tiket.<br/>\
+    2. Tiket berlaku dan sah apabila:<br/>\
+        &nbsp;&nbsp;&nbsp;a.) Nama tercetak pada tiket sama dengan nama yang tercetak pada bukti identitas penumpang yang bersangkutan. (KTP/SIM/paspor/bukti identitas lainnya).<br/>\
+        &nbsp;&nbsp;&nbsp;b.) Nama dan nomor kereta api, tanggal dan jam keberangkatan, kelas, dan relasi perjalanan yang tercantum dalam tiket telah sesuai dengan kereta api yang dinaiki.<br/>\
+    3. Dalam hal penumpang akan mempergunakan dua kereta api atau lebih yang memiliki sifat persambungan maka penumpang agar menyisihkan waktu yang cukup banyak untuk persambungan dengan kereta api lain tersebut. PT KAI tidak bertanggung jawab atas kegagalan penumpang menggunakan kereta api lanjutannya akibat kereta api yang dinaiki sebelumnya terlambat dan tidak diberikan kompensasi apapun.<br/>\
+    4. Jika penumpang tidak memiliki tiket yang sah ketika dilakukan pemeriksaan di atas kereta api, penumpang akan diturunkan dari kereta api pada kesempatan pertama.<br/>\
+    5. Reservasi tiket kereta api dapat dilakukan sejak H-90 di website Tiket.com, mobile Tiket.com (m.Tiket.com), dan partner yang berafiliasi dengan Tiket.com.<br/>\
+    6. Bukti Pembayaran pembelian tiket di luar loket KAI dapat berupa struk, email, SMS notifikasi atau bentuk lainnya, berisi kode booking, data diri, dan data perjalanan penumpang serta harus ditukarkan dengan tiket di loket stasiun selambat-lambatnya satu jam sebelum jadwal keberangkatan KA.<br/>\
+    7. Tarif adalah tarif per orang sekali jalan, sudah termasuk asuransi.<br/>\
+    8. Tarif berlaku berada pada rentang tarif batas atas (tba) dan tarif batas bawah (tbb) yang ditetapkan oleh direksi berdasarkan Peraturan Menteri Perhubungan Republik Indonesia dan dapat berubah sewaktu-waktu dalam rentang tbb-tba dimaksud.<br/>\
+    9. Semua penumpang dikenakan tarif dewasa dan berhak atas nomor tempat duduk, kecuali pada Kereta Api Komuter dapat diberlakukan bebas tempat duduk.<br/>\
+    10. Khusus anak usia di bawah 3 tahun pada kereta api jarak jauh dan menengah hanya dikenakan tarif sebesar 10% jika tidak mengambil tempat duduk sendiri.<br/>\
+    11. Berat bagasi tangan yang boleh dibawa ke dalam kabin kereta untuk tiap penumpang maksimum 20 Kg dengan volume maksimum 100 Dm3, tidak dikenakan bea tambahan.<br/>\
+    12. Bagasi yang melebihi berat dan atau ukuran sebagaimana dimaksud di atas tidak diperkenankan dibawa ke dalam kabin kereta penumpang. Bagasi dimaksud dapat ditempatkan pada kereta bagasi dengan pengaturan sesuai dengan ketentuan yang ditetapkan pengelola kereta bagasi (pihak ketiga).<br/>\
+    13. Khusus sepeda lipat atau sepeda biasa yang dikemas sedemikian rupa dalam keadaan komponen-komponennya tidak dirakit menjadi sepeda utuh dapat dibawa ke dalam kabin kereta penumpang dan ditempatkan pada tempat yang tidak mengganggu atau membahayakan penumpang lain serta tidak akan menimbulkan kerusakan pada kereta, tidak dikenakan biaya.<br/>\
+    14. Barang yang tidak diperbolehkan diangkut sebagai bagasi tangan adalah binatang, narkotika psikotropika dan zat adiktif lainnya, senjata api dan senjata tajam, semua barang yang mudah menyala/meledak, barang-barang yang karena sifatnya dapat mengganggu/merusak kesehatan, berbau busuk, barang-barang yang menurut pertimbangan pegawai karena keadaan dan besarnya tidak pantas diangkut sebagai bagasi tangan, barang-barang yang dilarang undang-undang.<br/>\
+    15. Semua penumpang berusia di atas 17 tahun wajib menunjukkan bukti identitas diri yang resmi (KTP/SIM/paspor/ID lainnya), dengan nama tertera pada bukti identitas sama dengan yang tertera pada tiket. Apabila tidak dapat menunjukkan bukti identitas yang sama dengan nama yang tertera pada tiket, maka tidak diperkenankan masuk.<br/>\
+    16. Permohonan pembatalan dapat dilakukan di loket stasiun selambat-lambatnya 30 menit sebelum jadwal keberangkatan kereta api sebagaimana tercantum dalam tiket yang telah dibeli dengan dikenakan bea pembatalan sebesar 25%.<br/>\
+    17. Permohonan pembatalan kurang dari 30 menit sebelum jadwal keberangkatan kereta api maka tiket hangus, tidak ada pengembalian bea.<br/>\
+    18. Pengembalian bea tiket yang dibatalkan dilakukan secara tunai di stasiun yang ditunjuk atau ditransfer ke rekening pemohon pembatalan dengan biaya transfer ditanggung PT KAI pada hari ke-30 sampai dengan hari ke-60 setelah permohonan pembatalan.<br/>\
+    19. Pembatalan yang diakibatkan tidak terselenggaranya angkutan karena alasan operasional, maka bea tiket di luar bea pesan dikembalikan penuh secara tunai.<br/>\
+    20. Permohonan perubahan jadwal dapat dilakukan di stasiun, selambat-lambatnya 60 menit sebelum jadwal keberangkatan kereta api sebagaimana tercantum dalam tiket yang telah dibeli dengan dikenakan bea perubahan jadwal sebesar 25%.<br/>\
+    21. Perubahan jadwal dapat dilakukan terhadap kereta api dengan tingkat tarif yang sama atau lebih tinggi, jika dilakukan terhadap kereta api dengan tingkat tarif lebih rendah, maka tidak ada pengembalian bea.<br/>\
+    22. Semua Perjalanan kereta api adalah perjalanan bebas asap rokok, tidak diperkenankan merokok di seluruh rangkaian kereta api. Jika penumpang merokok di atas kereta api, maka penumpang akan diturunkan pada kesempatan pertama.<br/>\
+    23. Larangan pengangkutan diperuntukkan bagi orang dalam keadaan mabuk dan orang yang dapat mengganggu atau membahayakan penumpang lain, orang yang dihinggapi penyakit menular, atau orang yang menurut undang-undang dapat dikenakan peraturan pengasingan untuk kesehatannya.<br/>\
+</div>\
 						<div class="alert alert-info">\
 						Perhatian! Mohon untuk membaca informasi berikut.<br/>\
 						<p class="size12">• Tiket yang anda beli akan langsung berhubungan dengan pihak maskapai/kereta api/hotel terkait. Segala hal yang berhubungan dengan pembatalan atau perubahan jadwal atau yang lainnya, mengikuti dengan peraturan perusahaan terkait.</p>\
@@ -952,24 +982,28 @@
 		$('#'+name_input).append(str);
 	}
 	
-	function isValidCharacter(str) {
+	function nameIsCharacter(str) {
 		var iChars = "~`!#$%^&*+=-[]\\\';,/{}|\":<>?0123456789";
-
+		var result = true;
 		for (var i = 0; i < str.length; i++) {
 		   if (iChars.indexOf(str.charAt(i)) != -1) {
-			   alert ("Nama harus berupa huruf, mohon benahi input anda");
+			   result = false;
+			   break;
 		   }
 		}
+		if(result==false) alert ("Nama harus berupa huruf");
 	}
 	
 	function isValidNumber(str) {
 		var iChars = "~`!#$%^&*+=-[]\\\';,/{}|\":<>?abcdefghijklmnopqrstuvwxyz";
-
+		var result = true;
 		for (var i = 0; i < str.length; i++) {
 		   if (iChars.indexOf(str.charAt(i)) != -1) {
-			   alert ("Telepon harus berupa angka, mohon benahi input anda");
+			   result = false;
+			   break;
 		   }
 		}
+		if(result==false) alert ("Telepon harus berupa angka");
 	}
 </script>
 

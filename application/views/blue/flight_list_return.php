@@ -368,6 +368,7 @@
 		var tid_dep = '<?php echo $this->input->get('tid_dep',TRUE);?>';
 		var dep_date = '<?php echo $this->input->get('dep_date',TRUE);?>';
 		var sc_dep = '<?php echo $this->input->get('sc_dep',TRUE);?>';
+		var time_dep = '<?php echo $this->input->get('time_dep',TRUE);?>';
 		
 		$('#list').empty();
 		$('#result-header').empty();
@@ -441,7 +442,7 @@
 											<div class="clearfix"></div><br/><br/>\
 										</div>\
 										<div class="fselect">\
-											<span class="size12 lightgrey">Total Harga</span> <span class="size18 green bold">IDR '+currency_separator(total_price,'.')+'</span>&nbsp; <a href="'+next_url+'"><button class="selectbtn mt1" type="button">Select</button></a>	\
+											<span class="size12 lightgrey">Total Harga</span> <span class="size18 green bold">IDR '+currency_separator(total_price,'.')+'</span>&nbsp; <a href="'+next_url+'" onClick="check_time()"><button class="selectbtn mt1" type="button">Select</button></a>	\
 										</div>');
 							div.append('<div class="clearfix"></div><div class="offset-2"><hr class="featurette-divider3"></div>');
 						}
@@ -455,6 +456,15 @@
 		})
 	}	
 
+	function check_time(time_ret)
+	{
+		var answer = confirm("Hapus data ini?")
+		if (answer){
+			document.messages.submit();
+		}
+			
+		return false;  
+	}
 </script>	
 
 </body>

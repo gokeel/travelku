@@ -111,4 +111,18 @@ class Bank extends CI_Model {
 		else
 			return false;
 	}
+	
+	function get_exchanges_by_detail($currency, $country){
+		$this->db->from('exchange_rates');
+		$this->db->where('currency_a', $currency);
+		$this->db->where('country_a', $country);
+		$this->db->order_by('country_a');
+		$get = $this->db->get();
+		if ($get->num_rows() > 0){
+			foreach($get->result_array() as $row)
+				return $row['rate_in_b'];
+		}
+		else
+			return '0';
+	}
 }

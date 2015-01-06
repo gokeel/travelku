@@ -6,7 +6,7 @@
 |--------------------------------------------------------------------------
 */
 $config['api_server'] = 'http://api.sandbox.tiket.com';
-$config['api_key'] = 'cf7841dbb1aa1b0c690eaba15db54c70';
+$config['api_key'] = '55b2cc2a4c52ed8bbc13eddeab447dd2';
 $config['google_api_key'] = 'AIzaSyAUF_v0Ad2IWxyXHxdXCvELO2fPaLeSZ1Q';
 //$config['api_token'] = '0ebbf60e5813d152d079bea444c90238c42e3628';
 $config['account_id'] = '2';

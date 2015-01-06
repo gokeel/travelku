@@ -767,6 +767,42 @@ class Order extends CI_Controller {
 		}
 		else {
 			$query = $this->bank->add_confirm_payment($data);
+			
+			//get email disribution
+			$this->load->model('notification');
+			list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-confirm_payment');
+			//sending email
+			$email_config = array(
+				'protocol' => 'mail',
+				'mailpath' => '/usr/sbin/sendmail',
+				'charset' => 'iso-8859-1',
+				'wordwrap' => TRUE,
+				'mailtype' => 'html'
+			);
+			$this->load->library('email', $email_config);
+			
+			$this->email->from($email_sender, $sender_name);
+			$this->email->to($to);
+			$this->email->cc($cc);
+			$this->email->bcc($bcc);
+					
+			$this->email->subject('Konfirmasi Pembayaran Baru');
+			$content = array(
+				'order_id' => $order_id
+			);
+			$messages = $this->load->view('email_tpl/new_confirmation_payment', $content, TRUE);
+			$this->email->message($messages);
+
+			$this->email->send();
+			//insert notification
+			$notif = array(
+				'category' => 'new-confirm_payment',
+				'message' => 'Konfirmasi pembayaran order ID '.$order_id,
+				'created_datetime' => date('Y-m-d H:i:s')
+			);
+			$this->general->add_to_table('notifications', $notif);
+			//end notif
+			
 			redirect(base_url('index.php/webfront/confirm_payment/success'));
 		}
 		
@@ -1108,6 +1144,14 @@ class Order extends CI_Controller {
 		$query_price = $this->general->get_afield_by_id('posts', 'post_id', $this->input->post('post_id',TRUE), 'price');
 		foreach($query_price->result_array() as $row)
 			$price = $row['price'];
+		//get the currency
+		$query_purchase_price = $this->general->get_afield_by_id('posts', 'post_id', $this->input->post('post_id',TRUE), 'currency');
+		foreach($query_purchase_price->result_array() as $row)
+			$currency = $row['currency'];
+		//if USD get the rate
+		if($currency=="USD"){
+			$rate = $this->bank->get_exchanges_by_detail('USD', 'Amerika');
+		}
 		
 		//get the purchasing price (harga beli)
 		$query_purchase_price = $this->general->get_afield_by_id('posts', 'post_id', $this->input->post('post_id',TRUE), 'purchasing_price');
@@ -1173,8 +1217,22 @@ class Order extends CI_Controller {
 			'title' => $this->input->post('title', TRUE),
 			'first_name' => $this->input->post('first_name', TRUE),
 			'last_name' => $this->input->post('last_name', TRUE),
-			'total_price' => $total_price
+			'total_price' => $total_price,
+			'currency' => $currency,
+			'rate' => $rate,
 		);
+		
+		//get bank list
+		$query = $this->bank->get_all_bank();
+		$number_row = 0;
+		foreach ($query->result_array() as $row){
+			$content['banks'][$number_row]['bank_name'] = $row['bank_name'];
+			$content['banks'][$number_row]['account_number'] = $row['bank_account_number'];
+			$content['banks'][$number_row]['holder_name'] = $row['bank_holder_name'];
+			$content['banks'][$number_row]['branch'] = $row['bank_branch'];
+			$content['banks'][$number_row]['city'] = $row['bank_city'];
+			$number_row++;
+		}
 			
 		//get email disribution
 		$this->load->model('notification');
@@ -1244,11 +1302,12 @@ class Order extends CI_Controller {
 			}
 			//checking for ages
 			if(strpos($key,'birthdatei') !== false){
-				$datetime1 = date_create($date_go);
+				//$datetime1 = date_create($date_go); jaga2 kalo ternyata yg dipake adalah tanggal keberangkatan
+				$datetime1 = date_create(date('Y-m-d'));
 				$datetime2 = date_create($value);
-				$interval = date_diff($datetime1, $datetime2);
-				$diff = intval($interval->format('%a'));
-				if($diff>720 and $diff<-10){
+				$interval = date_diff($datetime2, $datetime1);
+				$diff = intval($interval->format('%r%a'));
+				if($diff>730 or $diff<0){
 					$error_passport_date = true;
 					$error_message = 'Tanggal lahir bayi harus berumur kurang dari 2tahun di tanggal keberangkatan.';
 				}
