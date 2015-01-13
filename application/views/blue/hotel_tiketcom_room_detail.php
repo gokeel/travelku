@@ -96,14 +96,14 @@
 	
 	<div class="container breadcrub">
 	    <div>
-			<a class="homebtn left" href="#"></a>
+			<a class="homebtn left" href="<?php echo base_url();?>"></a>
 			<div class="left">
 				<ul class="bcrumbs">
 					<li>/</li>
 					<li><a href="#">Hotel</a></li>
 				</ul>				
 			</div>
-			<a class="backbtn right" href="#"></a>
+			<a class="backbtn right" href="javascript:history.back()"></a>
 		</div>
 		<div class="clearfix"></div>
 		<div class="brlines"></div>
@@ -197,7 +197,14 @@
 	
 	function detail_hotel(params){
 		//cindy nordiansyah
-			
+		var checkin = "<?php echo $this->input->get('startdate',TRUE);?>";
+		var checkout = "<?php echo $this->input->get('enddate',TRUE);?>";
+		var room = "<?php echo $this->input->get('room',TRUE);?>";
+		var night = "<?php echo $this->input->get('night',TRUE);?>";
+		var adult = "<?php echo $this->input->get('adult',TRUE);?>";
+		var child = "<?php echo $this->input->get('child',TRUE);?>";
+		var uid = "<?php echo $this->input->get('uid',TRUE);?>";
+		
 		$('#result-header').empty();
 		$('#list').empty();				
 		$('#result-header').append('<img id="progress" src="<?php echo IMAGES_DIR; ?>/spiffygif_34x34.gif" />');
@@ -206,7 +213,7 @@
 		$.ajax({
 			type : "GET",
 			url: '<?php echo base_url();?>index.php/hotel/tiketcom_show_hotel_rooms/<?php echo $this->uri->segment(3);?>',
-			//data: params,
+			data: "startdate="+checkin+"&enddate="+checkout+"&room="+room+"&night="+night+"&adult="+adult+"&child="+child+"&uid="+uid,
 			cache: false,
 			dataType: "json",
 			success:function(data){
@@ -215,10 +222,11 @@
 						$('#result-header').append('<p>Maaf, data tidak ada untuk rute ini.<p>');
 					} 
 					else{
-						$('#result-header').append(data.items[0].breadcrumb.business_name+' '+data.items[0].breadcrumb.area_name+' '+data.items[0].breadcrumb.province_name+', <?php echo $this->input->get('startdate',TRUE);?> - <?php echo $this->input->get('enddate',TRUE);?> Kamar:<?php echo $this->input->get('room',TRUE);?> Malam:<?php echo $this->input->get('night',TRUE);?> Dewasa:<?php echo $this->input->get('adult',TRUE);?> Anak:<?php echo $this->input->get('child',TRUE);?><br/><h3>Silahkan Pilih Tipe Kamar</h3>');
+						$('#result-header').append(data.items[0].breadcrumb.business_name+' '+data.items[0].breadcrumb.area_name+' '+data.items[0].breadcrumb.province_name+', '+checkin+' - '+checkout+' Kamar:'+room+' Malam:'+night+' Dewasa:'+adult+' Anak:'+child+'<br/><h3>Silahkan Pilih Tipe Kamar</h3>');
 									
 						var div = $("#list");
 						for(var i=0; i<data.items[0].results.result.length;i++){
+							var room_name = data.items[0].results.result[i].room_name;
 							var rating = data.items[0].breadcrumb.star_rating;
 							var star_image = 'bigrating-'+rating+'.png';
 							var breakfast = data.items[0].results.result[i].with_breakfasts;
@@ -254,6 +262,18 @@
 										other_facilities += hp_name+' | ';
 								}
 							}
+							
+							var room_policy = '<ol style="list-style:decimal">';
+							for(var k=0; k<data.items[0].policy.length; k++){
+								if (data.items[0].policy[k].name==room_name){
+									//parsing object required
+									Object.getOwnPropertyNames(data.items[0].policy[k]).forEach(function(val, idx, array) {
+										if(val.indexOf("tier") >= 0)
+											room_policy += "<li>"+data.items[0].policy[k][val]+"</li>";
+									});
+								}
+							}
+							room_policy += "</ol>";
 							var book_uri = data.items[0].results.result[i].bookUri;
 							var book_uri_split = book_uri.split("?");
 							
@@ -268,9 +288,9 @@
 									<div class="itemlabel3">\
 										<div class="labelright">\
 											<img src="<?php echo BLUE_THEME_DIR;?>/images/'+star_image+'" width="60" alt=""/><br/><br/>\
-											<span class="size11 grey">'+data.items[0].results.result[i].room_available+' Kamar Tersedia</span><br/><br/>\
+											<span class="size11 grey">'+data.items[0].results.result[i].room_available+' Kamar Tersedia<br/><br/>Harga Final!<br/></span>\
 											<span class="green size18"><b>IDR '+currency_separator(parseInt(data.items[0].results.result[i].price), '.')+'</b></span><br/>\
-											<span class="size11 grey">avg/night</span><br/><br/><br/>\
+											<span class="size11 grey">per night</span><br/><br/><br/>\
 											<a href="<?php echo base_url();?>index.php/webfront/form_passenger_tiket/hotel?'+book_uri_split[1]+'&token='+data.items[0].token+'&uid=<?php echo $this->input->get('uid',TRUE);?>">\
 											<button class="bookbtn mt1" type="submit">Select</button></a>\
 										</div>\
@@ -286,6 +306,10 @@
 								</div>\
 							</div>\
 							<div class="clearfix"></div>\
+							<div class="alert alert-info" style="margin-left:15px;margin-top:5px;margin-right:15px">\
+						<b>Kebijakan Kamar:</b><br/>\
+						'+room_policy+'\
+						</div>\
 							<div class="offset-2"><hr class="featurette-divider3"></div>');
 						}
 						// generate images gallery

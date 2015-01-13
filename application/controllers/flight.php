@@ -1,18 +1,27 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Flight extends CI_Controller {
+	function get_content($URL){
+        $ch = curl_init();
+		curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (twh:20681061; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $URL);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
 	public function get_token()
 	{
-		$getdata = file_get_contents($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json');
+		$url = $this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json';
+		$getdata = $this->get_content($url);
 		$json = json_decode($getdata);
 		$token = $json->token;
-		// set session token
 		return $token;
 	}
 	
 	public function get_token_json()
 	{
-		$getdata = file_get_contents($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json');
 		$json = json_decode($getdata);
 		$token = $json->token;
 		$response['token'] = $token;
@@ -52,7 +61,7 @@ class Flight extends CI_Controller {
 	
 	public function sync_all_airport()
 	{
-		$getdata = file_get_contents($this->config->item('api_server').'/flight_api/all_airport?token='.$this->get_token().'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/flight_api/all_airport?token='.$this->get_token().'&output=json');
 		$json = json_decode($getdata);
 		$airports = $json->all_airport->airport;
 		
@@ -87,7 +96,7 @@ class Flight extends CI_Controller {
 		$token = $this->get_token();
 		$this->session->set_userdata('token', $token);
 		$url_request = $this->config->item('api_server').'/search/flight?d='.$asal.'&a='.$tujuan.'&date='.$date.'&ret_date='.$ret_date.'&adult='.$adult.'&child='.$child.'&infant='.$infant.'&sort=priceasc&token='.$token.'&output=json&v=3';
-		$Data = file_get_contents($url_request);
+		$Data = $this->get_content($url_request);
 		 
 		$Proses2 = json_decode($Data);
 		 
@@ -103,7 +112,8 @@ class Flight extends CI_Controller {
 	
 	public function list_country(){
 		$token = $this->get_token();
-		$Data = file_get_contents($this->config->item('api_server').'/general_api/listCountry?token='.$token.'&output=json');
+		$url = $this->config->item('api_server').'/general_api/listCountry?token='.$token.'&output=json';
+		$Data = $this->get_content($url);
 		 
 		$Proses2 = json_decode($Data);
 		 
@@ -128,7 +138,7 @@ class Flight extends CI_Controller {
 			$url = $this->config->item('api_server').'/flight_api/get_flight_data?flight_id='.$flight_id.'&date='.$date.'&ret_flight_id='.$flight_id_return.'&ret_date='.$date_ret.'&token='.$this->session->userdata('token').'&output=json';
 		}
 		
-		$getdata = file_get_contents($url);
+		$getdata = $this->get_content($url);
 		
 		$json = json_decode($getdata);
 		$array = array();

@@ -89,7 +89,7 @@
 					<li><a href="#">Paket Reguler</a></li>
 				</ul>				
 			</div>
-			<a class="backbtn right" href="#"></a>
+			<a class="backbtn right" href="javascript:history.back()"></a>
 		</div>
 		<div class="clearfix"></div>
 		<div class="brlines"></div>

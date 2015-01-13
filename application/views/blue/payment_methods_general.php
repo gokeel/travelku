@@ -66,14 +66,14 @@
 	
 	<div class="container breadcrub">
 	    <div>
-			<a class="homebtn left" href="#"></a>
+			<a class="homebtn left" href="<?php echo base_url();?>"></a>
 			<div class="left">
 				<ul class="bcrumbs">
 					<li>/</li>
 					<li><a href="#">Metode Pembayaran</a></li>
 				</ul>				
 			</div>
-			<a class="backbtn right" href="#"></a>
+			<a class="backbtn right" href="javascript:history.back()"></a>
 		</div>
 		<div class="clearfix"></div><br/>
 		<div class="brlines"></div>

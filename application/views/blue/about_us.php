@@ -66,7 +66,7 @@
 	
 	<div class="container breadcrub">
 	    <div>
-			<a class="homebtn left" href="#"></a>
+			<a class="homebtn left" href="<?php echo base_url();?>"></a>
 			<div class="left">
 				<ul class="bcrumbs">
 					<li>/</li>

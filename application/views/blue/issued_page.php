@@ -66,8 +66,7 @@
 						echo '<ul class="leftatr">
 								<li>ID Pesanan</li>
 								<li>Harga Tiket</li>
-								<li>Pajak</li>
-								<li>Bagasi</li>
+								<li>Biaya Pelayanan</li>
 								<li>Total Harga</li>';
 						/*if($discount<>''){
 							echo '<li>Diskon</li>';
@@ -77,10 +76,9 @@
 									
 						echo '<ul class="rightatr">
 								<li>'.$order_id.'</li>
-								<li>IDR '.number_format($price,0,',','.').'</li>
-								<li>IDR '.number_format($tax,0,',','.').'</li>
-								<li>IDR '.number_format($baggage,0,',','.').'</li>
-								<li>IDR '.number_format($total_price,0,',','.').'</li>
+								<li>IDR '.number_format($subtotal_fee,0,',','.').'</li>
+								<li>IDR '.number_format($service_fee,0,',','.').'</li>
+								<li>IDR '.number_format($grand_total,0,',','.').'</li>
 								';
 						/*if($discount<>''){
 							echo '<li>IDR '.number_format($discount,0,',','.').'</li>';

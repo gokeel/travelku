@@ -92,7 +92,7 @@
 	
 	<div class="container breadcrub">
 	    <div>
-			<a class="homebtn left" href="#"></a>
+			<a class="homebtn left" href="<?php echo base_url();?>"></a>
 			<div class="left">
 				<ul class="bcrumbs">
 					<li>/</li>
@@ -101,7 +101,7 @@
 					<li><a href="#">Returning</a></li>
 				</ul>				
 			</div>
-			<a class="backbtn right" href="#"></a>
+			<a class="backbtn right" href="javascript:history.back()"></a>
 		</div>
 		<div class="clearfix"></div>
 		<div class="brlines"></div>
@@ -329,11 +329,14 @@
 															Durasi<br/>\
 															<b>'+data.items[0].returns.result[i].duration+'</b><br/>\
 														</li>\
-														<li class="ft3">Transit<br/><span class="grey">'+data.items[0].returns.result[i].stop+'</span><br/><br/>\
+														<li class="ft3">Transit<br/>\
+															<span class="grey">'+data.items[0].returns.result[i].stop+'</span><br/><br/>\
 														</li>\
-														<li class="ft4">Dewasa IDR '+currency_separator(parseInt(data.items[0].returns.result[i].price_adult),'.')+'<br/><br/>Anak IDR '+currency_separator(parseInt(data.items[0].returns.result[i].price_child),'.')+'<br/><br/>Bayi IDR '+currency_separator(parseInt(data.items[0].returns.result[i].price_infant),'.')+'<br/><br/>\
+														<li class="ft4">\
+															Dewasa IDR '+currency_separator(parseInt(data.items[0].returns.result[i].price_adult),'.')+'<br/><br/>Anak IDR '+currency_separator(parseInt(data.items[0].returns.result[i].price_child),'.')+'<br/><br/>Bayi IDR '+currency_separator(parseInt(data.items[0].returns.result[i].price_infant),'.')+'<br/><br/>\
 														</li>\
-														<li class="ft5"><button class="hidebtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">Hide</button>\
+														<li class="ft5">\
+															<button class="hidebtn mt1" type="button" data-toggle="collapse" data-target="#collapse'+collapse_index+'">Hide</button>\
 														</li>\
 													</ul>\
 													<div class="clearfix"></div><br/><br/>\

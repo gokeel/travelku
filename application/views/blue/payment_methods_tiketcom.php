@@ -66,7 +66,7 @@
 	
 	<div class="container breadcrub">
 	    <div>
-			<a class="homebtn left" href="#"></a>
+			<a class="homebtn left" href="<?php echo base_url();?>"></a>
 			<div class="left">
 				<ul class="bcrumbs">
 					<li>/</li>
@@ -75,7 +75,7 @@
 					<li><a href="#">Metode Pembayaran</a></li>
 				</ul>				
 			</div>
-			<a class="backbtn right" href="#"></a>
+			<a class="backbtn right" href="javascript:history.back()"></a>
 		</div>
 		<div class="clearfix"></div><br/>
 		<div class="brlines"></div>
@@ -180,22 +180,22 @@
 					// add input for deposit
 					nav += '<li class="active"><a href="#method-deposit" data-toggle="tab">Detil</a></li>';
 					nav_konten += '<div class="tab-pane active" id="method-deposit">';
-					nav_konten += '<div class="col-md-4 textright">\
-												<div class="margtop15"><span class="dark">ID Pesanan:</span></div>\
-											</div>\
-											<div class="col-md-4">\
-												<div class="margtop15"><span class="dark">'+data.order_id+'</span></div>\
-											</div>\
-											<div class="col-md-4 textleft"></div>\
-											<div class="clearfix"></div><br/>\
-											<div class="col-md-4 textright">\
-												<div class="margtop15"><span class="dark">Harga + Pajak:</span></div>\
-											</div>\
-											<div class="col-md-4">\
-												<div class="margtop15"><span class="dark">IDR '+currency_separator(data.price_no_discount, '.')+'</span></div>\
-											</div>\
-											<div class="col-md-4 textleft"></div>\
-											<div class="clearfix"></div><br/>';
+					nav_konten += '<div class="col-md-5 textleft">\
+										<div class="margtop15"><span class="dark">ID Pesanan</span></div>\
+									</div>\
+									<div class="col-md-4">\
+										<div class="margtop15"><span class="dark">: '+data.order_id+'</span></div>\
+									</div>\
+									<div class="col-md-3 textleft"></div>\
+									<div class="clearfix"></div><br/>\
+									<div class="col-md-5 textleft">\
+										<div class="margtop15"><span class="dark">Harga Tiket + Biaya Pelayanan</span></div>\
+									</div>\
+									<div class="col-md-4">\
+										<div class="margtop15"><span class="dark">: IDR '+currency_separator(data.price_no_discount, '.')+'</span></div>\
+									</div>\
+									<div class="col-md-3 textleft"></div>\
+									<div class="clearfix"></div><br/>';
 					nav_konten += '<form method="post" action="<?php echo base_url();?>index.php/order/tiketcom_checkout_payment">\
 										<input type="hidden" name="method" value="Deposit">\
 										<input type="hidden" name="token" value="<?php echo $this->uri->segment(3);?>">\

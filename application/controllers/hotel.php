@@ -1,9 +1,18 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Hotel extends CI_Controller {
+	function get_content($URL){
+        $ch = curl_init();
+		curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (twh:20681061; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $URL);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
 	public function get_token()
 	{
-		$getdata = file_get_contents($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json');
 		$json = json_decode($getdata);
 		$token = $json->token;
 		return $token;
@@ -24,7 +33,7 @@ class Hotel extends CI_Controller {
 	//cindy nordiansyah
 	public function tiketcom_search_autocomplete(){
 		$area = $this->input->get('area', TRUE);
-		$getdata = file_get_contents($this->config->item('api_server').'/search/autocomplete/hotel?q='.$area.'&token='.$this->get_token().'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/search/autocomplete/hotel?q='.$area.'&token='.$this->get_token().'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -52,7 +61,7 @@ class Hotel extends CI_Controller {
 			$this->session->set_userdata('token', $token);
 		//}
 		//echo ($this->config->item('api_server').'/search/hotel?q='.$query.'&startdate='.$checkin.'&night='.$night.'&enddate='.$checkout.'&room='.$room.'&adult='.$adult.'&child='.$child.'&token='.$token.'&output=json');
-		$getdata = file_get_contents($this->config->item('api_server').'/search/hotel?q='.$query.'&startdate='.$checkin.'&night='.$night.'&enddate='.$checkout.'&room='.$room.'&adult='.$adult.'&child='.$child.'&token='.$token.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/search/hotel?q='.$query.'&startdate='.$checkin.'&night='.$night.'&enddate='.$checkout.'&room='.$room.'&adult='.$adult.'&child='.$child.'&token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -81,10 +90,9 @@ class Hotel extends CI_Controller {
 			$token = $this->get_token();
 			$this->session->set_userdata('token', $token);
 		}
-		//$this->session->set_userdata('token', $token);
-		//$getdata = file_get_contents($this->config->item('api_server').'/search/hotel?q='.$query.'&startdate='.$checkin.'&enddata='.$checkout.'&room='.$room.'&night='.$night.'&adult='.$adult.'&child='.$child.'&token='.$token.'&output=json');
-		//echo ($this->config->item('api_server').'/'.$nama_hotel.'?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json');
-		$getdata = file_get_contents($this->config->item('api_server').'/'.$nama_hotel.'?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json');
+		$url=$this->config->item('api_server').'/'.$nama_hotel.'?startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json';
+		//print_r($url);
+		$getdata = file_get_contents($url);
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -118,7 +126,7 @@ class Hotel extends CI_Controller {
 		$room_id = $this->input->post('room_id', TRUE);
 		$hasPromo = $this->input->post('hasPromo', TRUE);
 		
-		$getdata = file_get_contents($this->config->item('api_server').'/order/add/hotel?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&minstar='.$minstar.'&maxstar='.$maxstar.'&minprice='.$minprice.'&maxprice='.$maxprice.'&hotelname='.$hotelname.'&room_id='.$room_id.'&hasPromo='.$hasPromo.'&token='.$token.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/order/add/hotel?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&minstar='.$minstar.'&maxstar='.$maxstar.'&minprice='.$minprice.'&maxprice='.$maxprice.'&hotelname='.$hotelname.'&room_id='.$room_id.'&hasPromo='.$hasPromo.'&token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		$diagnose = $json->diagnostic;
 			if($diagnose->status <> '200'){
@@ -131,7 +139,7 @@ class Hotel extends CI_Controller {
 			else {
 				// continue to order
 				$url_order = $this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
-				$send_order = file_get_contents($url_order);
+				$send_order = $this->get_content($url_order);
 				$response_order = json_decode($send_order);
 				$diagnose_order = $response_order->diagnostic;
 				$myorder = $response_order->myorder;
@@ -190,7 +198,7 @@ class Hotel extends CI_Controller {
 	public function tiketcom_delete_order_hotel(){
 		$token = $this->session->userdata('token');
 		$order_detail_id = $this->input->get('order_detail_id', TRUE);
-		$getdata = file_get_contents($this->config->item('api_server').'/order/delete_order?&order_detail_id='.$order_detail_id.'&token='.$token.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/order/delete_order?&order_detail_id='.$order_detail_id.'&token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		echo ($this->config->item('api_server').'/order/delete_order?order_detail_id='.$order_detail_id.'&token='.$token.'&output=json');
 		$array = array();
@@ -208,7 +216,7 @@ class Hotel extends CI_Controller {
 	public function tiketcom_show_order_hotel(){
 		$token = $this->session->userdata('token');
 		//echo ($this->config->item('api_server').'/order?&token='.$token.'&output=json');
-		$getdata = file_get_contents($this->config->item('api_server').'/order?&token='.$token.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/order?&token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -228,7 +236,7 @@ class Hotel extends CI_Controller {
 		$order_id = $this->uri->segment(3);
 		$currency = $this->uri->segment(4);
 		//echo ($this->config->item('api_server').'/order/checkout/'.$order_id.'/'.$currency.'?token='.$token.'&output=json');
-		$getdata = file_get_contents($this->config->item('api_server').'/order/checkout/'.$order_id.'/'.$currency.'?token='.$token.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/order/checkout/'.$order_id.'/'.$currency.'?token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -251,7 +259,7 @@ class Hotel extends CI_Controller {
 		$emailAddress = $this->input->get('emailAddress', TRUE);
 		$phone = $this->input->get('phone', TRUE);
 		$saveContinue = $this->input->get('saveContinue', TRUE);
-		$getdata = file_get_contents($this->config->item('api_server').'/checkout/checkout_customer?token='.$token.'&salutation='.$salutation.'&firstName='.$firstName.'&lastName='.$lastName.'&emailAddress='.$emailAddress.'&phone='.$phone.'&saveContinue='.$saveContinue.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/checkout/checkout_customer?token='.$token.'&salutation='.$salutation.'&firstName='.$firstName.'&lastName='.$lastName.'&emailAddress='.$emailAddress.'&phone='.$phone.'&saveContinue='.$saveContinue.'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -280,7 +288,7 @@ class Hotel extends CI_Controller {
 		$detailId = $this->input->get('detailId', TRUE);
 		$country = $this->input->get('country', TRUE);
 		
-		$getdata = file_get_contents($this->config->item('api_server').'/checkout/checkout_customer?token='.$token.'&salutation='.$salutation.'&firstName='.$firstName.'&lastName='.$lastName.'&emailAddress='.$emailAddress.'&phone='.$phone.'&detail_id='.$detailId.'&country='.$country.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/checkout/checkout_customer?token='.$token.'&salutation='.$salutation.'&firstName='.$firstName.'&lastName='.$lastName.'&emailAddress='.$emailAddress.'&phone='.$phone.'&detail_id='.$detailId.'&country='.$country.'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -298,7 +306,7 @@ class Hotel extends CI_Controller {
 	public function tiketcom_available_payment() {
 		$token = $this->session->userdata('token');
 		
-		$getdata = file_get_contents($this->config->item('api_server').'/checkout/checkout_payment?token='.$token.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/checkout/checkout_payment?token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -315,7 +323,7 @@ class Hotel extends CI_Controller {
 	public function tiketcom_checkout_payment() {
 		$token = $this->session->userdata('token');
 		
-		$getdata = file_get_contents($this->config->item('api_server').'/checkout/checkout_payment?token='.$token.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/checkout/checkout_payment?token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -338,7 +346,7 @@ class Hotel extends CI_Controller {
 		$uri = $this->input->post('link',TRUE);
 		
 		$url_1 = $uri.'?'.$params.'lang=id&output=json';
-		$checkout_page_request = file_get_contents($url_1);
+		$checkout_page_request = $this->get_content($url_1);
 		$response_1 = json_decode($checkout_page_request);
 		$diagnose_1 = $response_1->diagnostic;
 		if($diagnose_1->status<>'200'){
@@ -353,7 +361,7 @@ class Hotel extends CI_Controller {
 			$param = 'token='.$token. '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&saveContinue=2&lang=id&output=json';
 			$cl_url .= $param;
 			//print_r($cc_url);
-			$send_request_2 = file_get_contents($cl_url);
+			$send_request_2 = $this->get_content($cl_url);
 			$response_2 = json_decode($send_request_2);
 			$diagnose_2 = $response_2->diagnostic;
 			
@@ -367,7 +375,7 @@ class Hotel extends CI_Controller {
 				$params .=  '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&country=id&lang=id&output=json';
 				$cc_url .= $params;
 				//print_r($cc_url);
-				$send_request_3 = file_get_contents($cc_url);
+				$send_request_3 = $this->get_content($cc_url);
 				$response_3 = json_decode($send_request_3);
 				$diagnose_3 = $response_3->diagnostic;
 				
@@ -416,7 +424,7 @@ class Hotel extends CI_Controller {
 			$token = $this->get_token();
 			$this->session->set_userdata('token', $token);
 		}
-		$getdata = file_get_contents($this->config->item('api_server').'/'.$nama_hotel.'?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/'.$nama_hotel.'?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();

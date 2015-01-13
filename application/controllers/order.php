@@ -10,9 +10,19 @@ class Order extends CI_Controller {
 		$this->load->model('general');
 	}
 	
+	function get_content($URL){
+        $ch = curl_init();
+		curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (twh:20681061; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $URL);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
+	
 	function get_lion_captcha()
 	{	
-		$getdata = file_get_contents($this->config->item('api_server').'/flight_api/getLionCaptcha?token='.$this->session->userdata('token').'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/flight_api/getLionCaptcha?token='.$this->session->userdata('token').'&output=json');
 		$json = json_decode($getdata);
 		$lion_captcha = $json->lioncaptcha;
 		$lion_session_id = $json->lionsessionid;
@@ -22,7 +32,7 @@ class Order extends CI_Controller {
 	
 	public function get_token()
 	{
-		$getdata = file_get_contents($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json');
 		$json = json_decode($getdata);
 		$token = $json->token;
 		// set session token
@@ -1071,10 +1081,10 @@ class Order extends CI_Controller {
 				$post = rtrim($str, '&');
 				//add order
 				if ($cat=='flight')
-					$getdata = file_get_contents($this->config->item('api_server').'/order/add/flight?'.$post.'&output=json');
+					$getdata = $this->get_content($this->config->item('api_server').'/order/add/flight?'.$post.'&output=json');
 				else if ($cat=='train')
 					//print_r($this->config->item('api_server').'/order/add/train?'.$post.'&output=json');
-					$getdata = file_get_contents($this->config->item('api_server').'/order/add/train?'.$post.'&output=json');
+					$getdata = $this->get_content($this->config->item('api_server').'/order/add/train?'.$post.'&output=json');
 				
 				$json = json_decode($getdata);
 				$status = $json->diagnostic->status;
@@ -1082,7 +1092,7 @@ class Order extends CI_Controller {
 					$this->show_message_page('menambah pesanan ke pihak ketiga', $json->diagnostic->error_msgs);
 				else if ($status=="200"){
 					// order
-					$order_req = file_get_contents($this->config->item('api_server').'/order?token='.$token.'&output=json');
+					$order_req = $this->get_content($this->config->item('api_server').'/order?token='.$token.'&output=json');
 					$order_resp = json_decode($order_req);
 					$order_status = $order_resp->diagnostic->status;
 					$checkout_link = stripslashes($order_resp->checkout);
@@ -1090,7 +1100,7 @@ class Order extends CI_Controller {
 						$this->show_message_page('konfirmasi pesanan ke pihak ketiga', $order_resp->diagnostic->error_msgs);
 					else if ($order_status=="200"){
 						//linking to checkout link
-						$checkout_req = file_get_contents($checkout_link.'?token'.$token.'&output=json');
+						$checkout_req = $this->get_content($checkout_link.'?token'.$token.'&output=json');
 						$checkout_resp = json_decode($checkout_req);
 						$checkout_status = $checkout_resp->diagnostic->status;
 						if ($checkout_status!="200")
@@ -1326,7 +1336,7 @@ class Order extends CI_Controller {
 			$url_param .= '&lang=id&output=json';
 			$url = $this->config->item('api_server').'/order/add/flight?'.$url_param;
 			
-			$send_request = @file_get_contents($url, true);
+			$send_request = @$this->get_content($url, true);
 			if($send_request === FALSE){
 				$response = array(
 					'status' => '213',
@@ -1348,7 +1358,7 @@ class Order extends CI_Controller {
 				else {
 					// continue to order
 					$url_order = $this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
-					$send_order = file_get_contents($url_order,true);
+					$send_order = $this->get_content($url_order,true);
 					if($send_order === FALSE){
 						$response = array(
 							'status' => '213',
@@ -1369,7 +1379,16 @@ class Order extends CI_Controller {
 							);
 						}
 						else{ //jika sukses
-							$total_before_discount = intval($myorder->total_without_tax) + intval($myorder->data[0]->detail->baggage_fee) + intval($myorder->total_tax);
+							/*
+								rumusnya adalah sebagai berikut: (petunjuk berdasarkan Revisi ke-6)
+								Sub Total = Value_Total Penumpang + Bagasi
+								Biaya Pelayanan = [tax_and_charge] - [payment_discount]
+								Grand_Total = Sub_total + Biaya Pelayanan							
+							*/
+							$subtotal_fee = intval($myorder->data[0]->detail->price_adult) + intval($myorder->data[0]->detail->price_child) + intval($myorder->data[0]->detail->price_infant) + intval($myorder->data[0]->detail->baggage_fee);
+							$service_fee = intval($myorder->data[0]->tax_and_charge) - intval($myorder->discount_amount);
+							$grand_total = $subtotal_fee + $service_fee;
+							$total_before_discount = $grand_total;
 							//save to db
 							$data_insert = array(
 								'order_id' => $response_order->myorder->order_id,
@@ -1377,7 +1396,7 @@ class Order extends CI_Controller {
 								'token' => $response_order->token,
 								'delete_uri' => $myorder->data[0]->delete_uri,
 								'price_no_discount' => $total_before_discount,
-								'price_with_discount' => $total_before_discount - intval($myorder->discount_amount),
+								//'price_with_discount' => $total_before_discount - intval($myorder->discount_amount),
 								'status' => 'checkout'
 							);
 							$internal_order_id = $this->orders->add_order_tiketcom($data_insert);
@@ -1390,12 +1409,9 @@ class Order extends CI_Controller {
 								'category' => 'flight',
 								'internal_order_id' => $internal_order_id,
 								'order_id' => $myorder->order_id,
-								'price' => $myorder->total_without_tax,
-								'baggage' => $myorder->data[0]->detail->baggage_fee,
-								'tax' => $myorder->total_tax,
-								'total_price' => $total_before_discount,
-								'discount' => $myorder->discount_amount,
-								'after_discount' => $total_before_discount - intval($myorder->discount_amount),
+								'grand_total' => $grand_total,
+								'subtotal_fee' => $subtotal_fee,
+								'service_fee' => $service_fee,
 								'checkout_uri' => 'checkout_uri='.$response_order->checkout.'&token='.$response_order->token
 							);
 							
@@ -1423,7 +1439,7 @@ class Order extends CI_Controller {
 		$url_param .= '&lang=id&output=json';
 		$url = $this->config->item('api_server').'/order/add/train?'.$url_param;
 		//print_r($url);
-		$send_request = file_get_contents($url);
+		$send_request = $this->get_content($url);
 		$json = json_decode($send_request);
 		$diagnose = $json->diagnostic;
 		if($diagnose->status <> '200'){
@@ -1436,7 +1452,7 @@ class Order extends CI_Controller {
 		else {
 			// continue to order
 			$url_order = $this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
-			$send_order = file_get_contents($url_order);
+			$send_order = $this->get_content($url_order);
 			$response_order = json_decode($send_order);
 			$diagnose_order = $response_order->diagnostic;
 			$myorder = $response_order->myorder;
@@ -1487,8 +1503,9 @@ class Order extends CI_Controller {
 		$uri = $this->input->get('checkout_uri',TRUE);
 		$token = $this->input->get('token',TRUE);
 		$url = $uri.'?token='.$token.'&lang=id&output=json';
+		$http_url = str_replace('https','http',$url);
 		
-		$send_request = file_get_contents($url);
+		$send_request = $this->get_content($http_url);
 		$response = json_decode($send_request);
 		$diagnose = $response->diagnostic;
 		
@@ -1501,8 +1518,8 @@ class Order extends CI_Controller {
 			$cc_uri = $response->next_checkout_uri.'?';
 			$token = $response->token;
 			$param = 'token='.$token.'&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&saveContinue=2&lang=id&output=json';
-			$cc_url = $cc_uri.$param;
-			$send_request_2 = file_get_contents($cc_url);
+			$cc_url = str_replace('https','http',$cc_uri.$param);
+			$send_request_2 = $this->get_content($cc_url);
 			$response_2 = json_decode($send_request_2);
 			$diagnose_2 = $response_2->diagnostic;
 			
@@ -1534,7 +1551,7 @@ class Order extends CI_Controller {
 			$price_with_discount = $row['price_with_discount'];
 		
 		$url = $uri.'?token='.$token.'&lang=id&output=json';
-		$send_request = file_get_contents($url);
+		$send_request = $this->get_content($url);
 		$response = json_decode($send_request);
 		//print_r($send_request);
 		$diagnose = $response->diagnostic;
@@ -1565,11 +1582,11 @@ class Order extends CI_Controller {
 	public function tiketcom_checkout_payment(){
 		$method = $this->input->post('method');
 		if($method=='KlikBCA'){
-			$url = $this->input->post('link');
+			$url = str_replace('https','http',$this->input->post('link'));
 			$param = '?token='.$this->input->post('token');
 			$param .= '&user_bca='.$this->input->post('user_bca', TRUE);
 			$param .= '&btn_booking=1&currency=IDR&lang=id&output=json';
-			$send_request = file_get_contents($url.$param);
+			$send_request = $this->get_content($url.$param);
 			$json = json_decode($send_request);
 			if($json->diagnostic->status<>'200'){
 				$response = array(
@@ -1596,10 +1613,10 @@ class Order extends CI_Controller {
 			}
 		}
 		else if($method=='ATM Transfer'){
-			$url = $this->input->post('link');
+			$url = str_replace('https','http',$this->input->post('link'));
 			$param = '?token='.$this->input->post('token');
 			$param .= '&btn_booking=1&currency=IDR&lang=id&output=json';
-			$send_request = file_get_contents($url.$param);
+			$send_request = $this->get_content($url.$param);
 			$json = json_decode($send_request);
 			if($json->diagnostic->status<>'200'){
 				$response = array(
@@ -1635,10 +1652,10 @@ class Order extends CI_Controller {
 			}
 		}
 		else if($method=='Deposit'){
-			$url = $this->input->post('link');
+			$url = str_replace('https','http',$this->input->post('link'));
 			$param = '?token='.$this->input->post('token');
 			$param .= '&btn_booking=1&currency=IDR&lang=id&output=json';
-			$send_request = file_get_contents($url.$param);
+			$send_request = $this->get_content($url.$param);
 			$json = json_decode($send_request);
 			$order_id = $json->orderId;
 			$tot_price = $json->grand_total;
@@ -1738,7 +1755,7 @@ class Order extends CI_Controller {
 		}
 		$url_param .= '&token='.$token.'&lang=id&output=json';
 		
-		$send_request = file_get_contents($confirm_uri.'&'.$url_param);
+		$send_request = $this->get_content($confirm_uri.'&'.$url_param);
 		print_r($send_request);
 	}
 	
@@ -1749,7 +1766,7 @@ class Order extends CI_Controller {
 			$token = $row['token'];
 			$delete_uri = $row['delete_uri'];
 		}
-		$send_request = file_get_contents($delete_uri.'&token='.$token.'&output=json&lang=id');
+		$send_request = $this->get_content($delete_uri.'&token='.$token.'&output=json&lang=id');
 		$json = json_decode($send_request);
 		if($json->diagnostic->status<>'200'){
 			$response = array(
