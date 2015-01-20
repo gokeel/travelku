@@ -8,7 +8,7 @@
   <head>
   	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Metode Pembayaran Tiket</title>
+	<title>Detil Pesanan</title>
 	
     <!-- Bootstrap -->
     <link href="<?php echo BLUE_THEME_DIR;?>/dist/css/bootstrap.css" rel="stylesheet" media="screen">
@@ -70,14 +70,12 @@
 			<div class="left">
 				<ul class="bcrumbs">
 					<li>/</li>
-					<li><a href="#">Tiket</a></li>
-					<li>/</li>
-					<li><a href="#">Metode Pembayaran</a></li>
+					<li><a href="#">Detil Pesanan</a></li>
 				</ul>				
 			</div>
 			<a class="backbtn right" href="javascript:history.back()"></a>
 		</div>
-		<div class="clearfix"></div><br/>
+		<div class="clearfix"></div>
 		<div class="brlines"></div>
 	</div>	
 
@@ -91,9 +89,40 @@
 			<!-- LEFT CONTENT -->
 			<div class="col-md-8 pagecontainer2 offset-0">
 
-				<div class="padding30 grey" id="result">
+				<div class="padding30 grey">
+					<span class="size16px bold dark left">Tampilkan Detil ID Pesanan Anda</span>
+					<!--<div class="roundstep active right">1</div>-->
+					<div class="clearfix"></div>
+					<div class="line4"></div>
 					
-			
+					<form id="form-check-order">
+						<div class="col-md-4 textright">
+							<div class="margtop7"><span class="dark">ID Pesanan:</span><span class="red">*</span></div>
+						</div>
+						<div class="col-md-4">	
+							<input type="text" class="form-control" name="order_id" required>
+						</div>
+						<div class="col-md-4 textleft">
+						</div>
+						<div class="clearfix"></div>
+						<br/>
+						<div class="col-md-4 textright">
+							<div class="margtop7"><span class="dark">Email:</span><span class="red">*</span></div>
+						</div>
+						<div class="col-md-4">	
+							<input type="text" class="form-control" name="email" required>
+						</div>
+						<div class="col-md-4 textleft">
+						</div>
+					</form>
+					<div class="clearfix"></div>
+					<button type="submit" class="bluebtn margtop20">Tampilkan</button>
+					<br/>
+					<div id="content">
+						<?php
+							//echo $content;
+						?>
+					</div>
 				</div>
 		
 			</div>
@@ -101,7 +130,6 @@
 			
 			<!-- RIGHT CONTENT -->
 			<div class="col-md-4" >
-				
 				<?php include_once('box_call_support.php');?>
 				<br/>
 			</div>
@@ -120,6 +148,7 @@
 	<!-- FOOTER -->
 	
 	<?php include_once('footer.php')?>
+	
 	
 	<!-- Javascript  -->
 	<script src="<?php echo BLUE_THEME_DIR;?>/assets/js/js-payment.js"></script>
@@ -146,76 +175,23 @@
     <script src="<?php echo BLUE_THEME_DIR;?>/dist/js/bootstrap.min.js"></script>
 	
 <script>
-	var new_token = '';
-	var order_id = '';
-	var price = '';
-	var msg = '';
-	$( window ).load(function() {
-		load_available_payments();
-	});
-	function load_available_payments(){
-		$("#progress").show();
-		$("#result").empty();
-		
+	//$( window ).load(function() {
+		//load_posts();
+	//})
+	function load_posts(){
+		var request = '<?php echo base_url();?>index.php/webfront/get_post_by_category/faq/0/1';
 		$.ajax({
 			type : "GET",
-			url: '<?php echo base_url();?>index.php/order/tiketcom_get_available_payment?token=<?php echo $this->uri->segment(3);?>&id=<?php echo $this->uri->segment(4);?>',
-			cache: false,
+			async: false,
+			url: request,
 			dataType: "json",
-			success:function(data){
-				if(data.status!="200"){
-					$("#messages").append('<p style="color:red">Pesan Kesalahan: '+data.message+'</p>');
-					$("#progress").hide();
-				}
-				else{
-					var header = '<span class="size16px bold dark left">Detil Harga Untuk Pembayaran</span>\
-						<div class="roundstep right">1</div>\
-						<div class="clearfix"></div><br/>\
-						<div class="line4"></div>';
-					var nav = '<ul class="nav navigation-tabs">';
-					var nav_index = 0;
-					var nav_konten_index = 0;
-					var nav_konten = '<div class="tab-content4">';
-					
-					// add input for deposit
-					nav += '<li class="active"><a href="#method-deposit" data-toggle="tab">Detil</a></li>';
-					nav_konten += '<div class="tab-pane active" id="method-deposit">';
-					nav_konten += '<div class="col-md-5 textleft">\
-										<div class="margtop15"><span class="dark">ID Pesanan</span></div>\
-									</div>\
-									<div class="col-md-4">\
-										<div class="margtop15"><span class="dark">: '+data.order_id+'</span></div>\
-									</div>\
-									<div class="col-md-3 textleft"></div>\
-									<div class="clearfix"></div><br/>\
-									<div class="col-md-5 textleft">\
-										<div class="margtop15"><span class="dark">Harga Tiket + Biaya Pelayanan</span></div>\
-									</div>\
-									<div class="col-md-4">\
-										<div class="margtop15"><span class="dark">: IDR '+currency_separator(data.grand_total, '.')+'</span></div>\
-									</div>\
-									<div class="col-md-3 textleft"></div>\
-									<div class="clearfix"></div><br/>';
-					nav_konten += '<form method="post" action="<?php echo base_url();?>index.php/order/tiketcom_checkout_payment">\
-										<input type="hidden" name="method" value="Deposit">\
-										<input type="hidden" name="token" value="<?php echo $this->uri->segment(3);?>">\
-										<input type="hidden" name="link" value="<?php echo $this->config->item('api_server');?>/checkout/checkout_payment/8">\
-										<div class="alert alert-info">\
-											Petunjuk cara pembayaran:<br/>\
-											<p class="size12">• Segera lakukan pembayaran dalam 180 menit setelah menekan tombol di bawah ini.</p>\
-											<p class="size12">• Segera lakukan konfirmasi ulang melalui halaman konfirmasi pembayaran tiket.</p>\
-											<p class="size12">• Info pemesanan dan cara pembayaran akan dikirimkan ke email anda.</p>\
-										</div>\
-										<button type="submit" class="bluebtn margtop20">Complete booking</button>\
-										</form>\
-									</div>';
-					
-					$('#result').append(header+nav+'</ul><br/>'+nav_konten+'</div>');
-				}
-					
+			success:function(datajson){
+				var div = $('#content');
+				var html = $.parseHTML(datajson[0].content);
+				div.append(html);
+				
 			}
 		});
-		
 	}
 </script>
 

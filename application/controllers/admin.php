@@ -5073,24 +5073,27 @@ class Admin extends CI_Controller {
 	
 	public function edit_option(){
 		$id = $this->uri->segment(3);
+		$new_filename = 'pic_'.rand(1000, 1000000);
 		$config['upload_path'] = './assets/uploads/option_images';
-		$config['file_name'] = 'pic_'.$id;
+		$config['file_name'] = $new_filename;
 		$config['allowed_types'] = 'gif|jpeg|jpg|png';
 		$config['overwrite']	= TRUE;
 		$config['max_size']	= '2000';
 		
 		if($this->input->post('is_logo')=='yes'){
+			$logo = '';
 			if ($_FILES['value']['name']<>''){
-				$this->load->library('upload', $config);
+				$this->load->library('upload');
+				$this->upload->initialize($config);
 				if ( ! $this->upload->do_upload('value'))
 					$this->show_message_page('mengunggah foto', $this->upload->display_errors());
 				else {
 					$upload_data = $this->upload->data();
-					$ext = end(explode(".", $upload_data['file_name']));
-					$data['value'] = 'pic_'.$id.'.'.$ext;
+					//$ext = end(explode(".", $this->upload->file_name));
+					$data['value'] = $this->upload->file_name;
 				}
 			}
-		}		
+		}
 		else
 			$data['value'] = $this->input->post('value',TRUE);
 		
@@ -5099,6 +5102,7 @@ class Admin extends CI_Controller {
 			redirect(base_url('index.php/admin/option_setting'));
 		else
 			$this->show_message_page('mengubah opsi', 'Mohon cek inputan anda atau hubungi web administrator.');
+		
 	}
 	
 	public function approve_review(){

@@ -295,7 +295,11 @@
 						</div>';
 						
 						input_return = '<input type="hidden" name="ret_flight_id" value="'+flight_id_pulang+'">\
-						<input type="hidden" name="airline_name_ret" value="'+data.items[0].returns.airlines_name+'">';
+						<input type="hidden" name="airline_name_ret" value="'+data.items[0].returns.airlines_name+'">\
+						<input type="hidden" name="flight_number_ret" value="'+data.items[0].returns.flight_number+'">\
+						<input type="hidden" name="time_travel_ret" value="'+data.items[0].returns.simple_departure_time+' - '+data.items[0].returns.simple_arrival_time+'">\
+						<input type="hidden" name="date_ret" value="'+data.items[0].returns.flight_date+'">\
+						';
 					}
 					$('#trip-summary').empty();
 					/* TRIP SUMMARY*/
@@ -348,11 +352,6 @@
 					');
 					var input_dep_additional = '<input type="hidden" name="route" value="'+data.items[0].departures.flight_infos.flight_info[0].departure_city+' - '+data.items[0].departures.flight_infos.flight_info[0].arrival_city+'">\
 						<input type="hidden" name="time_travel" value="'+data.items[0].departures.simple_departure_time+' - '+data.items[0].departures.simple_arrival_time+'">\
-						<input type="hidden" name="total_price" value="'+data.items[0].departures.price_value+'">\
-						<input type="hidden" name="admin_fee" value="10000">\
-						<input type="hidden" name="price_adult" value="'+data.items[0].departures.price_adult+'">\
-						<input type="hidden" name="price_child" value="'+data.items[0].departures.price_child+'">\
-						<input type="hidden" name="price_infant" value="'+data.items[0].departures.price_infant+'">\
 						';
 					/*create input contains data*/
 					var token = "<?php echo $this->session->userdata('token');?>";
@@ -364,6 +363,7 @@
 						<input type="hidden" name="infant" value="'+data.items[0].departures.count_infant+'">\
 						<input type="hidden" name="airline_name" value="'+data.items[0].departures.airlines_name+'">\
 						<input type="hidden" name="date_go" value="'+data.items[0].departures.flight_date+'">\
+						<input type="hidden" name="flight_number_dep" value="'+data.items[0].departures.flight_number+'">\
 						'+input_return+'\
 						'+input_dep_additional+'\
 						');

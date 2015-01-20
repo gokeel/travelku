@@ -8,7 +8,7 @@
 					<a target="_blank" href="<?php echo prep_url($gplus_link);?>" class="social3b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-gplus.png" alt=""/></a>
 					<a target="_blank" href="<?php echo prep_url($youtube_link);?>" class="social4b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-youtube.png" alt=""/></a>
 					<br/><br/><br/>
-					<a href="<?php echo base_url();?>"><img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $company_logo;?>" width="130px" height="70px" alt="" /></a><br/>
+					<a href="<?php echo base_url();?>"><img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $company_logo;?>?ver=<?php echo rand(1000, 1000000);?>" width="130px" height="70px" alt="" /></a><br/>
 					<span class="grey2">&copy; 2014  |  <a href="#">Privacy Policy</a><br/>
 					All Rights Reserved </span>
 					<br/><br/>

@@ -218,9 +218,13 @@
 		<?php
 			$datetime1 = date_create(date('Y-m-d'));
 			$datetime2 = date_create($this->input->get('checkin', TRUE));
-			$interval = date_diff($datetime1, $datetime2);
-			$diff = $interval->format('%R%a');
-			echo 'var diff_date_in_now = '.$diff.';';
+			$datetime3 = date_create($this->input->get('checkout', TRUE));
+			$interval_in = date_diff($datetime1, $datetime2);
+			$interval_out = date_diff($datetime1, $datetime3);
+			$diff_in = $interval_in->format('%R%a');
+			$diff_out = $interval_out->format('%R%a');
+			echo 'var diff_date_in_now = '.$diff_in.';';
+			echo 'var diff_date_out_now = '.$diff_out.';';
 		?>
 		//Tanggal check-in lebih besar dari tanggal check out
 		//Lama menginap lebih dari 15 hari (max 15 hari)
@@ -240,98 +244,113 @@
 		//console.log('diff date now = '+diff_date_in_now);
 		//console.log('diff date in out = '+diff_date_in_out);
 		//console.log('room = '+rooms_quantity);
-			
+		
+		var check_error = false;
+		var error_message = '';
 		$('#result-header').empty();
 		$('#list').empty();
 		if(diff_date_in_now<0){	
-			$('#result-header').append('<p style="color:red">Tanggal Check-In Tidak Boleh Kurang Dari Hari Ini.</p>');
-				
+			//$('#result-header').append('<p style="color:red"></p>');
+			check_error = true;
+			error_message += 'Tanggal check-in tidak boleh kurang dari hari ini. ';
+		}
+		if(diff_date_in_now > 547){	
+			//$('#result-header').append('<p style="color:red"></p>');
+			check_error = true;
+			error_message += 'Tanggal check-in tidak lebih dari 547 hari. ';
+		}
+		if(diff_date_out_now > 550){	
+			//$('#result-header').append('<p style="color:red"></p>');
+			check_error = true;
+			error_message += 'Tanggal check-out tidak lebih dari 550 hari. ';
+		}
+		if(diff_date_in_out > 15){
+			check_error = true;
+			error_message += 'Tanggal check-out tidak lebih dari 15 hari sejak tanggal check-in. ';
+		}
+		if(diff_date_in_out < 0){
+			check_error = true;
+			error_message += 'Tanggal check-out tidak kurang dari tanggal check-in. ';
+		}
+		if(rooms_quantity > 8){
+			check_error = true;
+			error_message += 'Dalam satu pemesanan dibatasi maksimum 8 kamar. ';
+		}
+		if(check_error){
+			// if there is any error
+			$('#result-header').append('<p style="color:red">'+error_message+'</p>');
 		}
 		else {
-			if(diff_date_in_out> 15){
-				$('#result-header').append('<p style="color:red">Tanggal Check-Out Tidak Boleh Lebih Dari 15 Hari Sejak Check-In.</p>');
-			}
-			else if(diff_date_in_out<0){
-				$('#result-header').append('<p style="color:red">Tanggal Check-Out Tidak Boleh Kurang Dari Tanggal Check-In.</p>');
-			}						
-			else {
-				if(rooms_quantity>8){
-					$('#result-header').append('<p style="color:red">Dalam Satu Kali Pemesanan Dibatasi Maksimum 8 Kamar.</p>');
-				}
-				else {
-					//everything is OK
+			//everything is OK
+			$('#result-header').append('<img id="progress" src="<?php echo IMAGES_DIR; ?>/spiffygif_34x34.gif" />');
+			$("#progress").show();
 					
-					$('#result-header').append('<img id="progress" src="<?php echo IMAGES_DIR; ?>/spiffygif_34x34.gif" />');
-					$("#progress").show();
-					
-					$.ajax({
-						type : "GET",
-						url: '<?php echo base_url();?>index.php/hotel/tiketcom_search_hotels',
-						data: params,
-						cache: false,
-						dataType: "json",
-						success:function(data){
-							if(data.items[0].diagnostic.status=="200"){
-								if(data.items[0].results.result.length==0){
-									$('#result-header').append('<p>Maaf, data tidak ada untuk rute ini.<p>');
-								} 
-								else{
-									$('#result-header').append('Pencarian Hotel - Harga dari '+currency_separator(parseInt(data.items[0].search_queries.minprice), '.')+' - '+currency_separator(parseInt(data.items[0].search_queries.maxprice), '.')+', Tanggal '+data.items[0].search_queries.startdate+' - '+data.items[0].search_queries.enddate+' Kamar:'+data.items[0].search_queries.room+' Malam:'+data.items[0].search_queries.night+' Dewasa:'+data.items[0].search_queries.adult+' Anak:'+data.items[0].search_queries.child);
+			$.ajax({
+				type : "GET",
+				url: '<?php echo base_url();?>index.php/hotel/tiketcom_search_hotels',
+				data: params,
+				cache: false,
+				dataType: "json",
+				success:function(data){
+					if(data.items[0].diagnostic.status=="200"){
+						if(data.items[0].results.result.length==0){
+							$('#result-header').append('<p>Maaf, data tidak ada untuk rute ini.<p>');
+						} 
+						else{
+							$('#result-header').append('Pencarian Hotel - Harga dari '+currency_separator(parseInt(data.items[0].search_queries.minprice), '.')+' - '+currency_separator(parseInt(data.items[0].search_queries.maxprice), '.')+', Tanggal '+data.items[0].search_queries.startdate+' - '+data.items[0].search_queries.enddate+' Kamar:'+data.items[0].search_queries.room+' Malam:'+data.items[0].search_queries.night+' Dewasa:'+data.items[0].search_queries.adult+' Anak:'+data.items[0].search_queries.child);
 									
-									var div = $("#list");
-									for(var i=0; i<data.items[0].results.result.length;i++){
-										var rating = data.items[0].results.result[i].star_rating;
-										var star_image = 'bigrating-'+rating+'.png';
-										var user_rating_api = data.items[0].results.result[i].rating;
-										var user_rating_internal = Math.round(parseInt(user_rating_api / 2));
-										var user_rating_image = 'user-rating-'+user_rating_internal+'.png';
-										var business_uri = data.items[0].results.result[i].business_uri;
-										var business_uri_split = business_uri.split("/");
+							var div = $("#list");
+							for(var i=0; i<data.items[0].results.result.length;i++){
+								var rating = data.items[0].results.result[i].star_rating;
+								var star_image = 'bigrating-'+rating+'.png';
+								var user_rating_api = data.items[0].results.result[i].rating;
+								var user_rating_internal = Math.round(parseInt(user_rating_api / 2));
+								var user_rating_image = 'user-rating-'+user_rating_internal+'.png';
+								var business_uri = data.items[0].results.result[i].business_uri;
+								var business_uri_split = business_uri.split("/");
 										
-										/*this will replace https to http on images*/
-										var image_temp = data.items[0].results.result[i].photo_primary;
-										var image_primary = image_temp.replace("https", "http");
-										/*end replace*/
+								/*this will replace https to http on images*/
+								var image_temp = data.items[0].results.result[i].photo_primary;
+								var image_primary = image_temp.replace("https", "http");
+								/*end replace*/
 										
-										div.append('<div class="offset-2">\
-											<div class="col-md-4 offset-0">\
-												<div class="listitem2">\
-													<a href="'+image_primary+'" data-footer="A custom footer text" data-title="A random title" data-gallery="multiimages" data-toggle="lightbox"><img src="'+image_primary+'" alt=""/></a>\
-													<div class="liover"></div>\
-												</div>\
+								div.append('<div class="offset-2">\
+									<div class="col-md-4 offset-0">\
+										<div class="listitem2">\
+											<a href="'+image_primary+'" data-footer="A custom footer text" data-title="A random title" data-gallery="multiimages" data-toggle="lightbox"><img src="'+image_primary+'" alt=""/></a>\
+											<div class="liover"></div>\
+										</div>\
+									</div>\
+									<div class="col-md-8 offset-0">\
+										<div class="itemlabel3">\
+											<div class="labelright">\
+												<img src="<?php echo BLUE_THEME_DIR;?>/images/'+star_image+'" width="60" alt=""/><br/><br/>\
+												<img src="<?php echo BLUE_THEME_DIR;?>/images/'+user_rating_image+'" width="60" alt=""/><br/><br/>\
+												<span class="size11 grey">'+data.items[0].results.result[i].room_available+' Kamar Tersedia<br/><br/>Harga mulai:<br/></span>\
+												<span class="green size18"><b>IDR '+currency_separator(parseInt(data.items[0].results.result[i].price), '.')+'</b></span><br/>\
+												<span class="size11 grey">/night</span><br/><br/>\
+												<a href="<?php echo base_url();?>index.php/webfront/hotel_tiketcom_detail/'+business_uri_split[7]+'">\
+												<button class="bookbtn mt1" type="submit">Select</button></a>\
 											</div>\
-											<div class="col-md-8 offset-0">\
-												<div class="itemlabel3">\
-													<div class="labelright">\
-														<img src="<?php echo BLUE_THEME_DIR;?>/images/'+star_image+'" width="60" alt=""/><br/><br/>\
-														<img src="<?php echo BLUE_THEME_DIR;?>/images/'+user_rating_image+'" width="60" alt=""/><br/><br/>\
-														<span class="size11 grey">'+data.items[0].results.result[i].room_available+' Kamar Tersedia<br/><br/>Harga mulai:<br/></span>\
-														<span class="green size18"><b>IDR '+currency_separator(parseInt(data.items[0].results.result[i].price), '.')+'</b></span><br/>\
-														<span class="size11 grey">/night</span><br/><br/>\
-														<a href="<?php echo base_url();?>index.php/webfront/hotel_tiketcom_detail/'+business_uri_split[7]+'">\
-														<button class="bookbtn mt1" type="submit">Select</button></a>\
-													</div>\
-													<div class="labelleft2">\
-														<b>'+data.items[0].results.result[i].name+'</b><br/>\
-														<p class="grey">\
-														Alamat: <a class="fancybox fancybox.iframe" href="https://www.google.com/maps/embed/v1/view?key=<?php echo $this->config->item('google_api_key');?>&center='+data.items[0].results.result[i].latitude+','+data.items[0].results.result[i].longitude+'&zoom=18&maptype=roadmap">Lihat Peta</a><br/>'+data.items[0].results.result[i].address+'</p><br/>\
-														<p class="grey">\
-														Fasilitas: '+data.items[0].results.result[i].room_facility_name+'</p><br/>\
-													</div>\
-												</div>\
+											<div class="labelleft2">\
+												<b>'+data.items[0].results.result[i].name+'</b><br/>\
+												<p class="grey">\
+												Alamat: <a class="fancybox fancybox.iframe" href="https://www.google.com/maps/embed/v1/view?key=<?php echo $this->config->item('google_api_key');?>&center='+data.items[0].results.result[i].latitude+','+data.items[0].results.result[i].longitude+'&zoom=18&maptype=roadmap">Lihat Peta</a><br/>'+data.items[0].results.result[i].address+'</p><br/>\
+												<p class="grey">\
+												Fasilitas: '+data.items[0].results.result[i].room_facility_name+'</p><br/>\
 											</div>\
 										</div>\
-										<div class="clearfix"></div>\
-										<div class="offset-2"><hr class="featurette-divider3"></div>');
-									}
-								}
+									</div>\
+								</div>\
+								<div class="clearfix"></div>\
+								<div class="offset-2"><hr class="featurette-divider3"></div>');
 							}
-							$("#progress").hide();
 						}
-					})
+					}
 					$("#progress").hide();
 				}
-			}
+			})
+			$("#progress").hide();
 		}
 	}
 </script>	

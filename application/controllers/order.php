@@ -1199,6 +1199,7 @@ class Order extends CI_Controller {
 		
 		$data_order = array(
 			'account_id' => $account_id,
+			'order_system_id' => 'internal',
 			'post_id' => $this->input->post('post_id',TRUE),
 			'trip_category' => 'paket',
 			'order_status' => 'Registered',
@@ -1283,14 +1284,18 @@ class Order extends CI_Controller {
 		$post = $this->input->post(NULL,TRUE);
 		$url_param = '';
 		// LION needs to check the expiry passport date
-		$airline_name = $this->input->post('airline_name', TRUE);
+		$airline_name_dep = $this->input->post('airline_name', TRUE);
 		$airline_name_ret = $this->input->post('airline_name_ret', TRUE);
 		$date_go = $this->input->post('date_go', TRUE);
 		$error_passport_date = false;
+		
+		//all post key & value will be passed except these keys
+		$exception_post_key = array('airline_name', 'airline_name_ret', 'date_go', 'date_ret', 'admin_fee', 'price_adult', 'price_child', 'price_infant', 'price_adult_ret', 'price_child_ret', 'price_infant_ret', 'flight_number_dep', 'flight_number_ret', 'time_travel', 'time_travel_ret', 'total_price', 'total_price_ret', 'route'); 
+		//end
 		foreach($post as $key => $value){
-			if($key<>'airline_name' or $key<>'airline_name_ret' or $key<>'date_go')
+			if(in_array($key, $exception_post_key)==false)
 				$url_param .= $key.'='.$value.'&';
-			if((strpos($key,'passportExpiryDate') !== false) and ($airline_name=='LION')){
+			if((strpos($key,'passportExpiryDate') !== false) and ($airline_name_dep=='LION')){
 				$datetime1 = date_create($date_go);
 				$datetime2 = date_create($value);
 				$interval = date_diff($datetime1, $datetime2);
@@ -1335,7 +1340,6 @@ class Order extends CI_Controller {
 			$url_param .= 'lioncaptcha='.$lioncaptcha.'&lionsessionid='.$lionsessionid;
 			$url_param .= '&lang=id&output=json';
 			$url = $this->config->item('api_server').'/order/add/flight?'.$url_param;
-			
 			$send_request = @$this->get_content($url, true);
 			if($send_request === FALSE){
 				$response = array(
@@ -1385,29 +1389,65 @@ class Order extends CI_Controller {
 								Biaya Pelayanan = [tax_and_charge] - [payment_discount]
 								Grand_Total = Sub_total + Biaya Pelayanan							
 							*/
-							$subtotal_fee = intval($myorder->data[0]->detail->price_adult) + intval($myorder->data[0]->detail->price_child) + intval($myorder->data[0]->detail->price_infant) + intval($myorder->data[0]->detail->baggage_fee);
-							$service_fee = intval($myorder->data[0]->tax_and_charge) - intval($myorder->discount_amount);
+							
+							$subtotal_fee_dep = intval($myorder->data[0]->detail->price_adult) + intval($myorder->data[0]->detail->price_child) + intval($myorder->data[0]->detail->price_infant) + intval($myorder->data[0]->detail->baggage_fee);
+							$tax_charge_dep = intval($myorder->data[0]->tax_and_charge);
+							$subtotal_fee_ret = 0;
+							$tax_charge_ret = 0;
+							if(sizeof($myorder->data)==2){
+								$subtotal_fee_ret = intval($myorder->data[1]->detail->price_adult) + intval($myorder->data[1]->detail->price_child) + intval($myorder->data[1]->detail->price_infant) + intval($myorder->data[1]->detail->baggage_fee);
+								$tax_charge_ret = intval($myorder->data[1]->tax_and_charge);
+							}
+							$subtotal_fee = $subtotal_fee_dep + $subtotal_fee_ret;
+							$tax_and_charge = $tax_charge_dep + $tax_charge_ret;
+							$service_fee =  $tax_and_charge - intval($myorder->discount_amount);
+							if($service_fee < 0)
+								$service_fee = 0;
 							$grand_total = $subtotal_fee + $service_fee;
-							$total_before_discount = $grand_total;
-							//save to db
-							$data_insert = array(
-								'order_id' => $response_order->myorder->order_id,
-								'category' => 'flight',
+							
+							//save to internal database for order log
+							if($this->session->userdata('account_id')<>''){
+								if ($this->session->userdata('account_id')=='1')
+									$account_id = $this->config->item('account_id');
+								else
+									$account_id = $this->session->userdata('account_id');
+							}
+							else
+								$account_id = $this->config->item('account_id');
+							
+							$data_order = array(
+								'3rd_party_order_id' => $myorder->order_id,
+								'order_system_id' => 'tiketcom',
+								'account_id' => $account_id,
 								'token' => $response_order->token,
-								'delete_uri' => $myorder->data[0]->delete_uri,
-								'price_no_discount' => $total_before_discount,
-								//'price_with_discount' => $total_before_discount - intval($myorder->discount_amount),
-								'status' => 'checkout'
+								'trip_category' => 'flight',
+								'airline_name_depart' => $airline_name_dep,
+								'airline_name_return' => $airline_name_ret,
+								'flight_id_depart' => $this->input->post('flight_number_dep'),
+								'flight_id_return' => $this->input->post('flight_number_ret'),
+								'route' => $this->input->post('route'),
+								'departing_date' => $this->input->post('date_go'),
+								'returning_date' => $this->input->post('date_ret'),
+								'time_travel' => $this->input->post('time_travel'),
+								'time_travel_ret' => $this->input->post('time_travel_ret'),
+								'total_price' => $grand_total,
+								'total_price_dep' => $subtotal_fee_dep,
+								'total_price_ret' => $subtotal_fee_ret,
+								'adult' => $this->input->post('adult'),
+								'child' => $this->input->post('child'),
+								'infant' => $this->input->post('infant'),
+								'order_status' => 'Issued',
+								'registered_date' => date('Y-m-d H:i:s')
+								
 							);
-							$internal_order_id = $this->orders->add_order_tiketcom($data_insert);
+							$order_id = $this->orders->add_order($data_order);
 							
 							//generate success page
-							
 							$response = array(
 								'status' => $diagnose->status,
 								'error' => '',
 								'category' => 'flight',
-								'internal_order_id' => $internal_order_id,
+								'internal_order_id' => $order_id,
 								'order_id' => $myorder->order_id,
 								'grand_total' => $grand_total,
 								'subtotal_fee' => $subtotal_fee,
@@ -1540,16 +1580,13 @@ class Order extends CI_Controller {
 		$uri = $this->config->item('api_server').'/checkout/checkout_payment';
 		$token = $this->input->get('token',TRUE);
 		$internal_order_id = $this->input->get('id',TRUE);
-		$req_order_id = $this->general->get_afield_by_id('orders_in_tiketcom', 'id', $internal_order_id, 'order_id');
-		foreach($req_order_id->result_array() as $row)
-			$order_id = $row['order_id'];
-		$req_price_no_discount = $this->general->get_afield_by_id('orders_in_tiketcom', 'id', $internal_order_id, 'price_no_discount');
-		foreach($req_price_no_discount->result_array() as $row)
-			$price_no_discount = $row['price_no_discount'];
-		$req_price_with_discount = $this->general->get_afield_by_id('orders_in_tiketcom', 'id', $internal_order_id, 'price_with_discount');
-		foreach($req_price_with_discount->result_array() as $row)
-			$price_with_discount = $row['price_with_discount'];
-		
+		//get tiketcom order id
+		$req_order_id = $this->general->get_afield_by_id('orders', 'order_id', $internal_order_id, '3rd_party_order_id');
+		$order_id = $req_order_id->result_array()[0]['3rd_party_order_id'];
+		//get grand total
+		$req_grand_total = $this->general->get_afield_by_id('orders', 'order_id', $internal_order_id, 'total_price');
+		$grand_total = $req_grand_total->result_array()[0]['total_price'];
+		//get available payment by tiketcom
 		$url = $uri.'?token='.$token.'&lang=id&output=json';
 		$send_request = $this->get_content($url);
 		$response = json_decode($send_request);
@@ -1565,8 +1602,7 @@ class Order extends CI_Controller {
 			$json_response['status'] = $diagnose->status;
 			$json_response['token'] = $response->token;
 			$json_response['order_id'] = $order_id;
-			$json_response['price_no_discount'] = $price_no_discount;
-			$json_response['price_with_discount'] = $price_with_discount;
+			$json_response['grand_total'] = $grand_total;
 			
 			foreach($payments as $payment){
 				$json_response['list'][] = array(
@@ -1801,5 +1837,114 @@ class Order extends CI_Controller {
 		$this->load->view($theme_name.'/'.$view, $data);
 	}
 	
-	
+	public function check_order(){
+		/*checking order will be internal database or 3rd party
+			source_db:
+				int = internal database
+				tc = tiket.com
+		*/
+		$source_db = $this->uri->segment(3);
+		$order_id = $this->uri->segment(4);
+		switch ($source_db){
+			case "int":
+				$get_order_type = $this->general->get_afield_by_id('orders', 'order_id', $order_id, 'trip_category');
+				$order_type = $get_order_type->result_array()[0]['trip_category'];
+				if($order_type=="paket")
+					$query = $this->orders->get_order_by_id($order_id, true);
+				else
+					$query = $this->orders->get_order_by_id($order_id);
+				
+				$response = array();
+				$response['responses'] = array();
+				$response['responses']['general'] = array();
+				// generate response general info
+				foreach ($query->result_array() as $row){
+					if ($order_type == 'flight'){
+						$general = array(
+							'order_id' => $row['order_id'],
+							'agent_name' => $row['agent_name'],
+							'airline_name' => $row['airline_name'],
+							'flight_id' => array('name' => 'flight_id', 'value' => $row['flight_id']),
+							'token' => array('name' => 'token', 'value' => $row['token']),
+							'lion_captcha' => array('name' => 'lioncaptcha', 'value' => $row['lion_captcha']),
+							'lion_session_id' => array('name' => 'lionsessionid', 'value' => $row['lion_session_id']),
+							'route' => $row['route'],
+							'departing_date' => $row['departing_date'],
+							'time_travel' => $row['time_travel'],
+							'total_price' => $row['total_price'],
+							'adult' => array('name' => 'adult', 'value' => $row['adult']),
+							'price_adult' => $row['price_adult'],
+							'child' => array('name' => 'child', 'value' => $row['child']),
+							'price_child' => $row['price_child'],
+							'infant' => array('name' => 'infant', 'value' => $row['infant']),
+							'price_infant' => $row['price_infant'],
+							'payment_status' => $row['payment_status']
+						);
+					}
+					else if ($order_type == 'train'){
+						list ($d_station, $a_station) = explode('-', $row['route']);
+						$general = array(
+							'order_id' => $row['order_id'],
+							'agent_name' => $row['agent_name'],
+							'token' => array('name' => 'token', 'value' => $row['token']),
+							'train_name' => $row['train_name'],
+							'train_id' => array('name' => 'train_id', 'value' => $row['train_id']),
+							'route' => $row['route'],
+							'depart_station' => array('name' => 'd', 'value' => $d_station),
+							'arrival_station' => array('name' => 'a', 'value' => $a_station),
+							'departing_date' => array('name' => 'date', 'value' => $row['departing_date']),
+							'subclass' => array('name' => 'subclass', 'value' => $row['train_subclass']),
+							'kelas' => $row['train_class'],
+							'time_travel' => $row['time_travel'],
+							'total_price' => $row['total_price'],
+							'adult' => array('name' => 'adult', 'value' => $row['adult']),
+							'price_adult' => $row['price_adult'],
+							'child' => array('name' => 'child', 'value' => $row['child']),
+							'price_child' => $row['price_child'],
+							'infant' => array('name' => 'infant', 'value' => $row['infant']),
+							'price_infant' => $row['price_infant'],
+							'payment_status' => $row['payment_status']
+						);
+					}
+					else if ($order_type == 'hotel'){ // for hotel there is no need to proceed it with Tiket.com API
+						$general = array(
+							'order_id' => $row['order_id'],
+							'agent_name' => $row['agent_name'],
+							//'token' => array('name' => 'token', 'value' => $row['token']),
+							'hotel_name' => $row['hotel_name'],
+							'hotel_id' => $row['hotel_id'],
+							'hotel_address' => $row['hotel_address'],
+							'hotel_regional' => $row['hotel_regional'],
+							'room' => $row['hotel_room'],
+							'checkin' => $row['departing_date'],
+							'checkout' => $row['returning_date'],
+							'night' => $row['time_travel'],
+							'total_price' => $row['total_price'],
+							'adult' => $row['adult'],
+							'child' => $row['child'],
+							'payment_status' => $row['payment_status']
+						);
+					}
+					else if ($order_type == 'paket'){ // for paket there is no need to proceed it with Tiket.com API
+						$general = array(
+							'order_id' => $row['order_id'],
+							'agent_name' => $row['agent_name'],
+							'total_price' => $row['total_price'],
+							'commission' => $row['commission_to_agent'],
+							'title' => $row['title'],
+							'category' => $row['category'],
+							'payment_status' => $row['payment_status'],
+							'description' => $row['description']
+						);
+					}
+					array_push($response['responses']['general'], $general);
+				}
+				
+				break;
+			case "tc":
+				
+				break;
+		}
+		print_r($response);
+	}
 }

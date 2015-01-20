@@ -651,6 +651,10 @@ class Webfront extends CI_Controller {
 				
 		$this->load_theme('content_non_paket', $data);
 	}
+	public function detail_order(){
+		$data = array('request' => false);
+		$this->load_theme('view_order', $data);
+	}
 	public function load_faq_content(){
 		$this->load_theme('faq');
 	}

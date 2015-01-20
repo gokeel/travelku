@@ -421,12 +421,13 @@
 											 data-speed="1000"
 											 data-start="800"
 											 data-easing="easeOutExpo"  >
-											 <div class="sboxpurple textcenter">
+											 <!--<div class="sboxpurple textcenter">
 												<span class="lato size28 slim caps white"><?php echo $slider[$i]['category'];?></span><br/><br/><br/>
 												<span class="lato size48 slim caps white"><?php echo $slider[$i]['title'];?></span><br/><br/><br/>
 												<!--<span class="lato size20 normal caps white">from</span><br/><br/>-->
-												<span class="lato size40 slim uppercase yellow"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span><br/>
-											 </div>
+												<!--<span class="lato size40 slim uppercase yellow"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span>
+												<br/>
+											 </div>-->
 										</div>	
 										<div class="tp-caption sfb"
 											 data-x="left"
@@ -435,7 +436,21 @@
 											 data-start="800"
 											 data-easing="easeOutExpo"  >
 											<div class="blacklable">
-											<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $slider[$i]['id'];?>"><h4 class="lato bold white"><?php echo $slider[$i]['title'];?> <span class="green"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span></h4></a>
+												<?php
+												if($slider[$i]['price']<>"0"){
+												?>
+												<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $slider[$i]['id'];?>">
+													<h4 class="lato bold white"><?php echo $slider[$i]['title'];?> 
+														
+														<span class="green"><?php echo $slider[$i]['currency'];?> <?php echo $slider[$i]['price'];?></span>
+													</h4>
+												</a>
+												<?php } 
+												else{
+												?>
+												<h4 class="lato bold white"><?php echo $slider[$i]['title'];?></h4>
+												<?php } ?>
+												
 											<h5 class="lato grey mt-10"><?php echo $slider[$i]['mini_slogan'];?></h5>
 											</div>
 										</div>	
@@ -585,27 +600,46 @@
 			<div class="container">	
 				<div class="row">
 					<div class="col-md-4">
+						<?php
+						$index_latest_top = 0;
+						$i = 0;
+						while($index_latest_top<1) {
+							if($latest[$i]['price']<>"0"){
+					?>
 						<div class="lbl">
-							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[0]['image'];?>" width="360" height="184" alt="" class="fwimg"/></a>
+							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[$i]['image'];?>" width="360" height="184" alt="" class="fwimg"/></a>
 							<div class="smallblacklabel">Paket Terbaru</div>
 						</div>
 					<?php
-						for($i=0;$i<3;$i++){
+								$index_latest_top++;
+							}
+							$i++;
+						}
+						
+						$index_latest = 0;
+						$i = 0;
+						while($index_latest<3) {
+							if($latest[$i]['price']<>"0"){
 					?>
-						<div class="deal">
-							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[$i]['image'];?>" alt="" class="dealthumb" width="50" height="50" /></a>
-							<div class="dealtitle">
-								<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>" class="dark"><?php echo ucwords($latest[$i]['title']);?></a></p>
-								<?php if($latest[$i]['star_rating']<>'') {?>
-									<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $latest[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9">
-								<?php } //end of checking star rating
-								echo $latest[$i]['category'];?></span>
+							<div class="deal">
+								<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[$i]['image'];?>" alt="" class="dealthumb" width="50" height="50" /></a>
+								<div class="dealtitle">
+									<p><a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>" class="dark"><?php echo ucwords($latest[$i]['title']);?></a></p>
+									<?php if($latest[$i]['star_rating']<>'') {?>
+										<img src="<?php echo BLUE_THEME_DIR;?>/images/smallrating-<?php echo $latest[$i]['star_rating'];?>.png" alt="" class="mt-10"/><span class="size13 grey mt-9">
+									<?php } //end of checking star rating
+									echo $latest[$i]['category'];?></span>
+								</div>
+								<div class="dealprice">
+									<p class="size12 grey lh2"><span class="price"><?php echo $latest[$i]['currency'];?> <?php echo $latest[$i]['price'];?></span></p>
+								</div>					
 							</div>
-							<div class="dealprice">
-								<p class="size12 grey lh2"><span class="price"><?php echo $latest[$i]['currency'];?> <?php echo $latest[$i]['price'];?></span></p>
-							</div>					
-						</div>
-					<?php } ?>				
+					<?php 
+								$index_latest++;
+							}
+							$i++;
+						}
+					?>				
 					</div>
 					<!-- End of first row-->
 					
@@ -793,6 +827,8 @@
 		
 		load_all_station('<?php echo base_url();?>index.php/train/get_all_station', "#train-from");
 		load_all_station('<?php echo base_url();?>index.php/train/get_all_station', "#train-to");
+		
+		changeDateCheckout("datepicker", "datepicker2", "malam");
 	});
 
 	//event on hotel checkout change the night
