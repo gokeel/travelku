@@ -1340,7 +1340,7 @@ class Order extends CI_Controller {
 			$url_param .= 'lioncaptcha='.$lioncaptcha.'&lionsessionid='.$lionsessionid;
 			$url_param .= '&lang=id&output=json';
 			$url = $this->config->item('api_server').'/order/add/flight?'.$url_param;
-			$send_request = @$this->get_content($url, true);
+			$send_request = $this->get_content($url);
 			if($send_request === FALSE){
 				$response = array(
 					'status' => '213',
@@ -1362,7 +1362,7 @@ class Order extends CI_Controller {
 				else {
 					// continue to order
 					$url_order = $this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
-					$send_order = $this->get_content($url_order,true);
+					$send_order = $this->get_content($url_order);
 					if($send_order === FALSE){
 						$response = array(
 							'status' => '213',
@@ -1420,6 +1420,7 @@ class Order extends CI_Controller {
 								'order_system_id' => 'tiketcom',
 								'account_id' => $account_id,
 								'token' => $response_order->token,
+								'customer_email' => $this->input->post('conEmailAddress'),
 								'trip_category' => 'flight',
 								'airline_name_depart' => $airline_name_dep,
 								'airline_name_return' => $airline_name_ret,
@@ -1839,14 +1840,15 @@ class Order extends CI_Controller {
 	
 	public function check_order(){
 		/*checking order will be internal database or 3rd party
-			source_db:
-				int = internal database
-				tc = tiket.com
 		*/
-		$source_db = $this->uri->segment(3);
-		$order_id = $this->uri->segment(4);
+		$order_id = $this->input->get('orderid',NULL);
+		$email = $this->input->get('email',NULL);
+		$get_order_system = $this->general->get_afield_by_id('orders', 'order_id', $order_id, 'order_system_id');
+		if($get_order_system==false)
+			$get_order_system = $this->general->get_afield_by_id('orders', '3rd_party_order_id', $order_id, 'order_system_id');
+		$source_db = $get_order_system->result_array()[0]['order_system_id'];
 		switch ($source_db){
-			case "int":
+			case "internal":
 				$get_order_type = $this->general->get_afield_by_id('orders', 'order_id', $order_id, 'trip_category');
 				$order_type = $get_order_type->result_array()[0]['trip_category'];
 				if($order_type=="paket")
@@ -1863,7 +1865,7 @@ class Order extends CI_Controller {
 						$general = array(
 							'order_id' => $row['order_id'],
 							'agent_name' => $row['agent_name'],
-							'airline_name' => $row['airline_name'],
+							'airline_name' => $row['airline_name_depart'],
 							'flight_id' => array('name' => 'flight_id', 'value' => $row['flight_id']),
 							'token' => array('name' => 'token', 'value' => $row['token']),
 							'lion_captcha' => array('name' => 'lioncaptcha', 'value' => $row['lion_captcha']),
@@ -1941,10 +1943,18 @@ class Order extends CI_Controller {
 				}
 				
 				break;
-			case "tc":
+			case "tiketcom":
+				$token = $this->get_token();
+				$url = $this->config->item('api_server').'/check_order?token='.$token.'&order_id='.$order_id.'&email='.$email.'&output=json';
+				$check_order = $this->get_content($url);
+				$json = json_decode($check_order);
 				
+				$response['order_id'] = $json->result->order_id;
+				$response['order_timestamp'] = $json->result->order_timestamp;
+				$response['payment_status'] = $json->result->payment_status;
+				$response['total_customer_price'] = $json->result->total_customer_price;
 				break;
 		}
-		print_r($response);
+		print_r($check_order);
 	}
 }
