@@ -100,7 +100,7 @@
 							<div class="margtop7"><span class="dark">ID Pesanan:</span><span class="red">*</span></div>
 						</div>
 						<div class="col-md-4">	
-							<input type="text" class="form-control" name="order_id" required>
+							<input type="text" class="form-control" id="order_id" name="order_id" required>
 						</div>
 						<div class="col-md-4 textleft">
 						</div>
@@ -110,13 +110,13 @@
 							<div class="margtop7"><span class="dark">Email:</span><span class="red">*</span></div>
 						</div>
 						<div class="col-md-4">	
-							<input type="text" class="form-control" name="email" required>
+							<input type="text" class="form-control" id="email" name="email" required>
 						</div>
 						<div class="col-md-4 textleft">
 						</div>
 					</form>
 					<div class="clearfix"></div>
-					<button type="submit" class="bluebtn margtop20">Tampilkan</button>
+					<button id="btn-submit" type="submit" class="bluebtn margtop20">Tampilkan</button>
 					<br/>
 					<div id="content">
 						<?php
@@ -175,21 +175,199 @@
     <script src="<?php echo BLUE_THEME_DIR;?>/dist/js/bootstrap.min.js"></script>
 	
 <script>
-	//$( window ).load(function() {
-		//load_posts();
-	//})
-	function load_posts(){
-		var request = '<?php echo base_url();?>index.php/webfront/get_post_by_category/faq/0/1';
+	$( window ).load(function() {
+		var order_id = "<?php echo $this->input->get('order_id',NULL);?>";
+		var email = "<?php echo $this->input->get('email',NULL);?>";
+		
+		if(order_id!="" && email !="")
+			check_order(order_id, email);
+	})
+	$('#btn-submit').click(function(){
+		var order_id = $("#order_id").val();
+		var email = $("#email").val();
+		check_order(order_id, email);
+	})
+	function check_order(order_id, email){
+		var request = '<?php echo base_url();?>index.php/order/check_order';
 		$.ajax({
 			type : "GET",
 			async: false,
+			data: 'order_id='+order_id+'&email='+email,
 			url: request,
 			dataType: "json",
 			success:function(datajson){
 				var div = $('#content');
-				var html = $.parseHTML(datajson[0].content);
-				div.append(html);
+				div.empty();
+				div.append('<br/><br/><span class="size16px bold dark left">Detil Pesanan Anda</span>\
+					<div class="clearfix"></div>\
+					<div class="line4"></div><br/>');
+				var content = "";
+				var payment_status = "";
+				if(datajson.payment_status==null || datajson.payment_status=="")
+					payment_status = "NOT PAID";
+				else
+					payment_status = datajson.payment_status;
+				// row 1
+				content += '<div class="col-md-3">\
+								<div class="margtop7"><span class="dark">ID Pesanan:</span></div>\
+							</div>\
+							<div class="col-md-3">\
+								<div class="margtop7"><strong><span class="grey">'+datajson.order_id+'</span></strong></div>\
+							</div>\
+							<div class="col-md-3">\
+								<div class="margtop7"><span class="dark">Status Pembayaran:</span></div>\
+							</div>\
+							<div class="col-md-3">\
+							<div class="margtop7"><strong><span class="'+(datajson.payment_status=="paid" ? "green" : "red")+'">'+toUpperCase(payment_status)+'</span></strong></div>\
+							</div>\
+							<div class="clearfix"></div>\
+							<br/>';
+				// row 2
+				content += '<div class="col-md-3">\
+								<div class="margtop7"><span class="dark">Waktu Pemesanan:</span></div>\
+							</div>\
+							<div class="col-md-3">\
+								<div class="margtop7"><span class="grey">'+datajson.order_timestamp+'</span></div>\
+							</div>\
+							<div class="col-md-3">\
+								<div class="margtop7"><span class="dark">Batas Pembayaran:</span></div>\
+							</div>\
+							<div class="col-md-3">\
+							<div class="margtop7"><strong><span class="red">'+datajson.limit_order_timestamp+'</span></strong></div>\
+							</div>\
+							<div class="clearfix"></div>\
+							<br/>';
+				// row 3
+				content += '<div class="col-md-3">\
+								<div class="margtop7"><span class="dark">Total Harga:</span></div>\
+							</div>\
+							<div class="col-md-3">\
+								<div class="margtop7"><span class="grey">'+datajson.customer_currency+' '+datajson.total_customer_price+'</span></div>\
+							</div>\
+							<div class="col-md-3">\
+								<div class="margtop7"><span class="dark">Tanggal Pembayaran:</span></div>\
+							</div>\
+							<div class="col-md-3">\
+							<div class="margtop7"><strong><span class="grey">'+datajson.payment_timestamp+'</span></strong></div>\
+							</div>\
+							<div class="clearfix"></div>\
+							<br/>';
+				// row 4
+				content += '<div class="col-md-3">\
+								<div class="margtop7"><span class="dark">Tipe Pesanan:</span></div>\
+							</div>\
+							<div class="col-md-3">\
+								<div class="margtop7"><span class="grey">'+toUpperCase(datajson.order_type)+'</span></div>\
+							</div>\
+							<div class="col-md-3">\
+								<div class="margtop7"><span class="dark">'+(datajson.cart_detail.hasOwnProperty("category") ? "Kategori:" : "")+'</span></div>\
+							</div>\
+							<div class="col-md-3">\
+								<div class="margtop7"><span class="grey">'+(datajson.cart_detail.hasOwnProperty("category") ? toUpperCase(datajson.cart_detail.category) : "")+'</span></div>\
+							</div>\
+							<div class="clearfix"></div>\
+							<br/>';
+				if(datajson.order_type=="paket"){
+					content += '<div class="col-md-3">\
+									<div class="margtop7"><span class="dark">Nama Pesanan:</span></div>\
+								</div>\
+								<div class="col-md-3">\
+									<div class="margtop7"><span class="grey">'+datajson.cart_detail.order_name+'</span></div>\
+								</div>\
+								<div class="col-md-3">\
+									<div class="margtop7"><span class="dark">Info:</span></div>\
+								</div>\
+								<div class="col-md-3">\
+									<div class="margtop7"><span class="grey">'+datajson.cart_detail.order_name_detail+'</span></div>\
+								</div>\
+								<div class="clearfix"></div>\
+								<br/>';
+					content += '<div class="col-md-3">\
+									<div class="margtop7"><span class="dark">Data Pemesan:</span></div>\
+								</div>\
+								<div class="col-md-3">\
+									<div class="margtop7"><span class="grey">'+datajson.contact.name+'</span></div>\
+								</div>\
+								<div class="col-md-3">\
+									<div class="margtop7"><span class="grey">'+datajson.contact.email+'</span></div>\
+								</div>\
+								<div class="col-md-3">\
+									<div class="margtop7"><span class="grey">'+datajson.contact.phone+'</span></div>\
+								</div>\
+								<div class="clearfix"></div>\
+								<br/>';
+				}
 				
+				if(datajson.order_type=="flight"){
+					for(var i=0; i<datajson.cart_detail.length;i++){
+						var departure_date_time = '';
+						if(datajson.cart_detail[i].departure_date==datajson.cart_detail[i].arrival_date)
+							departure_date = datajson.cart_detail[i].departure_date+' '+datajson.cart_detail[i].departure_time+'-'+datajson.cart_detail[i].arrival_time;
+						else
+							departure_date = datajson.cart_detail[i].departure_date+' '+datajson.cart_detail[i].departure_time+'-'+datajson.cart_detail[i].departure_date+' '+datajson.cart_detail[i].arrival_time;
+						content += '<div class="col-md-3">\
+										<div class="margtop7"><span class="grey">'+datajson.cart_detail[i].order_name+'</span></div>\
+									</div>\
+									<div class="col-md-3">\
+										<div class="margtop7"><span class="grey">'+datajson.cart_detail[i].order_name_detail+'</span></div>\
+									</div>\
+									<div class="col-md-3">\
+										<div class="margtop7"><span class="grey">'+departure_date+'</span></div>\
+									</div>\
+									<div class="col-md-3">\
+										<div class="margtop7"><span class="grey">Kode Booking: <strong>'+(datajson.cart_detail[i].booking_code==null ? "Tidak Tersedia" : datajson.cart_detail[i].booking_code)+'</strong></span></div>\
+									</div>\
+									<div class="clearfix"></div>\
+									<br/>';
+						/*butuh get_token untuk bisa print voucher
+						if(datajson.cart_detail[i].ticket_status=="issued"){
+							content += '<div class="col-md-6">\
+											<a href="'+datajson.cart_detail[i].send_voucher+'" target="_blank"><button class="bluebtn margtop20">Kirim Voucher</button></a>\
+										</div>\
+										<div class="col-md-6">\
+											<a href="'+datajson.cart_detail[i].print_voucher+'" target="_blank"><button class="bluebtn margtop20">Cetak Voucher</button></a>\
+										</div>\
+										<div class="clearfix"></div>\
+										<br/>';
+						}*/
+					}
+				
+					var adult = '' ;
+					var child = '' ;
+					var infant = '' ;
+					if(datajson.passenger[0].hasOwnProperty('adult')){
+						for(var j=0; j<datajson.passenger[0].adult.length; j++){
+							adult += datajson.passenger[0].adult[j].name+'<br/>'+datajson.passenger[0].adult[j].birth_date+'<br/>Bagasi '+datajson.passenger[0].adult[j].baggage+'kg<br/><br/>';
+						}
+					}
+					if(datajson.passenger[0].hasOwnProperty('child')){
+						for(var j=0; j<datajson.passenger[0].child.length; j++){
+							child += datajson.passenger[0].child[j].name+'<br/>'+datajson.passenger[0].child[j].birth_date+'<br/>Bagasi '+datajson.passenger[0].child[j].baggage+'kg<br/><br/>';
+						}
+					}
+					if(datajson.passenger[0].hasOwnProperty('infant')){
+						for(var j=0; j<datajson.passenger[0].infant.length; j++){
+							infant += datajson.passenger[0].infant[j].name+'<br/>'+datajson.passenger[0].infant[j].birth_date+'<br/>';
+						}
+					}
+					content += '<div class="col-md-3">\
+									<div class="margtop7"><span class="dark">Data Penumpang</span></div>\
+								</div>\
+								<div class="col-md-3">\
+									<div class="margtop7"><span class="grey">Dewasa:<br/>'+adult+'</span></div>\
+								</div>\
+								<div class="col-md-3">\
+									<div class="margtop7"><span class="grey">Anak:<br/>'+child+'</span></div>\
+								</div>\
+								<div class="col-md-3">\
+									<div class="margtop7"><span class="grey">Bayi:<br/>'+infant+'</span></div>\
+								</div>\
+								<div class="clearfix"></div>\
+								<br/>';
+				}
+				
+				
+				div.append(content);
 			}
 		});
 	}

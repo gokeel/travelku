@@ -7,7 +7,7 @@
 		<p></p>
 		<?php
 			if($currency=="IDR"){
-				echo '<p>Total Harga yang harus Dibayar: Rp. ' . number_format($total_price, 0, ',', '.')$total_price.'</p>';
+				echo '<p>Total Harga yang harus Dibayar: Rp. ' . number_format($total_price, 0, ',', '.').'</p>';
 			}
 			else {
 				echo '<p>Kurs USD saat ini: 1 USD = IDR '.number_format($rate, 0, ',', '.').'</p>';
