@@ -122,7 +122,7 @@
 	<link rel="stylesheet" href="<?php echo CSS_2_DIR;?>/style.css">
 	<script src="http://yui.yahooapis.com/3.17.2/build/yui/yui-min.js"></script>
 	<link rel="stylesheet" href="http://yui.yahooapis.com/3.17.2/build/cssgrids/cssgrids-min.css">
-
+	
 </head>
 <body class="clearfix with-menu with-shortcuts reversed yui3-skin-sam">
 

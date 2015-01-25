@@ -25,7 +25,9 @@
 			<?php echo ($uri2=='option_setting' ? '<li id="grp_7" class="selected">' : '<li id="grp_4">');?>
 				<a href="<?php echo base_url();?>index.php/admin/option_setting" >Pengaturan Opsi</a>
 			</li>
-			
+			<?php echo ($uri2=='agent_news' ? '<li id="grp_7" class="selected">' : '<li id="grp_4">');?>
+				<a href="<?php echo base_url();?>index.php/admin/agent_news" >Berita Agen</a>
+			</li>
 		</ul>
 	</div>
 </div>

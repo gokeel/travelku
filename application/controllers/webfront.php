@@ -246,12 +246,14 @@ class Webfront extends CI_Controller {
 		$username = $this->input->get('username');
 		$this->load->model('users');
 		$account_id = $this->users->get_account_id_by_username($username);
-		$this->session->set_userdata('akun_id', $account_id);
-		$this->session->set_userdata('user_name', $username);
-		
-		$this->load->view('header');
-		$this->load->view('homepage');
-		$this->load->view('footer');
+		if($account_id<>false){
+			$this->session->set_userdata('akun_id', $account_id);
+			$this->session->set_userdata('user_name', $username);
+			
+			$this->index();
+		}
+		else
+			echo "Maaf, mohon periksa alamat website yang anda masukkan.";
 	}
 	public function test(){
 		print_r($this->config->item('account_id'));

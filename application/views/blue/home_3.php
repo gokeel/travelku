@@ -700,8 +700,9 @@
 			<div class="container">	
 				<div class="row">
 					<div class="col-md-3">
-						<img src="<?php echo base_url();?>assets/images/tagline-bestchoice.png" width="75px" height="50px"> <b><?php echo $tag_line_1_title;?></b><br/><br/>
-						<span class="size13 grey mt-9"><?php echo $tag_line_1_content;?></span>
+						
+						<!--<img src="<?php echo base_url();?>assets/images/tagline-bestchoice.png" width="75px" height="50px"> <b><?php echo $tag_line_1_title;?></b><br/><br/>
+						<span class="size13 grey mt-9"><?php echo $tag_line_1_content;?></span>-->
 					</div>
 					<div class="col-md-3">
 						<img src="<?php echo base_url();?>assets/images/tagline-man-wireless.png" width="75px" height="50px"> <b><?php echo $tag_line_2_title;?></b><br/><br/>

@@ -21,6 +21,7 @@ Your browser does not support JavaScript! Some features won't work as expected..
 <div class="standard-tabs" >
 	<ul class="tabs" style="margin-left:30px;">
 		<li class="active"><a href="#report">Report</a></li>  <!--  <li><a href="#T-iFlight">International Flight</a></li>-->
+		<li><a href="#news-agent">Berita Agen</a></li>  <!--  <li><a href="#T-iFlight">International Flight</a></li>-->
 		<li><a href="#T-Flight">Flight</a></li>  <!--  <li><a href="#T-iFlight">International Flight</a></li>-->
 		<li><a href="#T-KA">Kereta Api</a></li>
 		<li><a href="#T-Hotel">Hotel</a></li>
@@ -102,8 +103,12 @@ Your browser does not support JavaScript! Some features won't work as expected..
 			<div style="clear:both;"></div>
 		</div>
 	
-	
-	
+	<!-- ---------News Agent--------- -->
+	<div id="news-agent" class="">
+		<div style="clear: both; height: 20px;"></div>  
+		<div class="bggrey" id="data-news-agent"> </div>
+		<div style="clear: both; height: 20px;"></div>  
+	</div>
     <!-- ---------T-Flight--------- -->
 		<div id="T-Flight" class="">
 			<div style="clear: both; height: 20px;"></div>  
@@ -120,17 +125,24 @@ Your browser does not support JavaScript! Some features won't work as expected..
 					<script>
 					$(function() {
 						$( "#tgl_berangkat" ).datepicker({"dateFormat": "yy-mm-dd"});
-						//$( "#tgl_pulang" ).datepicker({"dateFormat": "yy-mm-dd"});
+						$( "#tgl_pulang" ).datepicker({"dateFormat": "yy-mm-dd"});
 					});
 					</script>
-					<div style="float:left; width:135px;">
+					<div style="float:left; width:180px;">
 						<p>Berangkat</p>
-					<span class="input"> 
-						<span class="icon-calendar"></span>
-						<input readonly="readonly" type="text" name="flight-pergi" id="tgl_berangkat" class="input-unstyled datepicker_dashboard" value="" style="width: 80px;"/>
-					</span>
+						<span class="input"> 
+							<span class="icon-calendar"></span>
+							<input readonly="readonly" type="text" name="flight-pergi" id="tgl_berangkat" class="input-unstyled datepicker_dashboard" value="" style="width: 80px;"/>
+						</span>
 					</div>
-           
+					<div style="float:left; width:260px;">
+						<p>Kembali</p>
+						<span class="input"> 
+							<span class="icon-calendar"></span>
+							<input readonly="readonly" type="text" name="flight-pulang" id="tgl_pulang" class="input-unstyled datepicker_dashboard" value="" style="width: 80px;"/>
+						</span>
+					</div>
+					<br/>
 				  <!-- tidak support untuk return
 				  <div id="boxpulang" style="float:left; width:135px;">
 					<p>Pulang</p>
@@ -510,7 +522,53 @@ function addDays(theDate, days) {
 			var mm = '<?php echo date('m')?>';
 			load_chart_daily(yy, mm, 'column');
 			load_chart_monthly(yy, 'column');
+			
+			load_news_agent()
 		});
+		
+		function load_news_agent(){
+			var div = $('#data-news-agent');
+			div.empty();
+			div.append('<h3 class="thin underline">Berita Agen dari Pusat</h3>');
+			$.ajax({
+				type : "GET",
+				url: '<?php echo base_url();?>index.php/admin/get_news_agents',
+				data: 'q=pub',
+				cache: false,
+				dataType: "json",
+				success:function(data){
+					if(data==''){
+						div.append('<p>Maaf, data tidak ditemukan.<p>');
+					}
+					else{
+						var table = document.createElement('table');
+						var thead = document.createElement('thead');
+						var tr_head = document.createElement('tr');
+						tr_head.appendChild(set_td_data('th', 'Judul'));
+						tr_head.appendChild(set_td_data('th', 'Berita'));
+						tr_head.appendChild(set_td_data('th', 'Tgl Publish'));
+						table.appendChild(tr_head);
+									
+						var tbody = document.createElement('tbody');
+						for(var i=0; i<data.length;i++){
+							var tr_body = document.createElement('tr');
+							tr_body.appendChild(set_td_data('td', data[i].title));
+							var el_td = document.createElement('td');
+							el_td.innerHTML = data[i].content; // using HTML
+							tr_body.appendChild(el_td);
+							
+							//tr_body.appendChild(set_td_data('td', $(this).html(data[i].content)));
+							tr_body.appendChild(set_td_data('td', data[i].publish_date));
+							
+							table.appendChild(tr_body);
+						}
+								
+						div.append(table);
+					}
+				}
+			})
+		}
+		
 		
 		function get_number_of_days(yy, mm){
 			var result;

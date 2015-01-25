@@ -189,6 +189,21 @@ class Agents extends CI_Model {
 			return true;
 		else return false;
 	}
+	
+	function get_news_agents($id=null, $only_publish=null){
+		$this->db->select('*');
+		$this->db->from('agent_news');
+		if($id<>null)
+			$this->db->where('id', $id);
+		if($only_publish=='pub')
+			$this->db->where('status','publish');
+		$this->db->order_by('publish_datetime desc');
+		$query = $this->db->get();
+		if ($query->num_rows() > 0)
+			return $query;
+		else
+			return false;
+	}
 }
 
 ?>

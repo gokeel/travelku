@@ -449,6 +449,27 @@ class Admin extends CI_Controller {
 			$this->no_right_access();
 	}
 	
+	public function agent_news(){
+		if($this->check_session('administrator'))
+			$this->page('admin_cms_agent_news');
+		else
+			$this->no_right_access();
+	}
+	
+	public function agent_news_add(){
+		if($this->check_session('administrator'))
+			$this->page('admin_cms_agent_news_add');
+		else
+			$this->no_right_access();
+	}
+	
+	public function agent_news_modify(){
+		if($this->check_session('administrator'))
+			$this->page('admin_cms_agent_news_modify');
+		else
+			$this->no_right_access();
+	}
+	
 	//cindy nordiansyah
 	public function assets_page(){
 		if($this->check_session('administrator'))
@@ -717,6 +738,52 @@ class Admin extends CI_Controller {
 		//	$data['license_file'] = $file_name;
 			
 		$edit = $this->agents->edit_agent($id, $data);
+		//email dikirim dengan berita berdasarkan perubahan status approval
+		$get_username = $this->general->get_afield_by_id('agents', 'agent_id', $id, 'agent_username');
+		$username = $get_username->result_array()[0]['agent_username'];
+		//preparing to send email
+		$content = array(
+			'name' => $this->input->post('company_name', TRUE),
+			'username' => $username
+		);
+		//get email disribution
+		$this->load->model('notification');
+		if($this->input->post('approve')=="Yes"){
+			list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('agent-approved');
+			$subject = 'Permintaan Keagenan Disetujui';
+			$template = 'agent_approved';
+		}
+		else if($this->input->post('approve')=="No"){
+			list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('agent-not-active');
+			$subject = 'Keagenan Di-Non-Aktifkan';
+			$template = 'agent_not_active';
+		}
+		else if($this->input->post('approve')=="Rejected"){
+			list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('agent-rejected');
+			$subject = 'Permintaan Keagenan Ditolak';
+			$template = 'agent_rejected';
+		}
+		//sending email
+		$email_config = array(
+			'protocol' => 'mail',
+			'mailpath' => '/usr/sbin/sendmail',
+			'charset' => 'iso-8859-1',
+			'wordwrap' => TRUE,
+			'mailtype' => 'html'
+		);
+		$this->load->library('email', $email_config);
+				
+		$this->email->from($email_sender, $sender_name);
+		$this->email->to($this->input->post('email',TRUE));
+		$this->email->cc($cc);
+		$this->email->bcc($bcc);
+				
+		$this->email->subject($subject);
+		$messages = $this->load->view('email_tpl/'.$template, $content, TRUE);
+		$this->email->message($messages);
+
+		$this->email->send();
+		
 		//$response[0]['response'] = $edit;
 		//$response[] = array('response' => $add);
 		//echo json_encode($response);
@@ -5232,5 +5299,84 @@ class Admin extends CI_Controller {
 		$data = array('system' => $this->input->get('system', TRUE));
 		$upd = $this->general->update_data_on_table('order_system_running', 'order', 'tiket', $data);
 		
+	}
+	
+	public function get_news_agents(){
+		$q = $this->input->get('q',NULL);
+		if(empty($q))
+			$query = $this->agents->get_news_agents();
+		else if($q=='pub')
+			$query = $this->agents->get_news_agents(null,'pub');
+		if($query<>false){
+			foreach($query->result_array() as $row){
+				$response[] = array(
+					'id' => $row['id'],
+					'title' => $row['news_title'],
+					'content' => $row['news_content'],
+					'status' => $row['status'],
+					'creation_date' => date_format(new DateTime($row['creation_datetime']), 'd M Y H:i:s'),
+					'publish_date' => ($row['publish_datetime']=="0000-00-00 00:00:00" ? "" : date_format(new DateTime($row['publish_datetime']), 'd M Y H:i:s'))
+				);
+			}
+		}
+		echo json_encode($response);
+	}
+	
+	public function add_news_agent(){
+		$data = array(
+			'news_title' => $this->input->post('news_title',NULL),
+			'news_content' => $this->input->post('news_content',NULL),
+			'status' => $this->input->post('status',NULL),
+			'creation_datetime' => date('Y-m-d H:i:s')
+		);
+		if($this->input->post('status',NULL)=="publish")
+			$data['publish_datetime'] = date('Y-m-d H:i:s');
+		
+		$add = $this->general->add_to_table('agent_news', $data);
+		if($add)
+			redirect(base_url('index.php/admin/agent_news'));
+		else
+			$this->show_message_page('menambah berita agen', 'Mohon cek kembali input anda, atau hubungi web administrator.');
+	}
+	
+	public function get_agent_news_by_id(){
+		$id = $this->uri->segment(3);
+		$query = $this->agents->get_news_agents($id);
+		if($query<>false){
+			foreach($query->result_array() as $row){
+				$response = array(
+					'title' => $row['news_title'],
+					'content' => $row['news_content'],
+					'status' => $row['status']
+				);
+			}
+		}
+		echo json_encode($response);
+	}
+	
+	public function edit_news_agent(){
+		$id = $this->input->post('id');
+		$data = array(
+			'news_title' => $this->input->post('news_title',NULL),
+			'news_content' => $this->input->post('news_content',NULL),
+			'status' => $this->input->post('status',NULL)
+		);
+		if($this->input->post('status',NULL)=="publish")
+			$data['publish_datetime'] = date('Y-m-d H:i:s');
+		
+		$upd = $this->general->update_data_on_table('agent_news', 'id', $id, $data);
+		if($upd)
+			redirect(base_url('index.php/admin/agent_news'));
+		else
+			$this->show_message_page('mengubah data berita agen', 'Mohon cek kembali input anda, atau hubungi web administrator.');
+	}
+	
+	public function agent_news_delete(){
+		$id = $this->uri->segment(3);
+		$del = $this->general->delete_from_table_by_id('agent_news', 'id', $id);
+		if($del)
+			redirect(base_url('index.php/admin/agent_news'));
+		else
+			$this->show_message_page('menghapus data berita agen', 'Mohon hubungi web administrator.');
 	}
 }

@@ -68,13 +68,15 @@ class Users extends CI_Model {
 	}
 	
 	function get_account_id_by_username($username){
+		$result = false;
 		$this->db->select('account_id');
 		$this->db->from('users');
 		$this->db->where('user_name', $username);
 		$get = $this->db->get();
 		if ($get->num_rows() > 0)
-		   foreach ($get->result() as $row)
-			$result = $row->account_id;
+			foreach ($get->result() as $row)
+				$result = $row->account_id;
+			
 		return $result;
 	}
 	
