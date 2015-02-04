@@ -47,6 +47,7 @@
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
 	<link rel="icon" type="image/png" href="<?php echo base_url();?>assets/images/<?php echo $favicon_frontend_logo;?>">
+	
 	<!-- end of tambahan -->
   </head>
   <body id="top">
@@ -700,21 +701,18 @@
 			<div class="container">	
 				<div class="row">
 					<div class="col-md-3">
-						
-						<img src="<?php echo base_url();?>assets/images/tagline-bestchoice.png" width="75px" height="50px"> <b><?php echo $tag_line_1_title;?></b><br/><br/>
-						<span class="size13 grey mt-9"><?php echo $tag_line_1_content;?></span>
+						<img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_1_logo;?>" width="100%" height="100%"/>
+						<!--<img src="<?php echo base_url();?>assets/images/tagline-bestchoice.png" width="75px" height="50px"> <b><?php echo $tag_line_1_title;?></b><br/><br/>
+						<span class="size13 grey mt-9"><?php echo $tag_line_1_content;?></span>-->
 					</div>
 					<div class="col-md-3">
-						<img src="<?php echo base_url();?>assets/images/tagline-man-wireless.png" width="75px" height="50px"> <b><?php echo $tag_line_2_title;?></b><br/><br/>
-						<span class="size13 grey mt-9"><?php echo $tag_line_2_content;?></span>
+						<img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_2_logo;?>" width="100%" height="100%"/>
 					</div>
 					<div class="col-md-3">
-						<img src="<?php echo base_url();?>assets/images/tagline-best-price.png" width="75px" height="50px"> <b><?php echo $tag_line_3_title;?></b><br/><br/>
-						<span class="size13 grey mt-9"><?php echo $tag_line_3_content;?></span>
+						<img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_3_logo;?>" width="100%" height="100%"/>
 					</div>
 					<div class="col-md-3">
-						<img src="<?php echo base_url();?>assets/images/tagline-call-center.jpg" width="75px" height="50px"> <b><?php echo $tag_line_4_title;?></b><br/><br/>
-						<span class="size13 grey mt-9"><?php echo $tag_line_4_content;?></span>
+						<img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_4_logo;?>" width="100%" height="100%"/>
 					</div>
 				</div>
 			</div>

@@ -22,6 +22,7 @@
 <script type="text/javascript">
 
     var base_url = '<?php echo base_url(); ?>';
+	var latest_notification = 0;
 
 </script>
 <!--tambahanku -->
@@ -522,6 +523,15 @@ $(function() {
 			dataType: "json",
 			success: function(data) {
 				$('a#notification').text('Notifikasi Hari Ini ('+data.count+')');
+				if(parseInt(data.count) > latest_notification){
+					if(latest_notification != 0){
+						var audioElement = document.createElement('audio');
+						audioElement.setAttribute('src', '<?php echo CSS_DIR;?>/alert_file/cms_al.mp3');
+						audioElement.setAttribute('autoplay', 'autoplay');
+						audioElement.play();
+					}
+					latest_notification = parseInt(data.count);
+				}
 			},
 			complete: function() {
 			// Schedule the next request when the current one's complete

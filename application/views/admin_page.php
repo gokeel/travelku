@@ -18,9 +18,10 @@
 </div>
 <script>
 	$( window ).load(function() {
-		load_booking();
+		//load_booking();
 	});
-	function load_booking(){
+	(function load_booking() {
+		$("#data-booking").empty();
 		var data = [];
 		$.ajax({
 			type : "GET",
@@ -30,6 +31,10 @@
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
 					data[i] = {number_row:datajson[i].number_row, payment_status: datajson[i].payment_status, order_id: datajson[i].order_id, category:datajson[i].category, total_price: datajson[i].total_price, order_status: datajson[i].order_status, timestamp: datajson[i].timestamp, agent_name: datajson[i].agent_name};
+			},
+			complete: function() {
+			// Schedule the next request when the current one's complete
+				setTimeout(load_booking, 10000);
 			}
 		});
 		
@@ -68,5 +73,6 @@
 			});
 			table.render("#data-booking");
 		});
-	}
+	})
+	();
 </script>

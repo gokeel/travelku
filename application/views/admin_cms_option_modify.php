@@ -38,8 +38,8 @@
 			success:function(datajson){
 				$('#parameter').text(datajson.parameter);
 				$('#readable').text(datajson.readable);
-				
-				if(datajson.parameter=="company_logo"){ //generate the div showing the image and the input to change the picture
+				var param = datajson.parameter;
+				if(param.indexOf("logo")>=0){ //generate the div showing the image and the input to change the picture
 					$('#value-show').append('<div id="image-show"></div><input name="value" id="value" type="file" value="" size="60">\
 							<input type="hidden" name="is_logo" value="yes">');
 					$("#image-show").append('<img src="'+image_path+datajson.value+'?ver='+d.getTime()+'" alt="no-picture" width="250px" height="250px" />');

@@ -5228,23 +5228,13 @@ class Admin extends CI_Controller {
 		echo $this->email->print_debugger();
 	}
 	
-	public function excel_all_transaction(){
-		//load from database
-		$list = $this->orders->get_order_list();
-		$number_row = 0;
-		foreach ($list->result_array() as $row){
-			$number_row++;
-			$data[] = array($number_row,$row['agent_username'],$row['agent_name'],$row['trip_category'],$row['order_id'],$row['total_price'],$row['order_status'],$row['registered_date'],$row['issued_date'],$row['status'],$row['transfer_date']);
-		}
-		
-		$headers = array('Nomor', 'Username Agen','Nama Agen', 'Kategori Pembelian', 'ID Pesanan', 'Total Harga', 'Status Pesanan', 'Tanggal Pemesanan', 'Tanggal Issued', 'Status Pembayaran', 'Tanggal Transfer');
-		
+	function export_to_excel($data, $headers, $sheet_name, $filename){
 		//load our new PHPExcel library
 		$this->load->library('excel');
 		//activate worksheet number 1
 		$this->excel->setActiveSheetIndex(0);
 		//name the worksheet
-		$this->excel->getActiveSheet()->setTitle('data transaksi');
+		$this->excel->getActiveSheet()->setTitle($sheet_name);
 		// set value for headers
 		
 		for($i=0;$i<sizeof($headers);$i++){
@@ -5263,7 +5253,6 @@ class Admin extends CI_Controller {
 		
 		//set aligment to center for that merged cell (A1 to D1)
 		$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-		$filename='data transaksi semua agen.xls'; //save our workbook as this file name
 		header('Content-Type: application/vnd.ms-excel'); //mime type
 		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 		header('Cache-Control: max-age=0'); //no cache
@@ -5273,7 +5262,34 @@ class Admin extends CI_Controller {
 		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
 		//force user to download the Excel file without writing it to server's HD
 		$objWriter->save('php://output');
+	}
+	
+	public function excel_all_transaction(){
+		//load from database
+		$list = $this->orders->get_order_list();
+		$number_row = 0;
+		foreach ($list->result_array() as $row){
+			$number_row++;
+			$data[] = array($number_row,$row['agent_username'],$row['agent_name'],$row['trip_category'],$row['order_id'],$row['total_price'],$row['order_status'],$row['registered_date'],$row['issued_date'],$row['status'],$row['transfer_date']);
+		}
+		
+		$headers = array('Nomor', 'Username Agen','Nama Agen', 'Kategori Pembelian', 'ID Pesanan', 'Total Harga', 'Status Pesanan', 'Tanggal Pemesanan', 'Tanggal Issued', 'Status Pembayaran', 'Tanggal Transfer');
 
+		$this->export_to_excel($data, $headers, 'Data Semua Transaksi', 'data transaksi semua agen.xls');
+	}
+	
+	public function excel_all_agent(){
+		//load from database
+		$query = $this->agents->get_all_agents();
+		$number_row = 0;
+		foreach ($query->result_array() as $row){
+			$number_row++;
+			$data[] = array($number_row,$row['agent_username'],$row['agent_id'],$row['agent_name'],$row['agent_type'],$row['join_date'],$row['agent_phone'],$row['agent_city'],$row['agent_email'],$row['parent_agent'],$row['deposit_amount'],$row['voucher'],$row['approved']);
+		}
+		
+		$headers = array('Nomor', 'Username Agen','ID Agen','Nama Agen', 'Tipe Agen', 'Tanggal Bergabung', 'No. Telepon', 'Kota', 'Email', 'Upline', 'Nilai Deposit', 'Voucher', 'Status Approval');
+
+		$this->export_to_excel($data, $headers, 'Data Semua Agen', 'data semua agen.xls');
 	}
 	
 	public function test(){

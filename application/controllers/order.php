@@ -11,13 +11,17 @@ class Order extends CI_Controller {
 	}
 	
 	function get_content($URL){
-        $ch = curl_init();
-		curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (twh:20681061; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $URL);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        return $data;
+        $this->load->library('curl');
+		$this->curl->create($URL);
+		$this->curl->option('buffersize', 10);
+		$this->curl->option('useragent', 'Mozilla/5.0 (twh:20782180; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
+		$this->curl->option('returntransfer', 1);
+		$this->curl->option('followlocation', 1);
+		//$this->curl->option('HEADER', true);
+		$this->curl->option('connecttimeout', 600);
+		$data = $this->curl->execute();
+		
+		return $data;
     }
 	
 	function get_lion_captcha()

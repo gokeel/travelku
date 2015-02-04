@@ -2,21 +2,55 @@
 
 class Flight extends CI_Controller {
 	function get_content($URL){
-        $ch = curl_init();
-		curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (twh:20681061; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $URL);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        return $data;
+		$this->load->library('curl');
+		$this->curl->create($URL);
+		$this->curl->option('buffersize', 10);
+		$this->curl->option('useragent', 'Mozilla/5.0 (twh:20782180; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
+		$this->curl->option('returntransfer', 1);
+		$this->curl->option('followlocation', 1);
+		//$this->curl->option('HEADER', true);
+		$this->curl->option('connecttimeout', 600);
+		$data = $this->curl->execute();
+		
+		return $data;
     }
 	public function get_token()
 	{
 		$url = $this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json';
+		//$getdata = $this->get_content($url);
 		$getdata = $this->get_content($url);
 		$json = json_decode($getdata);
 		$token = $json->token;
 		return $token;
+	}
+	
+	public function test()
+	{
+		$url = $this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json';
+		
+		
+		print_r($data);
+		/*$url = $this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json';
+		print_r($url);
+		$ch = curl_init();
+		//curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (twh:20681061; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $data = curl_exec($ch);
+		curl_close($ch);
+		if(!curl_errno($ch))
+		{
+			$info = curl_getinfo($ch);
+
+			echo '<br/> Took ' . $info['total_time'] . ' seconds to send a request to ' . $info['url'];
+		}
+		else
+		{
+			echo 'Curl error: ' . curl_error($ch);
+		}
+
+		echo $data;
+        */
 	}
 	
 	public function get_token_json()
@@ -61,27 +95,34 @@ class Flight extends CI_Controller {
 	
 	public function sync_all_airport()
 	{
-		$getdata = $this->get_content($this->config->item('api_server').'/flight_api/all_airport?token='.$this->get_token().'&output=json');
-		$json = json_decode($getdata);
-		$airports = $json->all_airport->airport;
+		$url = $this->config->item('api_server').'/flight_api/all_airport?token='.$this->get_token().'&output=json';
+		$getdata = $this->get_content($url);
 		
-		$data = array();
-		foreach ($airports as $airport)
-		{
-			$sub_data = array(
-				'airport_name' => $airport->airport_name,
-				'airport_code' => $airport->airport_code,
-				'airport_location_name' => $airport->location_name,
-				'airport_country' => $airport->country_id
-			);
-			array_push($data, $sub_data);
+		
+		if(!empty($getdata)){
+			$json = json_decode($getdata);
+			$airports = $json->all_airport->airport;
+			
+			$data = array();
+			foreach ($airports as $airport)
+			{
+				$sub_data = array(
+					'airport_name' => $airport->airport_name,
+					'airport_code' => $airport->airport_code,
+					'airport_location_name' => $airport->location_name,
+					'airport_country' => $airport->country_id
+				);
+				array_push($data, $sub_data);
+			}
+			//truncate and the insert all data
+			$this->db->truncate('flight_airports');
+			//insert batch
+			$this->db->insert_batch('flight_airports', $data);
+			print_r("Sync all airport done.");
 		}
+		else
+			print_r("Sync all airport ERROR.");
 		
-		//truncate and the insert all data
-		$this->db->truncate('flight_airports');
-		//insert batch
-		$this->db->insert_batch('flight_airports', $data);
-		print_r("Sync all airport done.");
 	}
 
 	public function search_flights()

@@ -35,7 +35,8 @@
 					{key:"readable", label:"Keterangan"},
 					{label:"Teks/Gambar yang Ditampilkan",
 						nodeFormatter:function(o){
-							if(o.data.parameter=="company_logo")
+							var param = o.data.parameter;
+							if(param.indexOf("logo")>=0)
 								o.cell.setHTML('<img src="<?php echo base_url();?>assets/uploads/option_images/'+o.data.value+'?ver='+d.getTime()+'" alt="image" />');
 							else
 								o.cell.set('text', o.data.value);
