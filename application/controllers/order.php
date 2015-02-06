@@ -139,17 +139,21 @@ class Order extends CI_Controller {
 		
 		/*inserting the general info*/
 		$data = array(
+			'order_system_id' => 'internal',
 			'account_id' => $account_id,
 			'token' => $token,
+			'customer_email' => $this->input->post('conEmailAddress', TRUE),
 			'trip_category' => 'flight',
-			'airline_name' => $airline_name,
-			'flight_id' => $flight_id,
+			'airline_name_depart' => $airline_name,
+			'airline_name_return' => $airline_name_ret,
+			'flight_id_depart' => $flight_id,
 			'flight_id_return' => ($flight_id_ret == '' ? '' : $flight_id_ret),
 			'is_round_trip' => ($flight_id_ret == '' ? 'false' : 'true'),
 			'route' => $route,
 			'departing_date' => $depart_date,
 			'returning_date' => $depart_date_ret,
 			'time_travel' => $time_travel,
+			'time_travel_ret' => $time_travel_ret,
 			'total_price' => $tot_price,
 			'admin_fee' => $admin_fee,
 			'adult' => $tot_adult,

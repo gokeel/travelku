@@ -772,8 +772,29 @@
 		</div>		-->
 		<div class="footerbg">
 			<div class="container">	
-				<div class="col-md-12">
-					<img src="<?php echo base_url();?>assets/images/banner-partner.png" alt="" width="100%" height="155px"/>
+				<div class="col-md-6" style="background-color:#F2F2F2">
+					<!--<img src="<?php echo base_url();?>assets/images/banner-partner.png" alt="" width="100%" height="155px"/>-->
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/sriwijaya.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Lion Air.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Air asia.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Garuda Indonesia.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/CITILINK.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Wings Air.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Batik air.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Tiger air.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Kalstar.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/xpress air.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Trigana Air.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Malindo Air.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Susi Air.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/NAM.png" height="70px" width="70px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Thai Air.png" height="70px" width="70px"/>
+				</div>
+				<div class="col-md-3" style="background-color:#F2F2F2">
+					
+				</div>
+				<div class="col-md-3" style="background-color:#F2F2F2">
+					
 				</div>
 			</div>
 		</div>
