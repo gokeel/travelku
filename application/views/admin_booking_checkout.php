@@ -6,20 +6,18 @@
   <!--content--> 
 	
 	<div class="frametab">
-		<h3 style="margin:5px 0 5px 5px;">Proses Checkout</h3>
+		<h3 style="margin:5px 0 5px 5px;">Proses Booking & Issued</h3>
 		<div id="data-order">
-			<form name="form-checkout">
 				<div id="data-general"></div>
 				<div id="data-pemesan"></div>
 				<div id="data-adult"></div>
 				<div id="data-child"></div>
 				<div id="data-infant"></div>
-			</form>
-			<div class="formFooter" style="margin-top:50px;">
+			<!--<div class="formFooter" style="margin-top:50px;">
 				<input class="mybutton" style="float:left" name="dbproses" type="button" value="Kembali ke halaman pesanan" onclick="document.location.href='<?php echo base_url();?>index.php/admin/booking_page';" />
 				<input class="mybutton" style="float:center" name="checkout-system" id="checkout-system" type="button" value="Issued oleh Sistem" />
 			</div>
-			
+			-->
 		</div>
 	</div> 
 
@@ -27,7 +25,7 @@
 
 <script>
 	$(document).ready(function() {
-		$('#checkout-system').click(function(event) {
+		$('#ljhcheckout-system').click(function(event) {
 			event.preventDefault();
 			$.ajax({
 				type : "GET",
@@ -61,68 +59,110 @@
 				$('#data-general').append('<h2>Data Detil Pemesanan</h2>');
 				// FLIGHT
 				if (type=="flight"){
-					$('#data-general').append('<table>\
+					var str = '<table style="margin-left:0px">\
 							<tr>\
-								<td><strong>Nama Agen</strong></td><td>'+data.responses.general[0].agent_name+'</td>\
-								<td><strong>Maskapai</strong></td><td>'+data.responses.general[0].airline_name+'</td>\
-							</tr>\
-							<tr>\
-								<td><strong>Rute</strong></td><td>'+data.responses.general[0].route+'</td>\
-								<td><strong>Keberangkatan-Kedatangan</strong></td><td>'+data.responses.general[0].departing_date+' '+data.responses.general[0].time_travel+'</td>\
-							</tr>\
-							<tr>\
-								<td><strong>Rincian Harga</strong></td>\
-								<td>\
-									<ul style="list-style-type:square; margin-left: 20px;">\
-										<li>\
-										Dewasa: '+data.responses.general[0].adult.value+' x '+data.responses.general[0].price_adult+' = '+data.responses.general[0].adult.value * data.responses.general[0].price_adult+'\
-										</li>\
-										<li>\
-										Anak: '+data.responses.general[0].child.value+' x '+data.responses.general[0].price_child+' = '+data.responses.general[0].child.value * data.responses.general[0].price_child+'\
-										</li>\
-										<li>\
-										Bayi: '+data.responses.general[0].infant.value+' x '+data.responses.general[0].price_infant+' = '+data.responses.general[0].infant.value * data.responses.general[0].price_infant+'\
-										</li>\
-									</ul>\
-								</td>\
-								<td><strong>Total Harga</strong></td>\
-								<td>IDR <strong>'+data.responses.general[0].total_price+'</strong></td>\
-							</tr>\
-						</table>');
+								<td><strong>Nama Agen</strong></td>\
+								<td style="width:200px">'+data.responses.general[0].agent_name+'</td>\
+								<td><strong>Rute & Jenis Perjalanan</strong></td>\
+								<td style="width:200px">'+data.responses.general[0].route+'<br />'+(data.responses.general[0].is_round_trip=="true" ? 'Round Trip' : 'Single Trip')+'</td>\
+							</tr>';
+					var second_row_left = '<td><strong>Perjalanan Berangkat</strong></td>\
+								<td style="width:200px">'+data.responses.general[0].airline_name_depart+' - '+data.responses.general[0].flight_id_depart+'<br />'+data.responses.general[0].departing_date+'<br />'+data.responses.general[0].time_travel+'</td>';
+					var second_row_right = '';
+					var third_row_left = '';
+					var third_row_right = '';
 					
-					$('#data-general').append('<input type="hidden" name="'+data.responses.general[0].flight_id.name+'" value="'+data.responses.general[0].flight_id.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.general[0].token.name+'" value="'+data.responses.general[0].token.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.general[0].lion_captcha.name+'" value="'+data.responses.general[0].lion_captcha.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.general[0].lion_session_id.name+'" value="'+data.responses.general[0].lion_session_id.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.general[0].adult.name+'" value="'+data.responses.general[0].adult.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.general[0].child.name+'" value="'+data.responses.general[0].child.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.general[0].infant.name+'" value="'+data.responses.general[0].infant.value+'">');
+					
+					
+					if(data.responses.general[0].is_round_trip=="true"){
+						second_row_right += '<td><strong>Perjalanan Kembali</strong></td>\
+								<td style="width:200px">'+data.responses.general[0].airline_name_return+'<br />'+data.responses.general[0].flight_id_return+'<br />'+data.responses.general[0].returning_date+'<br />'+data.responses.general[0].time_travel_ret+'</td>';
+						
+						/*penghitungan harga per penumpang*/
+						var dewasa = dewasa_ret = anak = anak_ret = bayi = bayi_ret = '';
+						var harga_dewasa = harga_dewasa_ret = harga_anak = harga_anak_ret = harga_bayi = harga_bayi_ret = 0;
+						
+						if(parseInt(data.responses.general[0].adult) > 0){
+							harga_dewasa = parseInt(data.responses.general[0].adult) * parseInt(data.responses.general[0].price_adult);
+							harga_dewasa_ret = parseInt(data.responses.general[0].adult) * parseInt(data.responses.general[0].price_adult_ret);
+							dewasa += 'Dewasa: '+data.responses.general[0].adult+' x IDR '+currency_separator(data.responses.general[0].price_adult, '.')+' = IDR '+currency_separator(harga_dewasa, '.')+'<br />';
+							dewasa_ret += 'Dewasa: '+data.responses.general[0].adult+' x IDR '+currency_separator(data.responses.general[0].price_adult_ret, '.')+' = IDR '+currency_separator(harga_dewasa_ret, '.')+'<br />';
+						}
+						if(parseInt(data.responses.general[0].child) > 0){
+							harga_anak = parseInt(data.responses.general[0].child) * parseInt(data.responses.general[0].price_child);
+							harga_anak_ret = parseInt(data.responses.general[0].child) * parseInt(data.responses.general[0].price_child_ret);
+							anak += 'Anak: '+data.responses.general[0].child+' x IDR '+currency_separator(data.responses.general[0].price_child, '.')+' = IDR '+currency_separator(harga_anak, '.')+'<br />';
+							anak_ret += 'Anak: '+data.responses.general[0].child+' x IDR '+currency_separator(data.responses.general[0].price_child_ret, '.')+' = IDR '+currency_separator(harga_anak_ret, '.')+'<br />';
+						}
+						if(parseInt(data.responses.general[0].infant) > 0){
+							harga_bayi = parseInt(data.responses.general[0].infant) * parseInt(data.responses.general[0].price_infant);
+							harga_bayi_ret = parseInt(data.responses.general[0].infant) * parseInt(data.responses.general[0].price_infant_ret);
+							bayi += 'Bayi: '+data.responses.general[0].infant+' x IDR '+currency_separator(data.responses.general[0].price_infant, '.')+' = IDR '+currency_separator(harga_bayi, '.')+'<br />';
+							bayi_ret += 'Bayi: '+data.responses.general[0].infant+' x IDR '+currency_separator(data.responses.general[0].price_infant_ret, '.')+' = IDR '+currency_separator(harga_bayi_ret, '.')+'<br />';
+						}
+						/*end of penghitungan*/
+						
+						third_row_left = '<td><strong>Penumpang dan Harga</strong></td>\
+								<td style="width:300px">'+dewasa+anak+bayi+'<br />\
+									<strong>Total Harga Berangkat:</strong> IDR '+currency_separator(data.responses.general[0].total_price_dep, '.')+'\
+								</td>';
+						third_row_right = '<td><strong>Penumpang dan Harga</strong></td>\
+								<td style="width:300px">'+dewasa_ret+anak_ret+bayi_ret+'<br />\
+									<strong>Total Harga Kembali:</strong> IDR '+currency_separator(data.responses.general[0].total_price_ret, '.')+'\
+								</td>';
+					}
+					else{
+						/*penghitungan harga per penumpang*/
+						var dewasa = anak = bayi = '';
+						var harga_dewasa = harga_anak = harga_bayi = 0;
+						
+						if(parseInt(data.responses.general[0].adult) > 0){
+							harga_dewasa = parseInt(data.responses.general[0].adult) * parseInt(data.responses.general[0].price_adult);
+							dewasa += 'Dewasa: '+data.responses.general[0].adult+' x IDR '+currency_separator(data.responses.general[0].price_adult, '.')+' = IDR '+currency_separator(harga_dewasa, '.')+'<br />';
+						}
+						if(parseInt(data.responses.general[0].child) > 0){
+							harga_anak = parseInt(data.responses.general[0].child) * parseInt(data.responses.general[0].price_child);
+							anak += 'Anak: '+data.responses.general[0].child+' x IDR '+currency_separator(data.responses.general[0].price_child, '.')+' = IDR '+currency_separator(harga_anak, '.')+'<br />';
+						}
+						if(parseInt(data.responses.general[0].infant) > 0){
+							harga_bayi = parseInt(data.responses.general[0].infant) * parseInt(data.responses.general[0].price_infant);
+							bayi += 'Bayi: '+data.responses.general[0].infant+' x IDR '+currency_separator(data.responses.general[0].price_infant, '.')+' = IDR '+currency_separator(harga_bayi, '.')+'<br />';
+						}
+						/*end of penghitungan*/
+						second_row_right += '<td><strong>Penumpang dan Harga</strong></td>\
+								<td style="width:300px">'+dewasa+anak+bayi+'<br />\
+									<strong>Total Harga Berangkat:</strong> IDR '+currency_separator(data.responses.general[0].total_price_dep, '.')+'\
+								</td>';
+					}
+						
+					//add second row
+					str += '<tr>\
+						'+second_row_left+'\
+						'+second_row_right+'\
+						</tr>';
+					//add third row
+					str += '<tr>\
+						'+third_row_left+'\
+						'+third_row_right+'\
+						</tr>';
+						
+					str += '</table>';
+					$('#data-general').append(str);
 					$('#data-pemesan').append('<h2>Data Pemesan</h2>');
-					$('#data-pemesan').append('<table>\
+					$('#data-pemesan').append('<table style="margin-left:0px">\
 							<tr>\
-								<td><strong>Titel</strong></td>\
-								<td>'+data.responses.contact[0].title.value+'</td>\
-								<td></td>\
-								<td></td>\
+								<th>Titel</th>\
+								<th>Nama Lengkap</th>\
+								<th>Alamat Email</th>\
+								<th>Telepon/HP</th>\
 							</tr>\
 							<tr>\
-								<td><strong>Nama Depan</strong></td>\
-								<td>'+data.responses.contact[0].firstname.value+'</td>\
-								<td><strong>Nama Belakang</strong></td>\
-								<td>'+data.responses.contact[0].lastname.value+'</td>\
-							</tr>\
-							<tr>\
-								<td><strong>Email</strong></td>\
-								<td>'+data.responses.contact[0].email.value+'</td>\
-								<td><strong>Telepon/HP</strong></td>\
-								<td>'+data.responses.contact[0].phone.value+'</td>\
+								<td>'+data.responses.contact.title+'</td>\
+								<td>'+data.responses.contact.fullname+'</td>\
+								<td>'+data.responses.contact.email+'</td>\
+								<td>'+data.responses.contact.phone+'</td>\
 							</tr>\
 						</table>');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.contact[0].title.name+'" value="'+data.responses.contact[0].title.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.contact[0].firstname.name+'" value="'+data.responses.contact[0].firstname.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.contact[0].lastname.name+'" value="'+data.responses.contact[0].lastname.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.contact[0].email.name+'" value="'+data.responses.contact[0].email.value+'">');
-					$('#data-general').append('<input type="hidden" name="'+data.responses.contact[0].phone.name+'" value="'+data.responses.contact[0].phone.value+'">');
 					
 					$('#data-adult').append('<h2>Data Penumpang Dewasa</h2>');
 					var div = document.getElementById('data-adult');

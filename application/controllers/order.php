@@ -813,31 +813,13 @@ class Order extends CI_Controller {
 			$query = $this->orders->get_order_by_id($id);
 		$response = array();
 		$response['responses'] = array();
-		$response['responses']['general'] = array();
+		//$response['responses']['general'] = array();
 		// generate response general info
-		foreach ($query->result_array() as $row){
-			if ($cat == 'flight'){
-				$general = array(
-					'order_id' => $row['order_id'],
-					'agent_name' => $row['agent_name'],
-					'airline_name' => $row['airline_name'],
-					'flight_id' => array('name' => 'flight_id', 'value' => $row['flight_id']),
-					'token' => array('name' => 'token', 'value' => $row['token']),
-					'lion_captcha' => array('name' => 'lioncaptcha', 'value' => $row['lion_captcha']),
-					'lion_session_id' => array('name' => 'lionsessionid', 'value' => $row['lion_session_id']),
-					'route' => $row['route'],
-					'departing_date' => $row['departing_date'],
-					'time_travel' => $row['time_travel'],
-					'total_price' => $row['total_price'],
-					'adult' => array('name' => 'adult', 'value' => $row['adult']),
-					'price_adult' => $row['price_adult'],
-					'child' => array('name' => 'child', 'value' => $row['child']),
-					'price_child' => $row['price_child'],
-					'infant' => array('name' => 'infant', 'value' => $row['infant']),
-					'price_infant' => $row['price_infant']
-				);
-			}
-			else if ($cat == 'train'){
+		foreach ($query->result_array() as $key => $value){
+			//if ($cat == 'flight'){
+				$response['responses']['general'][$key] = $value;
+			//}
+			/*else if ($cat == 'train'){
 				list ($d_station, $a_station) = explode('-', $row['route']);
 				$general = array(
 					'order_id' => $row['order_id'],
@@ -889,108 +871,106 @@ class Order extends CI_Controller {
 					'category' => $row['category'],
 					'description' => $row['description']
 				);
-			}
-			array_push($response['responses']['general'], $general);
+			}*/
+			//array_push($response['responses']['general'], $general);
 		}
 		
 		$con = $this->orders->get_passenger($id, 'contact');
 		$response['responses']['contact'] = array();
 		foreach ($con->result_array() as $row){
-			$contact = array(
+			/*$contact = array(
 				'title' => array('name' => 'conSalutation', 'value' => $row['title']),
 				'firstname' => array('name' => 'conFirstName', 'value' => $row['first_name']),
 				'lastname' => array('name' => 'conLastName', 'value' => $row['last_name']),
 				'email' => array('name' => 'conEmailAddress', 'value' => $row['email']),
 				'phone' => array('name' => 'conPhone', 'value' => $row['phone_1'])
 			);
-			array_push($response['responses']['contact'], $contact);
+			array_push($response['responses']['contact'], $contact);*/
+			$response['responses']['contact'] = array(
+				'title' => $row['title'],
+				'fullname' => $row['first_name'].' '.$row['last_name'],
+				'email' => $row['email'],
+				'phone' => $row['phone_1']
+			);
 		}
 		//fetch & generate passengers
-		if ($cat != 'hotel') { // for hotel there is no need to show the passengers, only show the contact person
-			//fetch & generate adult
-			$con = $this->orders->get_passenger($id, 'adult');
-			$response['responses']['adult'] = array();
-			if ($cat=='flight'){
-				foreach ($con->result_array() as $row){
-					$adult = array(
-						'title' => array('name' => 'titlea'.$row['order_list'], 'value' => $row['title']),
-						'firstname' => array('name' => 'firstnamea'.$row['order_list'], 'value' => $row['first_name']),
-						'lastname' => array('name' => 'lastnamea'.$row['order_list'], 'value' => $row['last_name']),
-						'birthdate' => array('name' => 'birthdatea'.$row['order_list'], 'value' => $row['birthday']),
-						'id' => array('name' => 'ida'.$row['order_list'], 'value' => $row['identity_number']),
-						'baggage_direct' => array('name' => 'dcheckinbaggagea1'.$row['order_list'], 'value' => 'FALSE'),
-						'baggage_transit' => array('name' => 'dcheckinbaggagea2'.$row['order_list'], 'value' => 'FALSE')
-					);
-					array_push($response['responses']['adult'], $adult);
-				}
-			}
-			else if($cat=='train'){
-				foreach ($con->result_array() as $row){
-					$adult = array(
-						'title' => array('name' => 'salutationAdult'.$row['order_list'], 'value' => $row['title']),
-						'name' => array('name' => 'nameAdult'.$row['order_list'], 'value' => $row['first_name'].' '.$row['last_name']),
-						'birthdate' => array('name' => 'birthDateAdult'.$row['order_list'], 'value' => $row['birthday']),
-						'id' => array('name' => 'IdCardAdult'.$row['order_list'], 'value' => $row['identity_number']),
-						'phone' => array('name' => 'noHpAdult'.$row['order_list'], 'value' => $row['phone_1'])
-					);
-					array_push($response['responses']['adult'], $adult);
-				}
-			}
+		//fetch & generate adult
+		$response['responses']['adult'] = array();
+		$response['responses']['child'] = array();
+		$response['responses']['infant'] = array();
 			
-			//fetch & generate child
-			$con = $this->orders->get_passenger($id, 'child');
-			$response['responses']['child'] = array();
-			if ($cat=='flight'){
-				foreach ($con->result_array() as $row){
-					$child = array(
-						'title' => array('name' => 'titlec'.$row['order_list'], 'value' => $row['title']),
-						'firstname' => array('name' => 'firstnamec'.$row['order_list'], 'value' => $row['first_name']),
-						'lastname' => array('name' => 'lastnamec'.$row['order_list'], 'value' => $row['last_name']),
-						'birthdate' => array('name' => 'birthdatec'.$row['order_list'], 'value' => $row['birthday']),
-						'id' => array('name' => 'idc'.$row['order_list'], 'value' => $row['identity_number']),
-						'baggage_direct' => array('name' => 'dcheckinbaggagec1'.$row['order_list'], 'value' => 'FALSE'),
-						'baggage_transit' => array('name' => 'dcheckinbaggagec2'.$row['order_list'], 'value' => 'FALSE')
-					);
-					array_push($response['responses']['child'], $child);
-				}
+		$get_adult = $this->orders->get_passenger($id, 'adult');
+		$get_child = $this->orders->get_passenger($id, 'child');
+		$get_infant = $this->orders->get_passenger($id, 'infant');
+		if ($cat=='flight'){
+			foreach ($get_adult->result_array() as $row){
+				$adult = array(
+					'order_list' => $row['order_list'],
+					'title' => $row['title'],
+					'first_name' => $row['first_name'],
+					'last_name' => $row['last_name'],
+					'birth_date' => $row['birthday'],
+					'id' => $row['identity_number'],
+					'nationality' => $row['nationality'],
+					'baggage' => $row['baggage'],
+					'baggage_return' => $row['baggage_return']
+				);
+				array_push($response['responses']['adult'], $adult);
 			}
-			else if($cat=='train'){
-				foreach ($con->result_array() as $row){
-					$child = array(
-						'title' => array('name' => 'salutationChild'.$row['order_list'], 'value' => $row['title']),
-						'name' => array('name' => 'nameChild'.$row['order_list'], 'value' => $row['first_name'].' '.$row['last_name']),
-						'birthdate' => array('name' => 'birthDateChild'.$row['order_list'], 'value' => $row['birthday'])
-					);
-					array_push($response['responses']['child'], $child);
-				}
+			foreach ($get_child->result_array() as $row){
+				$child = array(
+					'order_list' => $row['order_list'],
+					'title' => $row['title'],
+					'firstname' => $row['first_name'],
+					'lastname' => $row['last_name'],
+					'birthdate' => $row['birthday'],
+					'id' => $row['identity_number'],
+					'nationality' => $row['nationality'],
+					'baggage' => $row['baggage'],
+					'baggage_return' => $row['baggage_return']
+				);
+				array_push($response['responses']['child'], $child);
 			}
-			//fetch & generate infant
-			$con = $this->orders->get_passenger($id, 'infant');
-			$response['responses']['infant'] = array();
-			if ($cat=='flight'){
-				foreach ($con->result_array() as $row){
-					$infant = array(
-						'title' => array('name' => 'titlei'.$row['order_list'], 'value' => $row['title']),
-						'firstname' => array('name' => 'firstnamei'.$row['order_list'], 'value' => $row['first_name']),
-						'lastname' => array('name' => 'lastnamei'.$row['order_list'], 'value' => $row['last_name']),
-						'birthdate' => array('name' => 'birthdatei'.$row['order_list'], 'value' => $row['birthday']),
-						'parent' => array('name' => 'parenti'.$row['order_list'], 'value' => $row['parent'])
-					);
-					array_push($response['responses']['infant'], $infant);
-				}
-			}
-			else if($cat=='train'){
-				foreach ($con->result_array() as $row){
-					$infant = array(
-						'title' => array('name' => 'salutationInfant'.$row['order_list'], 'value' => $row['title']),
-						'name' => array('name' => 'nameInfant'.$row['order_list'], 'value' => $row['first_name'].' '.$row['last_name']),
-						'birthdate' => array('name' => 'birthDateInfant'.$row['order_list'], 'value' => $row['birthday'])
-					);
-					array_push($response['responses']['infant'], $infant);
-				}
+			foreach ($get_infant->result_array() as $row){
+				$infant = array(
+					'title' => array('name' => 'titlei'.$row['order_list'], 'value' => $row['title']),
+					'firstname' => array('name' => 'firstnamei'.$row['order_list'], 'value' => $row['first_name']),
+					'lastname' => array('name' => 'lastnamei'.$row['order_list'], 'value' => $row['last_name']),
+					'birthdate' => array('name' => 'birthdatei'.$row['order_list'], 'value' => $row['birthday']),
+					'parent' => array('name' => 'parenti'.$row['order_list'], 'value' => $row['parent'])
+				);
+				array_push($response['responses']['infant'], $infant);
 			}
 		}
-		
+		else if($cat=='train'){
+			foreach ($get_adult->result_array() as $row){
+				$adult = array(
+					'title' => array('name' => 'salutationAdult'.$row['order_list'], 'value' => $row['title']),
+					'name' => array('name' => 'nameAdult'.$row['order_list'], 'value' => $row['first_name'].' '.$row['last_name']),
+					'birthdate' => array('name' => 'birthDateAdult'.$row['order_list'], 'value' => $row['birthday']),
+					'id' => array('name' => 'IdCardAdult'.$row['order_list'], 'value' => $row['identity_number']),
+					'phone' => array('name' => 'noHpAdult'.$row['order_list'], 'value' => $row['phone_1'])
+				);
+				array_push($response['responses']['adult'], $adult);
+			}
+			foreach ($get_child->result_array() as $row){
+				$child = array(
+					'title' => array('name' => 'salutationChild'.$row['order_list'], 'value' => $row['title']),
+					'name' => array('name' => 'nameChild'.$row['order_list'], 'value' => $row['first_name'].' '.$row['last_name']),
+					'birthdate' => array('name' => 'birthDateChild'.$row['order_list'], 'value' => $row['birthday'])
+				);
+				array_push($response['responses']['child'], $child);
+			}
+			foreach ($get_infant->result_array() as $row){
+				$infant = array(
+					'title' => array('name' => 'salutationInfant'.$row['order_list'], 'value' => $row['title']),
+					'name' => array('name' => 'nameInfant'.$row['order_list'], 'value' => $row['first_name'].' '.$row['last_name']),
+					'birthdate' => array('name' => 'birthDateInfant'.$row['order_list'], 'value' => $row['birthday'])
+				);
+				array_push($response['responses']['infant'], $infant);
+			}
+		}
+	
 		echo json_encode($response);
 	}
 	
