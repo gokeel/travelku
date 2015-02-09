@@ -90,17 +90,17 @@ class Order extends CI_Controller {
 	public function add_flight_order()
 	{
 		$response = '';
-		$flight_id = $this->input->post('flight_id', TRUE);
+		$flight_id_dep = $this->input->post('flight_id', TRUE);
 		//$ret_flight_id = $this->input->post('ret_flight_id', TRUE);
-		$airline_name = $this->input->post('airline_name', TRUE);
+		$airline_name_dep = $this->input->post('airline_name_dep', TRUE);
 		$depart_date = $this->input->post('date_go', TRUE);
 		$route = $this->input->post('route', TRUE);
-		$time_travel = $this->input->post('time_travel', TRUE);
+		$time_travel_dep = $this->input->post('time_travel_dep', TRUE);
 		$tot_price = $this->input->post('total_price', TRUE);
-		$admin_fee = $this->input->post('admin_fee', TRUE);
-		$price_adult = $this->input->post('price_adult', TRUE);
-		$price_child = $this->input->post('price_child', TRUE);
-		$price_infant = $this->input->post('price_infant', TRUE);
+		$total_price_dep = $this->input->post('total_price_dep', TRUE);
+		$price_adult_dep = $this->input->post('price_adult_dep', TRUE);
+		$price_child_dep = $this->input->post('price_child_dep', TRUE);
+		$price_infant_dep = $this->input->post('price_infant_dep', TRUE);
 		$tot_child = $this->input->post('child', TRUE);
 		$tot_adult = $this->input->post('adult', TRUE);
 		$tot_infant = $this->input->post('infant', TRUE);
@@ -112,19 +112,17 @@ class Order extends CI_Controller {
 		$conEmailAddress = $this->input->post('conEmailAddress', TRUE);
 		$conOtherPhone = $this->input->post('conOtherPhone', TRUE);
 		
-		
 		/* for round trip*/
 		$flight_id_ret = $this->input->post('flight_id_ret', TRUE);
 		$airline_name_ret = $this->input->post('airlines_name_ret', TRUE);
-		$depart_date_ret = $this->input->post('depart_date_ret', TRUE);
+		$depart_date_ret = $this->input->post('date_ret', TRUE);
 		$time_travel_ret = $this->input->post('time_travel_ret', TRUE);
-		$route_ret = $this->input->post('route_ret', TRUE);
 		$total_price_ret = $this->input->post('total_price_ret', TRUE);
 		$price_adult_ret = $this->input->post('price_adult_ret', TRUE);
 		$price_child_ret = $this->input->post('price_child_ret', TRUE);
 		$price_infant_ret = $this->input->post('price_infant_ret', TRUE);
 		
-		if ($airline_name == 'LION' || $airline_name_ret =='LION')
+		if ($airline_name_dep == 'LION' || $airline_name_ret =='LION')
 			list ($lioncaptcha, $lionsessionid) = $this->get_lion_captcha();
 		$token = $this->session->userdata('token');
 		//$account_id = ($this->session->userdata('account_id')<>'' ? $this->session->userdata('account_id'): $account_id = $this->config->item('account_id'));
@@ -144,24 +142,30 @@ class Order extends CI_Controller {
 			'token' => $token,
 			'customer_email' => $this->input->post('conEmailAddress', TRUE),
 			'trip_category' => 'flight',
-			'airline_name_depart' => $airline_name,
+			'airline_name_depart' => $airline_name_dep,
 			'airline_name_return' => $airline_name_ret,
-			'flight_id_depart' => $flight_id,
-			'flight_id_return' => ($flight_id_ret == '' ? '' : $flight_id_ret),
+			'flight_id_depart' => $flight_id_dep,
+			'flight_id_return' => $flight_id_ret,
 			'is_round_trip' => ($flight_id_ret == '' ? 'false' : 'true'),
 			'route' => $route,
 			'departing_date' => $depart_date,
 			'returning_date' => $depart_date_ret,
-			'time_travel' => $time_travel,
+			'time_travel' => $time_travel_dep,
 			'time_travel_ret' => $time_travel_ret,
 			'total_price' => $tot_price,
-			'admin_fee' => $admin_fee,
+			'total_price_dep' => $total_price_dep,
+			'total_price_ret' => $total_price_ret,
+			'admin_fee' => '10000',
+			'admin_fee_ret' => ($flight_id_ret == '' ? '' : '10000'),
 			'adult' => $tot_adult,
-			'price_adult' => $price_adult,
+			'price_adult' => $price_adult_dep,
+			'price_adult_ret' => $price_adult_ret,
 			'child' => $tot_child,
-			'price_child' => $price_child,
+			'price_child' => $price_child_dep,
+			'price_child_ret' => $price_child_ret,
 			'infant' => $tot_infant,
-			'price_infant' => $price_infant,
+			'price_infant' => $price_infant_dep,
+			'price_infant_ret' => $price_infant_ret,
 			'order_status' => 'Registered',
 			'lion_captcha' => (isset($lioncaptcha) ? $lioncaptcha : ''),
 			'lion_session_id' => (isset($lionsessionid) ? $lionsessionid : ''),
@@ -169,39 +173,6 @@ class Order extends CI_Controller {
 		);
 		
 		$order_id = $this->orders->add_order($data);
-		
-		/* if round trip*/
-		if($flight_id_ret<>''){
-			$data_return = array(
-				'account_id' => $account_id,
-				'token' => $token,
-				'trip_category' => 'flight',
-				'airline_name' => $airline_name_ret,
-				'is_return_flight' => 'true',
-				'is_round_trip' => 'true',
-				'flight_id' => $flight_id_ret,
-				'flight_id_depart' => $flight_id,
-				'route' => $route_ret,
-				'departing_date' => $depart_date_ret,
-				'time_travel' => $time_travel_ret,
-				'total_price' => $total_price_ret,
-				'admin_fee' => $admin_fee,
-				'adult' => $tot_adult,
-				'price_adult' => $price_adult_ret,
-				'child' => $tot_child,
-				'price_child' => $price_child_ret,
-				'infant' => $tot_infant,
-				'price_infant' => $price_infant_ret,
-				'order_status' => 'Registered',
-				'lion_captcha' => (isset($lioncaptcha) ? $lioncaptcha : ''),
-				'lion_session_id' => (isset($lionsessionid) ? $lionsessionid : ''),
-				'registered_date' => $time_stamp
-			);
-			$order_id_ret = $this->orders->add_order($data_return);
-		}
-		
-		
-		//print_r($id);
 		
 		if ($order_id > 0){
 			/*inserting the passenger info*/
@@ -227,6 +198,8 @@ class Order extends CI_Controller {
 					'identity_number' => $this->input->post('ida'.$i, TRUE),
 					'birthday' => $this->input->post('birthdatea'.$i, TRUE),
 					'nationality' => $this->input->post('passportnationalitya'.$i, TRUE),
+					'baggage' => $this->input->post('dcheckinbaggagea1'.$i, TRUE),
+					'baggage_return' => $this->input->post('rcheckinbaggagea1'.$i, TRUE),
 					'order_list' => $i
 				);
 				array_push($passenger, $adult);
@@ -241,6 +214,8 @@ class Order extends CI_Controller {
 					'identity_number' => $this->input->post('idc'.$i, TRUE),
 					'birthday' => $this->input->post('birthdatec'.$i, TRUE),
 					'nationality' => $this->input->post('passportnationalityc'.$i, TRUE),
+					'baggage' => $this->input->post('dcheckinbaggagec1'.$i, TRUE),
+					'baggage_return' => $this->input->post('rcheckinbaggagec1'.$i, TRUE),
 					'order_list' => $i
 				);
 				array_push($passenger, $child);
@@ -256,6 +231,8 @@ class Order extends CI_Controller {
 					'birthday' => $this->input->post('birthdatei'.$i, TRUE),
 					'parent' => $this->input->post('parenti'.$i, TRUE),
 					'nationality' => $this->input->post('passportnationalityi'.$i, TRUE),
+					'baggage' => $this->input->post('dcheckinbaggagei1'.$i, TRUE),
+					'baggage_return' => $this->input->post('rcheckinbaggagei1'.$i, TRUE),
 					'order_list' => $i
 				);
 				array_push($passenger, $infant);
@@ -274,15 +251,16 @@ class Order extends CI_Controller {
 					'order_id' => $order_id,
 					'first_name' => $conFirstName,
 					'last_name' => $conLastName,
-					'airline_name' => $airline_name,
+					'airline_name' => $airline_name_dep,
 					'route' => $route,
 					'departure_date' => $depart_date,
-					'time_travel' => $time_travel,
+					'time_travel' => $time_travel_dep,
 					'adult' => $tot_adult,
 					'child' => $tot_child,
 					'infant' => $tot_infant,
 					'total_price' => $tot_price,
-					'admin_fee' => $admin_fee
+					'admin_fee' => '10.000',
+					'customer_email' => $conEmailAddress
 				);
 				
 				//get email disribution
@@ -304,7 +282,7 @@ class Order extends CI_Controller {
 				$this->email->bcc($bcc);
 				
 				$this->email->subject('Order Berhasil');
-				$messages = $this->load->view('email_tpl/new_flight_order_request', $content, TRUE);
+				$messages = $this->load->view('email_tpl/new_internal_flight_order', $content, TRUE);
 				$this->email->message($messages);
 
 				$this->email->send();
@@ -1875,12 +1853,12 @@ class Order extends CI_Controller {
 				// generate response general info
 				foreach ($query->result_array() as $row){
 					if ($order_type == 'flight'){
-						$general = array(
+						$response = array(
 							'order_id' => $row['order_id'],
+							'order_type' => $order_type,
+							'order_system' => 'internal',
 							'agent_name' => $row['agent_name'],
 							'airline_name' => $row['airline_name_depart'],
-							'flight_id' => array('name' => 'flight_id', 'value' => $row['flight_id']),
-							'token' => array('name' => 'token', 'value' => $row['token']),
 							'lion_captcha' => array('name' => 'lioncaptcha', 'value' => $row['lion_captcha']),
 							'lion_session_id' => array('name' => 'lionsessionid', 'value' => $row['lion_session_id']),
 							'route' => $row['route'],
@@ -1895,11 +1873,15 @@ class Order extends CI_Controller {
 							'price_infant' => $row['price_infant'],
 							'payment_status' => $row['payment_status']
 						);
+						$response['cart_detail']['category'] = $order_type;
+						$response['cart_detail']['order_name'] = $row['route'];
+						$response['cart_detail']['order_name_detail'] = $row['flight_id_depart'];
 					}
 					else if ($order_type == 'train'){
 						list ($d_station, $a_station) = explode('-', $row['route']);
-						$general = array(
+						$response = array(
 							'order_id' => $row['order_id'],
+							'order_type' => $order_type,
 							'agent_name' => $row['agent_name'],
 							'token' => array('name' => 'token', 'value' => $row['token']),
 							'train_name' => $row['train_name'],
@@ -1922,8 +1904,9 @@ class Order extends CI_Controller {
 						);
 					}
 					else if ($order_type == 'hotel'){ // for hotel there is no need to proceed it with Tiket.com API
-						$general = array(
+						$response = array(
 							'order_id' => $row['order_id'],
+							'order_type' => $order_type,
 							'agent_name' => $row['agent_name'],
 							//'token' => array('name' => 'token', 'value' => $row['token']),
 							'hotel_name' => $row['hotel_name'],
@@ -1952,7 +1935,6 @@ class Order extends CI_Controller {
 						$response['cart_detail']['category'] = $row['category'];
 						$response['cart_detail']['order_name'] = $row['title'];
 						$response['cart_detail']['order_name_detail'] = $row['mini_slogan'];
-						
 					}
 					//array_push($response['responses']['general'], $general);
 				}
@@ -1973,6 +1955,7 @@ class Order extends CI_Controller {
 				$limit_order_timestamp = $order_timestamp->add(new DateInterval('PT1H'));
 				
 				$response['order_id'] = $json->result->order_id;
+				$response['order_system'] = 'tiketcom';
 				$response['order_timestamp'] = date_format(new DateTime($json->result->order_timestamp), 'd M Y H:i:s');
 				$response['limit_order_timestamp'] = date_format($limit_order_timestamp, 'd M Y H:i:s');
 				$response['payment_timestamp'] = date_format(new DateTime($json->result->payment_timestamp), 'd M Y H:i:s');

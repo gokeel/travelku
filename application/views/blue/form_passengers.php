@@ -299,6 +299,10 @@
 						<input type="hidden" name="flight_number_ret" value="'+data.items[0].returns.flight_number+'">\
 						<input type="hidden" name="time_travel_ret" value="'+data.items[0].returns.simple_departure_time+' - '+data.items[0].returns.simple_arrival_time+'">\
 						<input type="hidden" name="date_ret" value="'+data.items[0].returns.flight_date+'">\
+						<input type="hidden" name="total_price_ret" value="'+total_price_ret+'">\
+						<input type="hidden" name="price_adult_ret" value="'+total_price_adult_ret+'">\
+						<input type="hidden" name="price_child_ret" value="'+total_price_child_ret+'">\
+						<input type="hidden" name="price_infant_ret" value="'+total_price_infant_ret+'">\
 						';
 					}
 					$('#trip-summary').empty();
@@ -351,7 +355,7 @@
 						</div>\
 					');
 					var input_dep_additional = '<input type="hidden" name="route" value="'+data.items[0].departures.flight_infos.flight_info[0].departure_city+' - '+data.items[0].departures.flight_infos.flight_info[0].arrival_city+'">\
-						<input type="hidden" name="time_travel" value="'+data.items[0].departures.simple_departure_time+' - '+data.items[0].departures.simple_arrival_time+'">\
+						<input type="hidden" name="time_travel_dep" value="'+data.items[0].departures.simple_departure_time+' - '+data.items[0].departures.simple_arrival_time+'">\
 						';
 					/*create input contains data*/
 					var token = "<?php echo $this->session->userdata('token');?>";
@@ -364,6 +368,10 @@
 						<input type="hidden" name="airline_name" value="'+data.items[0].departures.airlines_name+'">\
 						<input type="hidden" name="date_go" value="'+data.items[0].departures.flight_date+'">\
 						<input type="hidden" name="flight_number_dep" value="'+data.items[0].departures.flight_number+'">\
+						<input type="hidden" name="total_price_dep" value="'+total_price_dep+'">\
+						<input type="hidden" name="price_adult_dep" value="'+total_price_adult_dep+'">\
+						<input type="hidden" name="price_child_dep" value="'+total_price_child_dep+'">\
+						<input type="hidden" name="price_infant_dep" value="'+total_price_infant_dep+'">\
 						'+input_return+'\
 						'+input_dep_additional+'\
 						');
@@ -470,7 +478,7 @@
 						</div>\
 						By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
 						restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
-						<button type="submit" class="bluebtn margtop20">Lanjut Booking</button>';
+						<button type="submit" class="bluebtn margtop20">Lanjut Pemesanan</button>';
 						
 					div_input.append(input_string+'</div>');
 					for(x=1;x<=datepicker_index;x++){
@@ -806,7 +814,7 @@
 						</div>\
 						By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
 						restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
-						<button type="submit" class="bluebtn margtop20">Lanjut Booking</button>\
+						<button type="submit" class="bluebtn margtop20">Lanjut Pemesanan</button>\
 						</div>';
 				
 				var first_number_adult = 2;
@@ -918,7 +926,7 @@
 			</div>\
 			By selecting to complete this booking I acknowledge that I have read and accept the <a href="#" class="clblue">rules & \
 			restrictions</a> <a href="#" class="clblue">terms & conditions</a> , and <a href="#" class="clblue">privacy policy</a>.	<br/>\
-			<button type="submit" class="bluebtn margtop20">Lanjut Booking</button>\
+			<button type="submit" class="bluebtn margtop20">Lanjut Pemesanan</button>\
 		</div>';
 		/*create input contains data*/
 		$('#form-passenger').append(inputs);

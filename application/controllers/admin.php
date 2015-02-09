@@ -1140,14 +1140,14 @@ class Admin extends CI_Controller {
 		$category = $this->uri->segment(3);
 		$query = $this->orders->get_registered_order($category);
 		$number_row = 0;
-		foreach ($query->result_array() as $row){
+		foreach ($query->result_array() as $key => $value){
 			$number_row ++;
 			if ($category=='flight')
-				$data[] = array(
-					'number_row' => $number_row,
+				$data[$key] = $value;
+				/*$data[] = array(
 					'order_id' => $row['order_id'],
 					'agent_name' => $row['agent_name'],
-					'airline_name' => $row['airline_name'],
+					'airline_name_depart' => $row['airline_name_depart'],
 					'flight_id' => $row['flight_id'],
 					'route' => $row['route'],
 					'departing_date' => $row['departing_date'],
@@ -1160,7 +1160,7 @@ class Admin extends CI_Controller {
 					'infant' => $row['infant'],
 					'price_infant' => $row['price_infant'],
 					'payment_status' => $row['status']
-				);
+				);*/
 			else if ($category=='train')
 				$data[] = array(
 					'number_row' => $number_row,

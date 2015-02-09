@@ -127,7 +127,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, airline_name: datajson[i].airline_name, flight_id: datajson[i].flight_id, route: datajson[i].route, full_via: datajson[i].departing_date+' '+datajson[i].time_travel, total_price: datajson[i].total_price, adult: datajson[i].adult, price_adult: datajson[i].price_adult, child: datajson[i].child, price_child: datajson[i].price_child, infant: datajson[i].infant, price_infant: datajson[i].price_infant, payment_status: datajson[i].payment_status};
+					data[i] = {order_id: datajson[i].order_id, is_round_trip: datajson[i].is_round_trip,agent_name:datajson[i].agent_name, airline_name_depart: datajson[i].airline_name_depart,airline_name_return: datajson[i].airline_name_return, flight_id: datajson[i].flight_id, route: datajson[i].route, datetime_depart: datajson[i].departing_date+' '+datajson[i].time_travel, datetime_return: datajson[i].returning_date+' '+datajson[i].time_travel_ret, total_price: datajson[i].total_price, adult: datajson[i].adult, price_adult: datajson[i].price_adult, child: datajson[i].child, price_child: datajson[i].price_child, infant: datajson[i].infant, price_infant: datajson[i].price_infant, payment_status: datajson[i].payment_status};
 			}
 		});
 		
@@ -151,30 +151,61 @@ YUI().use('tabview', function(Y) {
 			var data_order = data;
 			var table = new Y.DataTable({
 				columns: [
-					{key:"number_row", label:"No.", width:"10px"},
 					{key:"order_id", label:"ID Pesanan"},
-					{key:"agent_name", label:"Nama Agen"},
-					{key:"airline_name", label:"Maskapai"},
+					{key:"agent_name", label:"Agen"},
+					{
+						label:"Single/Round",
+						nodeFormatter:function (o) {
+							if (o.data.is_round_trip=="true")
+								o.cell.setHTML('<img src="<?php echo IMAGES_DIR;?>/icon_round_trip.jpg" width="60px" height="25px" title="round-trip">');
+							else
+								o.cell.setHTML('<img src="<?php echo IMAGES_DIR;?>/icon_single_trip.jpg" width="60px" height="25px" title="single-trip">');
+							return false;
+						}
+					},
+					{
+						label:"Maskapai",
+						nodeFormatter:function (o) {
+							var str = '<p><b>Dep:</b> '+o.data.airline_name_depart;
+							if (o.data.airline_name_return != "")
+								str += '<br /><b>Ret:</b> '+o.data.airline_name_return;
+							str += '</p>';
+							
+							o.cell.setHTML(str);
+							return false;
+						}
+					},
 					{key:"route", label:"Rute"},
-					{key:"full_via", label:"Waktu"},
-					{key:"total_price", label:"Total Harga", formatter:formatCurrency},
-					{key:"payment_status", label:"Status Pembayaran"},
+					{
+						label:"Waktu",
+						nodeFormatter:function (o) {
+							var str = '<p><b>Dep:</b> '+o.data.datetime_depart;
+							if (o.data.datetime_return != "")
+								str += '<br /><b>Ret:</b> '+o.data.datetime_return;
+							str += '</p>';
+							
+							o.cell.setHTML(str);
+							return false;
+						}
+					},
+					//{key:"total_price", label:"Total Harga", formatter:formatCurrency},
+					//{key:"payment_status", label:"Status Pembayaran"},
 					{
 						key:"order_id", 
-						label: "Issued",
-						formatter:'<a href="<?php echo base_url();?>index.php/admin/proceed_order/flight/{value}" style="color:red"><button>Issued</button></a>',
+						label: "Book",
+						formatter:'<a href="<?php echo base_url();?>index.php/admin/proceed_order/flight/{value}" style="color:red"><button>Book</button></a>',
 						allowHTML: true
 					},
 					{
 						key:"order_id", 
 						label: "Batal",
-						formatter:'<a href="<?php echo base_url();?>index.php/admin/cancel_order/{value}" style="color:red"><button>Batal</button></a>',
+						formatter:'<a href="<?php echo base_url();?>index.php/admin/cancel_order/{value}" onclick="return prompt_delete_item();" style="color:red"><button>Batal</button></a>',
 						allowHTML: true
 					},
 					{
 						key:"order_id", 
 						label: "Tolak",
-						formatter:'<a href="<?php echo base_url();?>index.php/admin/reject_order/{value}" style="color:red"><button>Tolak</button></a>',
+						formatter:'<a href="<?php echo base_url();?>index.php/admin/reject_order/{value}" onclick="return prompt_delete_item();" style="color:red"><button>Tolak</button></a>',
 						allowHTML: true
 					}
 				],
@@ -261,7 +292,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, name: datajson[i].name, hotel_id: datajson[i].id, address: datajson[i].address, regional: datajson[i].regional, book_date: datajson[i].checkin+' / '+datajson[i].checkout, night: datajson[i].night, room: datajson[i].room, total_price: datajson[i].total_price, adult: datajson[i].adult, child: datajson[i].child, payment_status: datajson[i].payment_status, room_name: datajson[i].room_name};
+					data[i] = {order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, name: datajson[i].name, hotel_id: datajson[i].id, address: datajson[i].address, regional: datajson[i].regional, book_date: datajson[i].checkin+' / '+datajson[i].checkout, night: datajson[i].night, room: datajson[i].room, total_price: datajson[i].total_price, adult: datajson[i].adult, child: datajson[i].child, payment_status: datajson[i].payment_status, room_name: datajson[i].room_name};
 			}
 		});
 		

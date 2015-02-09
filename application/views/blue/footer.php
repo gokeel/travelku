@@ -78,7 +78,7 @@
 				for(var i=0; i<datajson.length;i++)
 					//data_via[i] = {number_row: datajson[i].number_row, id:datajson[i].id, name:datajson[i].name, type:datajson[i].type};
 					div.append('</span><a href="ymsgr:SendIM?'+datajson[i].username+'">\
-						<img border=0 src="http://opi.yahoo.com/online?u='+datajson[i].username+'&m=g&t=9"></a>&nbsp;&nbsp;'+datajson[i].username+'<br/><br/>');
+						<img border=0 height="40px" src="http://opi.yahoo.com/online?u='+datajson[i].username+'&m=g&t=9"></a>&nbsp;&nbsp;'+datajson[i].username+'<br/><br/>');
 			}
 		});
 	</script>
