@@ -165,86 +165,97 @@
 						</table>');
 					
 					$('#data-adult').append('<h2>Data Penumpang Dewasa</h2>');
-					var div = document.getElementById('data-adult');
-					var table = document.createElement('table');
-					var thead = document.createElement('tr');
-					thead.appendChild(set_td_data('th', 'Title'));
-					thead.appendChild(set_td_data('th', 'Nama Depan'));
-					thead.appendChild(set_td_data('th', 'Nama Belakang'));
-					thead.appendChild(set_td_data('th', 'Tanggal Lahir'));
-					thead.appendChild(set_td_data('th', 'No. Identitas'));
-					table.appendChild(thead);
-					for (var a=0; a<data.responses.general[0].adult.value; a++){
-						var tr = document.createElement('tr');
-						tr.appendChild(set_td_data('td', data.responses.adult[a].title.value));
-						tr.appendChild(set_td_data('td', data.responses.adult[a].firstname.value));
-						tr.appendChild(set_td_data('td', data.responses.adult[a].lastname.value));
-						tr.appendChild(set_td_data('td', data.responses.adult[a].birthdate.value));
-						tr.appendChild(set_td_data('td', data.responses.adult[a].id.value));
-						table.appendChild(tr);
-						$('#data-general').append('<input type="hidden" name="'+data.responses.adult[a].title.name+'" value="'+data.responses.adult[a].title.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.adult[a].firstname.name+'" value="'+data.responses.adult[a].firstname.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.adult[a].lastname.name+'" value="'+data.responses.adult[a].lastname.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.adult[a].birthdate.name+'" value="'+data.responses.adult[a].birthdate.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.adult[a].id.name+'" value="'+data.responses.adult[a].id.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.adult[a].baggage_direct.name+'" value="'+data.responses.adult[a].baggage_direct.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.adult[a].baggage_transit.name+'" value="'+data.responses.adult[a].baggage_transit.value+'">');
+					var str_adult = '<table style="margin-left:0px">\
+							<tr>\
+								<th>No.</th>\
+								<th>Titel</th>\
+								<th>Nama Depan</th>\
+								<th>Nama Belakang</th>\
+								<th>Tgl Lahir</th>\
+								<th>No. ID</th>\
+								<th>Kewarganegaraan</th>\
+								<th>Bagasi</th>\
+								<th>Bagasi Kembali</th>\
+							</tr>';
+					// fetching passengers
+					for (var a=0; a<data.responses.adult.length; a++){
+						str_adult += '<tr>\
+										<td>'+data.responses.adult[a].order_list+'</td>\
+										<td>'+data.responses.adult[a].title+'</td>\
+										<td>'+data.responses.adult[a].first_name+'</td>\
+										<td>'+data.responses.adult[a].last_name+'</td>\
+										<td>'+data.responses.adult[a].birth_date+'</td>\
+										<td>'+data.responses.adult[a].id+'</td>\
+										<td>'+data.responses.adult[a].nationality+'</td>\
+										<td>'+data.responses.adult[a].baggage+'</td>\
+										<td>'+data.responses.adult[a].baggage_return+'</td>\
+									</tr>';
 					}
-					div.appendChild(table);
+					
+					str_adult += '</table>';
+					$('#data-adult').append(str_adult);
 					
 					$('#data-child').append('<h2>Data Penumpang Anak</h2>');
-					var div = document.getElementById('data-child');
-					var table = document.createElement('table');
-					var thead = document.createElement('tr');
-					thead.appendChild(set_td_data('th', 'Title'));
-					thead.appendChild(set_td_data('th', 'Nama Depan'));
-					thead.appendChild(set_td_data('th', 'Nama Belakang'));
-					thead.appendChild(set_td_data('th', 'Tanggal Lahir'));
-					thead.appendChild(set_td_data('th', 'No. Identitas'));
-					table.appendChild(thead);
-					for (var a=0; a<data.responses.general[0].child.value; a++){
-						var tr = document.createElement('tr');
-						tr.appendChild(set_td_data('td', data.responses.child[a].title.value));
-						tr.appendChild(set_td_data('td', data.responses.child[a].firstname.value));
-						tr.appendChild(set_td_data('td', data.responses.child[a].lastname.value));
-						tr.appendChild(set_td_data('td', data.responses.child[a].birthdate.value));
-						tr.appendChild(set_td_data('td', data.responses.child[a].id.value));
-						table.appendChild(tr);
-						$('#data-general').append('<input type="hidden" name="'+data.responses.child[a].title.name+'" value="'+data.responses.child[a].title.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.child[a].firstname.name+'" value="'+data.responses.child[a].firstname.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.child[a].lastname.name+'" value="'+data.responses.child[a].lastname.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.child[a].birthdate.name+'" value="'+data.responses.child[a].birthdate.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.child[a].id.name+'" value="'+data.responses.child[a].id.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.child[a].baggage_direct.name+'" value="'+data.responses.child[a].baggage_direct.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.child[a].baggage_transit.name+'" value="'+data.responses.child[a].baggage_transit.value+'">');
+					var str_child = '<table style="margin-left:0px">\
+							<tr>\
+								<th>No.</th>\
+								<th>Titel</th>\
+								<th>Nama Depan</th>\
+								<th>Nama Belakang</th>\
+								<th>Tgl Lahir</th>\
+								<th>No. ID</th>\
+								<th>Kewarganegaraan</th>\
+								<th>Bagasi</th>\
+								<th>Bagasi Kembali</th>\
+							</tr>';
+					// fetching passengers
+					for (var a=0; a<data.responses.child.length; a++){
+						str_child += '<tr>\
+										<td>'+data.responses.child[a].order_list+'</td>\
+										<td>'+data.responses.child[a].title+'</td>\
+										<td>'+data.responses.child[a].first_name+'</td>\
+										<td>'+data.responses.child[a].last_name+'</td>\
+										<td>'+data.responses.child[a].birth_date+'</td>\
+										<td>'+data.responses.child[a].id+'</td>\
+										<td>'+data.responses.child[a].nationality+'</td>\
+										<td>'+data.responses.child[a].baggage+'</td>\
+										<td>'+data.responses.child[a].baggage_return+'</td>\
+									</tr>';
 					}
-					div.appendChild(table);
+					
+					str_child += '</table>';
+					$('#data-child').append(str_child);
 					
 					$('#data-infant').append('<h2>Data Penumpang Bayi</h2>');
-					var div = document.getElementById('data-infant');
-					var table = document.createElement('table');
-					var thead = document.createElement('tr');
-					thead.appendChild(set_td_data('th', 'Title'));
-					thead.appendChild(set_td_data('th', 'Nama Depan'));
-					thead.appendChild(set_td_data('th', 'Nama Belakang'));
-					thead.appendChild(set_td_data('th', 'Tanggal Lahir'));
-					thead.appendChild(set_td_data('th', 'Orang Tua'));
-					table.appendChild(thead);
-					for (var a=0; a<data.responses.general[0].infant.value; a++){
-						var tr = document.createElement('tr');
-						tr.appendChild(set_td_data('td', data.responses.infant[a].title.value));
-						tr.appendChild(set_td_data('td', data.responses.infant[a].firstname.value));
-						tr.appendChild(set_td_data('td', data.responses.infant[a].lastname.value));
-						tr.appendChild(set_td_data('td', data.responses.infant[a].birthdate.value));
-						tr.appendChild(set_td_data('td', 'Dewasa '+data.responses.infant[a].parent.value));
-						table.appendChild(tr);
-						$('#data-general').append('<input type="hidden" name="'+data.responses.infant[a].title.name+'" value="'+data.responses.infant[a].title.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.infant[a].firstname.name+'" value="'+data.responses.infant[a].firstname.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.infant[a].lastname.name+'" value="'+data.responses.infant[a].lastname.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.infant[a].birthdate.name+'" value="'+data.responses.infant[a].birthdate.value+'">');
-						$('#data-general').append('<input type="hidden" name="'+data.responses.infant[a].parent.name+'" value="'+data.responses.infant[a].parent.value+'">');
+					var str_infant = '<table style="margin-left:0px">\
+							<tr>\
+								<th>No.</th>\
+								<th>Titel</th>\
+								<th>Nama Depan</th>\
+								<th>Nama Belakang</th>\
+								<th>Tgl Lahir</th>\
+								<th>No. ID</th>\
+								<th>Kewarganegaraan</th>\
+								<th>Bagasi</th>\
+								<th>Bagasi Kembali</th>\
+							</tr>';
+					// fetching passengers
+					for (var a=0; a<data.responses.infant.length; a++){
+						str_infant += '<tr>\
+										<td>'+data.responses.infant[a].order_list+'</td>\
+										<td>'+data.responses.infant[a].title+'</td>\
+										<td>'+data.responses.infant[a].first_name+'</td>\
+										<td>'+data.responses.infant[a].last_name+'</td>\
+										<td>'+data.responses.infant[a].birth_date+'</td>\
+										<td>'+data.responses.infant[a].id+'</td>\
+										<td>'+data.responses.infant[a].nationality+'</td>\
+										<td>'+data.responses.infant[a].baggage+'</td>\
+										<td>'+data.responses.infant[a].baggage_return+'</td>\
+									</tr>';
 					}
-					div.appendChild(table);
+					
+					str_infant += '</table>';
+					$('#data-infant').append(str_infant);
 				} // end-flight
 				
 				// train

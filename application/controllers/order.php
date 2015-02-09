@@ -933,11 +933,16 @@ class Order extends CI_Controller {
 			}
 			foreach ($get_infant->result_array() as $row){
 				$infant = array(
-					'title' => array('name' => 'titlei'.$row['order_list'], 'value' => $row['title']),
-					'firstname' => array('name' => 'firstnamei'.$row['order_list'], 'value' => $row['first_name']),
-					'lastname' => array('name' => 'lastnamei'.$row['order_list'], 'value' => $row['last_name']),
-					'birthdate' => array('name' => 'birthdatei'.$row['order_list'], 'value' => $row['birthday']),
-					'parent' => array('name' => 'parenti'.$row['order_list'], 'value' => $row['parent'])
+					'order_list' => $row['order_list'],
+					'title' => $row['title'],
+					'firstname' => $row['first_name'],
+					'lastname' => $row['last_name'],
+					'birthdate' => $row['birthday'],
+					'parent' => $row['parent'],
+					'id' => $row['identity_number'],
+					'nationality' => $row['nationality'],
+					'baggage' => $row['baggage'],
+					'baggage_return' => $row['baggage_return']
 				);
 				array_push($response['responses']['infant'], $infant);
 			}

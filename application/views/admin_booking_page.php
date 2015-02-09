@@ -11,8 +11,8 @@ YUI().use('tabview', function(Y) {
 		<div id="tabs">
 			<ul>
 				<li><a href="#tab-1">Tiket Pesawat</a></li>
-				<li><a href="#tab-2">Tiket Kereta Api</a></li>
-				<li><a href="#tab-3">Tiket Hotel</a></li>
+				<!--<li><a href="#tab-2">Tiket Kereta Api</a></li>
+				<li><a href="#tab-3">Tiket Hotel</a></li>-->
 				<li><a href="#tab-4">Paket</a></li>
 			</ul>
 			<div>
