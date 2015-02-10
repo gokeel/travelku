@@ -2,7 +2,7 @@
 	$type = $this->uri->segment(3);
 	$id = $this->uri->segment(4);
 ?>
-<style type="text/css">
+<!--<style type="text/css">
 .yui3-panel {
     outline: none;
 }
@@ -35,7 +35,7 @@
 }
 
 </style>
-
+-->
 <div id="content"  style="min-height:400px;"> 
   <!--content--> 
 	
@@ -69,9 +69,25 @@
 			</form>
 		</div>
 	</div>
+	<div id="panel-send-bc">
+		<div class="yui3-widget-bd">
+			<form id="form-send-bc" name="form-send-bc">
+				<input type="hidden" name="id" value="<?php echo $id;?>">
+				<fieldset>
+					<p>
+						<label for="bank-name">Konten Email</label>
+						<!--<input class="editor" name="email_content" id="email_content">-->
+						<textarea name="email_content" id="email_content" style="width: 450px; height: 250px;"></textarea>
+					</p>
+				</fieldset>
+			</form>
+		</div>
+	</div>
 </div>
 
 <script>
+	$(".editor").jqte();
+
 	$(document).ready(function() {
 		$('#ljhcheckout-system').click(function(event) {
 			event.preventDefault();
@@ -583,6 +599,58 @@
 			srcNode      : '#panel-add-bc',
 			headerContent: 'Masukkan Kode Booking',
 			width        : 250,
+			zIndex       : 5,
+			centered     : true,
+			modal        : true,
+			visible      : false,
+			render       : true,
+			plugins      : [Y.Plugin.Drag]
+		});
+		panel.addButton({
+			value  : 'Submit',
+			section: Y.WidgetStdMod.FOOTER,
+			action : function (e) {
+				e.preventDefault();
+				add_bc();
+			}
+		});
+		panel.addButton({
+			value  : 'Batal',
+			section: Y.WidgetStdMod.FOOTER,
+			action : function (e) {
+				panel.hide();
+			}
+		});
+		// When the addRowBtn is pressed, show the modal form.
+		addRowBtn.on('click', function (e) {
+			panel.show();
+		});
+	});
+	
+	YUI().use('panel', 'dd-plugin', function (Y) {
+		function send_bc(){
+			var form = $('#form-send-bc').serialize();
+			$.ajax({
+				type : "POST",
+				url: '<?php echo base_url();?>index.php/admin/add_booking_code',
+				data: form,
+				cache: false,
+				dataType: "json",
+				success:function(data){
+					if(data.response==true)
+						window.location.assign("<?php echo base_url('index.php/admin/proceed_order/'.$type.'/'.$id);?>");
+					else
+						alert("Terdapat kesalahan saat mengubah kode booking.");
+				}
+			})
+		}
+		
+		var addRowBtn  = Y.one('#send-bc');
+		// Create the main modal form for add bank
+		var panel = new Y.Panel({
+			srcNode      : '#panel-send-bc',
+			headerContent: 'Masukkan Konten Email yang diinginkan',
+			width        : 750,
 			zIndex       : 5,
 			centered     : true,
 			modal        : true,

@@ -5407,4 +5407,32 @@ class Admin extends CI_Controller {
 		
 		echo json_encode($response);
 	}
+	
+	public function send_booking_code_to_customer(){
+		$id = $this->input->post('id');
+		$message = $this->input->post('email_content');
+		
+		$query = $this->general->get_detail_by_id('orders', 'order_id', $id);
+		foreach($query->result_array() as $row){
+			$email = $row['customer_email'];
+		}
+		//sending email
+		$email_config = array(
+			'protocol' => 'mail',
+			'mailpath' => '/usr/sbin/sendmail',
+			'charset' => 'iso-8859-1',
+			'wordwrap' => TRUE,
+			'mailtype' => 'html'
+		);
+		$this->load->library('email', $email_config);
+		
+		$this->email->from('noreply@travelku.co', 'do-not-reply');
+		$this->email->to($email);
+				
+		$this->email->subject('Pesanan anda telah di book');
+		//$messages = $this->load->view('email_tpl/new_paket_order_request', $content, TRUE);
+		$this->email->message($message);
+
+		$this->email->send();
+	}
 }
