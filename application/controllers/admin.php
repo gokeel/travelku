@@ -5395,4 +5395,16 @@ class Admin extends CI_Controller {
 		else
 			$this->show_message_page('menghapus data berita agen', 'Mohon hubungi web administrator.');
 	}
+	
+	public function add_booking_code(){
+		$id = $this->input->get('id');
+		$bc = $this->input->get('bc', NULL);
+		
+		$data = array('booking_code' => $bc);
+		$upd = $this->general->update_data_on_table('orders', 'order_id', $id, $data);
+		
+		$response = array('response' => $upd);
+		
+		echo json_encode($response);
+	}
 }
