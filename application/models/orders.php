@@ -47,7 +47,7 @@ class Orders extends CI_Model {
 	}
 	
 	function get_issued_order($cat){
-		$this->db->select('orders.*, agents.agent_name, payments.status');
+		$this->db->select('orders.*, agents.agent_name, payments.status as payment_status');
 		$this->db->from('orders');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');

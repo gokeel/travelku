@@ -167,7 +167,7 @@ YUI().use('tabview', function(Y) {
 						label:"Maskapai",
 						nodeFormatter:function (o) {
 							var str = '<p><b>Dep:</b> '+o.data.airline_name_depart;
-							if (o.data.airline_name_return != "")
+							if (o.data.is_round_trip=="true")
 								str += '<br /><b>Ret:</b> '+o.data.airline_name_return;
 							str += '</p>';
 							
@@ -180,7 +180,7 @@ YUI().use('tabview', function(Y) {
 						label:"Waktu",
 						nodeFormatter:function (o) {
 							var str = '<p><b>Dep:</b> '+o.data.datetime_depart;
-							if (o.data.datetime_return != "")
+							if (o.data.is_round_trip=="true")
 								str += '<br /><b>Ret:</b> '+o.data.datetime_return;
 							str += '</p>';
 							
@@ -189,7 +189,7 @@ YUI().use('tabview', function(Y) {
 						}
 					},
 					//{key:"total_price", label:"Total Harga", formatter:formatCurrency},
-					//{key:"payment_status", label:"Status Pembayaran"},
+					{key:"payment_status", label:"Status Pembayaran"},
 					{
 						key:"order_id", 
 						label: "Book",

@@ -34,7 +34,7 @@
 			},
 			complete: function() {
 			// Schedule the next request when the current one's complete
-				setTimeout(load_booking, 10000);
+				setTimeout(load_booking, 60000);
 			}
 		});
 		

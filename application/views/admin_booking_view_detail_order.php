@@ -2,45 +2,11 @@
 	$type = $this->uri->segment(3);
 	$id = $this->uri->segment(4);
 ?>
-<!--<style type="text/css">
-.yui3-panel {
-    outline: none;
-}
-.yui3-panel-content .yui3-widget-hd {
-    font-weight: bold;
-}
-.yui3-panel-content .yui3-widget-bd {
-    padding: 15px;
-}
-.yui3-panel-content label {
-    margin-right: 30px;
-}
-.yui3-panel-content fieldset {
-    border: none;
-    padding: 0;
-}
-.yui3-panel-content input[type="text"] {
-    border: none;
-    border: 1px solid #ccc;
-    padding: 3px 7px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    font-size: 100%;
-    width: 200px;
-}
-
-#addRow {
-    margin-top: 10px;
-}
-
-</style>
--->
 <div id="content"  style="min-height:400px;"> 
   <!--content--> 
 	
 	<div class="frametab">
-		<h3 style="margin:5px 0 5px 5px;">Proses Booking & Issued</h3>
+		<h3 style="margin:5px 0 5px 5px;">Tampilan Detil Pesanan</h3>
 		<div id="data-order">
 				<div id="data-booking-code"></div>
 				<div id="data-general"></div>
@@ -51,7 +17,7 @@
 		</div>
 	</div> 
 	
-	<div id="panel-add-bc">
+	<!--<div id="panel-add-bc">
 		<div class="yui3-widget-bd">
 			<form id="form-add-bc" name="form-add-bc">
 				<input type="hidden" name="id" value="<?php echo $id;?>">
@@ -72,12 +38,12 @@
 					<p>
 						<label for="bank-name">Konten Email</label>
 						<!--<input class="editor" name="email_content" id="email_content">-->
-						<textarea name="email_content" id="email_content" style="width: 450px; height: 250px;"></textarea>
+	<!--					<textarea name="email_content" id="email_content" style="width: 450px; height: 250px;"></textarea>
 					</p>
 				</fieldset>
 			</form>
 		</div>
-	</div>
+	</div>-->
 </div>
 
 <script>
@@ -97,23 +63,10 @@
 			//generate booking code
 			$('#data-booking-code').empty();
 			$('#data-booking-code').append('<h2>Kode Booking<h2>');
-			var bc_is_null = false;
-			if(data.responses.general[0].booking_code==null || data.responses.general[0].booking_code=="")
-				bc_is_null = true;
-			
-			var in_red = disabled = '';
-			if(bc_is_null==true){
-				in_red = ';color:red;';
-				disabled = 'disabled';
-			}
-			
 			var str_bc = '<table style="margin-left:0px">\
 						<tr>\
 							<td><strong>Kode Booking</strong></td>\
-							<td style="width:200px'+in_red+'">'+(bc_is_null==true ? "BELUM ADA" : data.responses.general[0].booking_code)+'</td>\
-							<td><button id="add-bc">Tambah/Ubah Kode Booking</button></td>\
-							<td><button id="send-bc" '+disabled+'>Kirim kode booking ke customer</button></td>\
-							<td><button id="issued" '+disabled+'>Issued</button></td>\
+							<td style="width:200px">'+data.responses.general[0].booking_code+'</td>\
 						</tr>\
 					</table>';
 			$('#data-booking-code').append(str_bc);
@@ -156,7 +109,7 @@
 					
 				if(data.responses.general[0].is_round_trip=="true"){
 					second_row_right += '<td><strong>Perjalanan Kembali</strong></td>\
-							<td style="width:200px">'+data.responses.general[0].airline_name_return+'<br />'+data.responses.general[0].flight_id_return+'<br />'+data.responses.general[0].returning_date+'<br />'+data.responses.general[0].time_travel_ret+'</td>';
+							<td style="width:200px">'+data.responses.general[0].airline_name_return+' - '+data.responses.general[0].flight_id_return+'<br />'+data.responses.general[0].returning_date+'<br />'+data.responses.general[0].time_travel_ret+'</td>';
 						
 					/*penghitungan harga per penumpang*/
 					var dewasa = dewasa_ret = anak = anak_ret = bayi = bayi_ret = '';
@@ -569,6 +522,7 @@
 		}
 	});
 	
+	/*
 	YUI().use('panel', 'dd-plugin', function (Y) {
 		function add_bc(){
 			var form = $('#form-add-bc').serialize();
@@ -671,5 +625,5 @@
 		addRowBtn.on('click', function (e) {
 			panel.show();
 		});
-	});
+	});*/
 </script>

@@ -670,27 +670,44 @@ class Order extends CI_Controller {
 	
 	public function issued_order_by_system(){
 		$id = $this->uri->segment(3);
-		// check the payment status, if in status "requested" then refused to checkout
+		// check the payment status, if in status "requested" then refused to issued
+		$not_ready = true;
 		list ($order_id, $status) = $this->bank->get_payment_id($id);
 		if ($order_id==0){
+			$not_ready = false;
 			$responses['response'] = 'nok';
-			$responses['message'] = 'Pelanggan belum melakukan konfirmasi pembayaran';
+			$responses['message'] = 'Pelanggan belum melakukan konfirmasi pembayaran.';
 		}
-		else {
-			if ($status=='requested'){
+		if($status=='requested'){
+			$not_ready = false;
+			$responses['response'] = 'nok';
+			$responses['message'] = 'Status pembayaran pelanggan belum divalidasi. Harap mengubah status pembayaran terlebih dahulu.';
+		}
+		// check if the order doesn't have a booking code, then refused to issued
+		$query = $this->general->get_afield_by_id('orders', 'order_id', $id, 'booking_code');
+		if($query==false){
+			$not_ready = false;
+			$responses['response'] = 'nok';
+			$responses['message'] = 'Pesanan belum mendapatkan booking code.';
+		}
+		else{
+			$booking_code = $query->result_array()[0]['booking_code'];
+			if($booking_code==""){
+				$not_ready = false;
 				$responses['response'] = 'nok';
-				$responses['message'] = 'Status pembayaran pelanggan belum divalidasi. Harap mengubah status pembayaran terlebih dahulu.';
+				$responses['message'] = 'Booking code tidak boleh kosong.';
 			}
-			else if ($status=='validated'){
-				//$this->orders->update_order_status($id, 'Issued');
-				$data = array(
-					'order_status' => 'Issued',
-					'issued_date' => date('Y-m-d H:i:s')
-				);
-				$this->general->update_data_on_table('orders', 'order_id', $id, $data);
-				//redirect(base_url('index.php/admin/booking_page'));
-				$responses['response'] = 'ok';
-			}
+		}
+		
+		//checking done, if all prerequisite ready then issued is permitted
+		if($not_ready){
+			$data = array(
+				'order_status' => 'Issued',
+				'issued_date' => date('Y-m-d H:i:s')
+			);
+			$this->general->update_data_on_table('orders', 'order_id', $id, $data);
+			$responses['response'] = 'ok';
+			
 		}
 		echo json_encode($responses);
 	}

@@ -133,7 +133,15 @@ function prompt_delete_item()
 		
 	return false;  
 }
-
+function prompt_confirmation()
+{
+	var answer = confirm("Apakah anda yakin merubah data ini?")
+	if (answer){
+		document.messages.submit();
+	}
+		
+	return false;  
+}
 function currency_separator(nStr, sep) {
     nStr += '';
     x = nStr.split('.');

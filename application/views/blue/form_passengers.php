@@ -305,6 +305,7 @@
 						<input type="hidden" name="price_infant_ret" value="'+total_price_infant_ret+'">\
 						';
 					}
+					var input_total_price = '<input type="hidden" name="total_price" value="'+total_price+'">';
 					$('#trip-summary').empty();
 					/* TRIP SUMMARY*/
 					$('#trip-summary').append('<div class="padding20"><span class="opensans size18 dark bold">Trip Summary</span></div>\
@@ -365,7 +366,7 @@
 						<input type="hidden" name="adult" value="'+data.items[0].departures.count_adult+'">\
 						<input type="hidden" name="child" value="'+data.items[0].departures.count_child+'">\
 						<input type="hidden" name="infant" value="'+data.items[0].departures.count_infant+'">\
-						<input type="hidden" name="airline_name" value="'+data.items[0].departures.airlines_name+'">\
+						<input type="hidden" name="airline_name_dep" value="'+data.items[0].departures.airlines_name+'">\
 						<input type="hidden" name="date_go" value="'+data.items[0].departures.flight_date+'">\
 						<input type="hidden" name="flight_number_dep" value="'+data.items[0].departures.flight_number+'">\
 						<input type="hidden" name="total_price_dep" value="'+total_price_dep+'">\
@@ -374,8 +375,9 @@
 						<input type="hidden" name="price_infant_dep" value="'+total_price_infant_dep+'">\
 						'+input_return+'\
 						'+input_dep_additional+'\
+						'+input_total_price+'\
 						');
-					//belum
+					
 					/* create mandatory input for passengers and contact person */
 					var div_input = $('#form-passenger');
 					var input_string = '<div class="padding30 grey">';

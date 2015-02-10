@@ -519,6 +519,15 @@ class Admin extends CI_Controller {
 		$this->load->view('admin_page_footer');
 	}
 
+	public function view_detail_order(){
+		$data = array(
+			'user_name' => $this->session->userdata('user_name'),
+			'ip_address' => $this->session->userdata('ip_address')
+		);
+		$this->load->view('admin_page_header', $data);
+		$this->load->view('admin_booking_view_detail_order');
+		$this->load->view('admin_page_footer');
+	}
 	
 	public function agent_add(){
 		/*$config['upload_path'] = './assets/uploads/agent_license_files';
@@ -1208,10 +1217,11 @@ class Admin extends CI_Controller {
 		$category = $this->uri->segment(3);
 		$query = $this->orders->get_issued_order($category);
 		$number_row = 0;
-		foreach ($query->result_array() as $row){
+		foreach ($query->result_array() as $key => $value){
 			$number_row ++;
 			if ($category=='flight')
-				$data[] = array(
+				$data[$key] = $value;
+				/*$data[] = array(
 					'number_row' => $number_row,
 					'order_id' => $row['order_id'],
 					'agent_name' => $row['agent_name'],
@@ -1229,7 +1239,7 @@ class Admin extends CI_Controller {
 					'price_infant' => $row['price_infant'],
 					'payment_status' => $row['status'],
 					'order_status' => $row['order_status']
-				);
+				);*/
 			else if ($category=='train')
 				$data[] = array(
 					'number_row' => $number_row,
