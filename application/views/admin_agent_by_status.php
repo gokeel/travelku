@@ -9,6 +9,8 @@
 			else if ($by_status=='Trial')
 				echo 'Sedang Trial';	
 		?></h3>
+		Download <br/><a href="<?php echo base_url();?>index.php/admin/excel_active_agent" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+		
 		<div id="data-agents"></div>
 	</div>
 	<div id="end"></div>

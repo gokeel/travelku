@@ -5445,4 +5445,23 @@ class Admin extends CI_Controller {
 
 		$this->email->send();
 	}
+	
+	public function excel_active_agent(){
+		//load from database
+		$query = $this->agents->get_agents_by_status('Yes');
+		$number_row = 0;
+		if ($query->num_rows() > 0){
+			foreach ($query->result_array() as $row){
+				$number_row++;
+				$data[] = array($number_row,$row['agent_username'],$row['agent_id'],$row['agent_name'],$row['agent_type'],$row['join_date'],$row['agent_phone'],$row['agent_city'],$row['agent_email'],$row['parent_agent'],$row['deposit_amount'],$row['voucher'],$row['approved']);
+			}
+			
+			$headers = array('Nomor', 'Username Agen','ID Agen','Nama Agen', 'Tipe Agen', 'Tanggal Bergabung', 'No. Telepon', 'Kota', 'Email', 'Upline', 'Nilai Deposit', 'Voucher', 'Status Approval');
+		}
+		else{
+			$data[0] = array('Tidak ada data');
+			$headers = array('Nomor', 'Username Agen','ID Agen','Nama Agen', 'Tipe Agen', 'Tanggal Bergabung', 'No. Telepon', 'Kota', 'Email', 'Upline', 'Nilai Deposit', 'Voucher', 'Status Approval');
+		}
+		$this->export_to_excel($data, $headers, 'Data Semua Agen Aktif', 'data semua agen aktif.xls');
+	}
 }
