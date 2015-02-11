@@ -49,7 +49,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,id: datajson[i].id, agent_name:datajson[i].agent_name, bank_from: datajson[i].bank_from, sender_number: datajson[i].sender_account_number, sender_name: datajson[i].sender_account_name, bank_name: datajson[i].bank_name, transfer_date: datajson[i].transfer_date, nominal: datajson[i].nominal};
+					data[i] = {number_row:datajson[i].number_row ,id: datajson[i].id, agent_name:datajson[i].agent_name, bank_from: datajson[i].bank_from, sender_number: datajson[i].sender_number, sender_name: datajson[i].sender_name, bank_name: datajson[i].bank_name, transfer_date: datajson[i].transfer_date, nominal: datajson[i].nominal};
 			}
 		});
 		
@@ -110,7 +110,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,id: datajson[i].id, agent_name:datajson[i].agent_name, bank_from: datajson[i].bank_from, sender_number: datajson[i].sender_account_number, sender_name: datajson[i].sender_account_name, bank_name: datajson[i].bank_name, transfer_date: datajson[i].transfer_date, nominal: datajson[i].nominal};
+					data[i] = {number_row:datajson[i].number_row ,id: datajson[i].id, agent_name:datajson[i].agent_name, bank_from: datajson[i].bank_from, sender_number: datajson[i].sender_number, sender_name: datajson[i].sender_name, bank_name: datajson[i].bank_name, transfer_date: datajson[i].transfer_date, nominal: datajson[i].nominal};
 			}
 		});
 		
@@ -159,7 +159,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,id: datajson[i].id, agent_name:datajson[i].agent_name, bank_from: datajson[i].bank_from, sender_number: datajson[i].sender_account_number, sender_name: datajson[i].sender_account_name, bank_name: datajson[i].bank_name, transfer_date: datajson[i].transfer_date, nominal: datajson[i].nominal};
+					data[i] = {number_row:datajson[i].number_row ,id: datajson[i].id, agent_name:datajson[i].agent_name, bank_from: datajson[i].bank_from, sender_number: datajson[i].sender_number, sender_name: datajson[i].sender_name, bank_name: datajson[i].bank_name, transfer_date: datajson[i].transfer_date, nominal: datajson[i].nominal};
 			}
 		});
 		

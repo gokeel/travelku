@@ -20,12 +20,12 @@ YUI().use('tabview', function(Y) {
 					<div id="order-flight"></div>
 					
 				</div>
-				<div id="tab-2">
+				<!--<div id="tab-2">
 					<div id="order-train"></div>
 				</div>
 				<div id="tab-3">
 					<div id="order-hotel"></div>
-				</div>
+				</div>-->
 				<div id="tab-4">
 					<div id="order-paket"></div>
 				</div>
@@ -44,8 +44,8 @@ YUI().use('tabview', function(Y) {
 <script>
 	$( window ).load(function() {
 		load_order_flight();
-		load_order_train();
-		load_order_hotel();
+		//load_order_train();
+		//load_order_hotel();
 		load_order_paket();
 	});
 	function load_order_paket(){
@@ -94,8 +94,8 @@ YUI().use('tabview', function(Y) {
 					{key:"payment_status", label:"Status Pembayaran"},
 					{
 						key:"order_id", 
-						label: "Issued",
-						formatter:'<a href="<?php echo base_url();?>index.php/admin/proceed_order/paket/{value}" style="color:red"><button>Issued</button></a>',
+						label: "Book",
+						formatter:'<a href="<?php echo base_url();?>index.php/admin/proceed_order/paket/{value}" style="color:red"><button>Book</button></a>',
 						allowHTML: true
 					},
 					{

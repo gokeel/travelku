@@ -528,43 +528,38 @@
 				} // end hotel
 				
 				//paket
-				else if (type=="paket"){
-					$('#data-general').append('<table>\
-							<tr>\
-								<td><strong>Nama Agen</strong></td><td>'+data.responses.general[0].agent_name+'</td>\
-								<td><strong>Deskripsi Paket</strong></td><td>'+data.responses.general[0].description+'</td>\
-							</tr>\
-							<tr>\
-								<td><strong>Titel Paket</strong></td><td>'+data.responses.general[0].title+'</td>\
-								<td><strong>Total Harga</strong></td><td>'+data.responses.general[0].total_price+'</td>\
-							</tr>\
-							<tr>\
-								<td><strong>Kategori Paket</strong></td><td>'+data.responses.general[0].category+'</td>\
-								<td><strong>Komisi ke Agen</strong></td><td>'+data.responses.general[0].commission+'</td>\
-							</tr>\
-						</table>');
-					$('#data-pemesan').append('<h2>Data Pemesan</h2>');
-					$('#data-pemesan').append('<table>\
-							<tr>\
-								<td><strong>Titel</strong></td>\
-								<td>'+data.responses.contact[0].title.value+'</td>\
-								<td></td>\
-								<td></td>\
-							</tr>\
-							<tr>\
-								<td><strong>Nama Depan</strong></td>\
-								<td>'+data.responses.contact[0].firstname.value+'</td>\
-								<td><strong>Nama Belakang</strong></td>\
-								<td>'+data.responses.contact[0].lastname.value+'</td>\
-							</tr>\
-							<tr>\
-								<td><strong>Email</strong></td>\
-								<td>'+data.responses.contact[0].email.value+'</td>\
-								<td><strong>Telepon/HP</strong></td>\
-								<td>'+data.responses.contact[0].phone.value+'</td>\
-							</tr>\
-						</table>');
-				} // end paket
+			else if (type=="paket"){
+				$('#data-general').append('<table>\
+						<tr>\
+							<td><strong>Nama Agen</strong></td><td>'+data.responses.general[0].agent_name+'</td>\
+							<td><strong>Deskripsi Paket</strong></td><td>'+data.responses.general[0].description+'</td>\
+						</tr>\
+						<tr>\
+							<td><strong>Titel Paket</strong></td><td>'+data.responses.general[0].title+'</td>\
+							<td><strong>Total Harga</strong></td><td>'+data.responses.general[0].total_price+'</td>\
+						</tr>\
+						<tr>\
+							<td><strong>Kategori Paket</strong></td><td>'+data.responses.general[0].category+'</td>\
+							<td></td>\
+							<td></td>\
+						</tr>\
+					</table>');
+				$('#data-pemesan').append('<h2>Data Pemesan</h2>');
+				$('#data-pemesan').append('<table>\
+						<tr>\
+							<td><strong>Titel</strong></td>\
+							<td>'+data.responses.contact.title+'</td>\
+							<td><strong>Nama Lengkap</strong></td>\
+							<td>'+data.responses.contact.fullname+'</td>\
+						</tr>\
+						<tr>\
+							<td><strong>Email</strong></td>\
+							<td>'+data.responses.contact.email+'</td>\
+							<td><strong>Telepon/HP</strong></td>\
+							<td>'+data.responses.contact.phone+'</td>\
+						</tr>\
+					</table>');
+			} // end paket
 				
 		}
 	});

@@ -33,9 +33,9 @@
 					</li>
 				</ul>
 			</li>
-			<?php echo ($uri2=='setting_commission_page' ? '<li id="grp_12" class="selected">' : '<li id="grp_12">');?>
+			<!--<?php echo ($uri2=='setting_commission_page' ? '<li id="grp_12" class="selected">' : '<li id="grp_12">');?>
 				<a href="<?php echo base_url();?>index.php/admin/setting_commission_page" >Commission</a>
-				<!--<span >Commission
+				<span >Commission
 					<div class="nextrow">&nbsp;</div>
 				</span>
 				<ul class="sub1 sortleftmenu" id="ul_394" >
@@ -48,8 +48,8 @@
 					<li id="grp_424">
 						<a href="<?php echo base_url();?>index.php/admin/setting_commission_page/train" >Kereta</a>
 					</li>
-				</ul>-->
-			</li>
+				</ul>
+			</li>-->
 			<?php echo ($uri2=='setting_city_page' ? '<li id="grp_401" class="selected">' : '<li id="grp_401">');?>
 				<a href="<?php echo base_url();?>index.php/admin/setting_city_page" >City</a>
 			</li>
