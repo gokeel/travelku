@@ -621,15 +621,12 @@
 			var form = $('#form-send-bc').serialize();
 			$.ajax({
 				type : "POST",
-				url: '<?php echo base_url();?>index.php/admin/add_booking_code',
+				url: '<?php echo base_url();?>index.php/admin/send_booking_code_to_customer',
 				data: form,
 				cache: false,
 				dataType: "json",
 				success:function(data){
-					if(data.response==true)
-						window.location.assign("<?php echo base_url('index.php/admin/proceed_order/'.$type.'/'.$id);?>");
-					else
-						alert("Terdapat kesalahan saat mengubah kode booking.");
+					alert("Email telah dikirimkan ke email customer.");
 				}
 			})
 		}
@@ -652,11 +649,11 @@
 			section: Y.WidgetStdMod.FOOTER,
 			action : function (e) {
 				e.preventDefault();
-				add_bc();
+				send_bc();
 			}
 		});
 		panel.addButton({
-			value  : 'Batal',
+			value  : 'Tutup',
 			section: Y.WidgetStdMod.FOOTER,
 			action : function (e) {
 				panel.hide();

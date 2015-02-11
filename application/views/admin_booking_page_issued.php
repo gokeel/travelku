@@ -20,12 +20,13 @@ YUI().use('tabview', function(Y) {
 					<div id="order-flight"></div>
 					
 				</div>
-				<div id="tab-2">
+				<!--<div id="tab-2">
 					<div id="order-train"></div>
 				</div>
 				<div id="tab-3">
 					<div id="order-hotel"></div>
 				</div>
+				-->
 				<div id="tab-4">
 					<div id="order-paket"></div>
 				</div>
@@ -55,7 +56,7 @@ YUI().use('tabview', function(Y) {
 			success:function(datajson){
 				var div = $('#faqkonten');
 				for(var i=0; i<datajson.length; i++){
-					data[i] = {number_row: datajson[i].number_row, order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, category: datajson[i].category, description: datajson[i].category, title: datajson[i].title, price: datajson[i].price, payment_status: datajson[i].payment_status, order_status: datajson[i].order_status};
+					data[i] = {number_row: datajson[i].number_row, order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, category: datajson[i].category, description: datajson[i].category, title: datajson[i].title, price: datajson[i].price, payment_status: datajson[i].payment_status, order_status: datajson[i].order_status, email_issued_sent: datajson[i].email_issued_sent};
 				}
 			}
 		});
@@ -89,7 +90,6 @@ YUI().use('tabview', function(Y) {
 					{key:"payment_status", label:"Status Pembayaran"},
 					{key:"order_status", label:"Status Pesanan"},
 					{
-						//key:"order_id", 
 						label: "Pesanan Selesai",
 						nodeFormatter:function(o){
 							if(o.data.order_status=='Issued')
@@ -98,8 +98,16 @@ YUI().use('tabview', function(Y) {
 								o.cell.set('text', '');
 							return false;
 						}
-						//formatter:'<a href="<?php echo base_url();?>index.php/admin/order_done/'+o.data.order_id+'" style="color:red"><button>Tandai Selesai</button></a>',
-						//allowHTML: true
+					},
+					{
+						label: "Pengiriman Email",
+						nodeFormatter:function(o){
+							if(o.data.email_issued_sent=='false')
+								o.cell.setHTML('<span style="color:red"><b>BELUM!!</b></span><br /><a href="<?php echo base_url();?>index.php/admin/send_email_page/'+o.data.order_id+'/booking_issued" style="color:red"><button>Kirim Email</button></a>');
+							else
+								o.cell.setHTML('<span style="color:red">Sudah</span><br /><a href="<?php echo base_url();?>index.php/admin/send_email_page/'+o.data.order_id+'/booking_issued" style="color:red"><button>Kirim Email</button></a>');
+							return false;
+						}
 					}
 				],
 				data: data_order,
@@ -135,7 +143,9 @@ YUI().use('tabview', function(Y) {
 								infant: datajson[i].infant, 
 								price_infant: datajson[i].price_infant, 
 								payment_status: datajson[i].payment_status,
-								order_status: datajson[i].order_status};
+								order_status: datajson[i].order_status,
+								email_issued_sent: datajson[i].email_issued_sent
+							};
 			}
 		});
 		
@@ -206,7 +216,6 @@ YUI().use('tabview', function(Y) {
 						}
 					},
 					{
-						//key:"order_id", 
 						label: "Pesanan Selesai",
 						nodeFormatter:function(o){
 							if(o.data.order_status=='Issued')
@@ -215,8 +224,16 @@ YUI().use('tabview', function(Y) {
 								o.cell.set('text', '');
 							return false;
 						}
-						//formatter:'<a href="<?php echo base_url();?>index.php/admin/order_done/'+o.data.order_id+'" style="color:red"><button>Tandai Selesai</button></a>',
-						//allowHTML: true
+					},
+					{
+						label: "Pengiriman Email",
+						nodeFormatter:function(o){
+							if(o.data.email_issued_sent=='false')
+								o.cell.setHTML('<span style="color:red"><b>BELUM!!</b></span><br /><a href="<?php echo base_url();?>index.php/admin/send_email_page/'+o.data.order_id+'/booking_issued" style="color:red"><button>Kirim Email</button></a>');
+							else
+								o.cell.setHTML('<span style="color:red">Sudah</span><br /><a href="<?php echo base_url();?>index.php/admin/send_email_page/'+o.data.order_id+'/booking_issued" style="color:red"><button>Kirim Email</button></a>');
+							return false;
+						}
 					}
 				],
 				data: data_order,

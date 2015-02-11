@@ -484,6 +484,13 @@ class Admin extends CI_Controller {
 		else
 			$this->no_right_access();
 	}
+	
+	public function send_email_page(){
+		if($this->check_session('administrator'))
+			$this->page('admin_send_email_manual');
+		else
+			$this->no_right_access();
+	}
 	/******************************/
 	
 	/**		PAGES END			 **/
@@ -2386,7 +2393,8 @@ class Admin extends CI_Controller {
 				'agent_name' => $row['agent_name'],
 				'payment_status' => $row['status'],
 				'order_status' => $row['order_status'],
-				'price' => $row['total_price']
+				'price' => $row['total_price'],
+				'email_issued_sent' => $row['email_issued_sent']
 			);
 		}
 		echo json_encode($data);
@@ -5423,6 +5431,43 @@ class Admin extends CI_Controller {
 		$message = $this->input->post('email_content');
 		
 		$query = $this->general->get_detail_by_id('orders', 'order_id', $id);
+		$customer_email = $query->result_array()[0]['customer_email'];
+		
+		//sending email
+		$email_config = array(
+			'protocol' => 'mail',
+			'mailpath' => '/usr/sbin/sendmail',
+			'charset' => 'iso-8859-1',
+			'wordwrap' => TRUE,
+			'mailtype' => 'html'
+		);
+		$this->load->library('email', $email_config);
+		
+		$this->email->from('ticketing@travelku.co', 'Admin Ticketing');
+		$this->email->to($customer_email);
+		$this->email->cc('ticketing@travelku.co');
+				
+		$this->email->subject('Pesanan anda telah di book');
+		//$messages = $this->load->view('email_tpl/new_paket_order_request', $content, TRUE);
+		$this->email->message($message);
+		
+		$this->email->send();
+		
+		//update email_booking_code_sent = true in table orders
+		$data = array('email_booking_code_sent' => 'true');
+		$upd = $this->general->update_data_on_table('orders', 'order_id', $id, $data);
+		
+		$response = array('response' => $upd);
+		echo json_encode($response);
+	}
+	
+	public function send_email_issued(){
+		$id = $this->input->post('id');
+		$page = $this->input->post('page');
+		$cc = $this->input->post('cc');
+		$message = $this->input->post('email_content');
+		
+		$query = $this->general->get_detail_by_id('orders', 'order_id', $id);
 		foreach($query->result_array() as $row){
 			$email = $row['customer_email'];
 		}
@@ -5436,14 +5481,21 @@ class Admin extends CI_Controller {
 		);
 		$this->load->library('email', $email_config);
 		
-		$this->email->from('noreply@travelku.co', 'do-not-reply');
+		$this->email->from('ticketing@travelku.co', 'Admin Ticketing');
 		$this->email->to($email);
+		$this->email->cc($cc);
 				
-		$this->email->subject('Pesanan anda telah di book');
+		$this->email->subject('Pesanan anda telah di-issued');
 		//$messages = $this->load->view('email_tpl/new_paket_order_request', $content, TRUE);
 		$this->email->message($message);
 
 		$this->email->send();
+		
+		//update email_issued_sent = true in table orders
+		$data = array('email_issued_sent' => 'true');
+		$upd = $this->general->update_data_on_table('orders', 'order_id', $id, $data);
+		
+		redirect(base_url()."index.php/admin/".$page);
 	}
 	
 	public function excel_active_agent(){

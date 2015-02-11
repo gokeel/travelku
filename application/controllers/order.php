@@ -1195,7 +1195,8 @@ class Order extends CI_Controller {
 			'total_price' => $total_price,
 			'commission_to_agent' => $comm,
 			'purchasing_price' => $purchase_price,
-			'total_person_registered' => $total_person
+			'total_person_registered' => $total_person,
+			'customer_email' => $this->input->post('email',TRUE)
 		);
 		$order_id = $this->orders->add_order($data_order);
 		

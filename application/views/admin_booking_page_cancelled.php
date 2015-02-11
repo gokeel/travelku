@@ -12,21 +12,20 @@ YUI().use('tabview', function(Y) {
 		<div id="tabs">
 			<ul>
 				<li><a href="#tab-1">Tiket Pesawat</a></li>
-				<li><a href="#tab-2">Tiket Kereta Api</a></li>
-				<li><a href="#tab-3">Tiket Hotel</a></li>
+				<!--<li><a href="#tab-2">Tiket Kereta Api</a></li>
+				<li><a href="#tab-3">Tiket Hotel</a></li>-->
 				<li><a href="#tab-4">Paket</a></li>
 			</ul>
 			<div>
 				<div id="tab-1">
 					<div id="order-flight"></div>
-					
 				</div>
-				<div id="tab-2">
+				<!--<div id="tab-2">
 					<div id="order-train"></div>
 				</div>
 				<div id="tab-3">
 					<div id="order-hotel"></div>
-				</div>
+				</div>-->
 				<div id="tab-4">
 					<div id="order-paket"></div>
 				</div>
@@ -106,8 +105,8 @@ YUI().use('tabview', function(Y) {
 	});
 	$( window ).load(function() {
 		load_order_flight();
-		load_order_train();
-		load_order_hotel();
+		//load_order_train();
+		//load_order_hotel();
 		load_order_paket();
 	});
 	
