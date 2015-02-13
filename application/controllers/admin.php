@@ -93,32 +93,38 @@ class Admin extends CI_Controller {
 				'subtitle' => 'Terjadi kesalahan pada saat '.$in,
 				'message' => $message
 			);
-			$this->load->view('admin_page_header', $data);
-			$this->load->view('admin_any_message', $data);
-			$this->load->view('admin_page_footer');
+		$this->load->view('admin_page_header', $data);
+		$this->load->view('admin_any_message', $data);
+		$this->load->view('admin_page_footer');
 	}
 	
 	function show_success_page($message){
 		$data = array(
-				'user_name' => $this->session->userdata('user_name'),
-				'ip_address' => $this->session->userdata('ip_address'),
-				'title' => 'Pesan Berhasil',
-				'subtitle' => '',
-				'message' => $message
-			);
-			$this->load->view('admin_page_header', $data);
-			$this->load->view('admin_any_message', $data);
-			$this->load->view('admin_page_footer');
+			'user_name' => $this->session->userdata('user_name'),
+			'ip_address' => $this->session->userdata('ip_address'),
+			'title' => 'Pesan Berhasil',
+			'subtitle' => '',
+			'message' => $message
+		);
+		$this->load->view('admin_page_header', $data);
+		$this->load->view('admin_any_message', $data);
+		$this->load->view('admin_page_footer');
 	}
 	
 	
-	function page($page_request, $additional=null){
+	function page($page_request, $additional=null, $active_menu=null, $active_submenu=null){
 		$data = array(
 			'user_name' => $this->session->userdata('user_name'),
-			'ip_address' => $this->session->userdata('ip_address')
+			'ip_address' => $this->session->userdata('ip_address'),
+			'active_menu' => $active_menu,
+			'active_submenu' => $active_submenu
 		);
-		if ($additional != null)
-			$data['by_status'] = $additional;
+		if ($additional != null){
+			foreach($additional as $key => $val)
+				$data[$key] = $val;
+		}
+			//array_push($data, $additional);
+		
 		$this->load->view('admin_page_header', $data);
 		if (strpos($page_request, 'admin_agent') !== false)
 			$this->load->view('admin_agent_header');
@@ -138,7 +144,7 @@ class Admin extends CI_Controller {
 	
 	public function admin_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_page');
+			$this->page('admin_page', null, 'admin_page', null);
 		else
 			$this->no_right_access();
 	}
@@ -147,29 +153,29 @@ class Admin extends CI_Controller {
 	}
 	public function agent_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_agent');
+			$this->page('admin_agent', null, 'agent_page', 'agent_page');
 		else
 			$this->no_right_access();
 	}
 	
 	public function setting_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting');
+			$this->page('admin_setting', null, 'setting_page', null);
 		else
 			$this->no_right_access();
 	}
 	
 	public function deposit_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_deposit');
+			$this->page('admin_deposit', null, 'deposit_page', null);
 		else
 			$this->no_right_access();
 	}
 	
 	public function agent_page_by_status(){
 		if($this->check_session('administrator')){
-			$status = $this->uri->segment(3);
-			$this->page('admin_agent_by_status', $status);
+			$data = array('by_status' => $this->uri->segment(3));
+			$this->page('admin_agent_by_status', $data, 'agent_page', $this->uri->segment(3));
 		}
 		else
 			$this->no_right_access();
@@ -178,7 +184,7 @@ class Admin extends CI_Controller {
 	
 	public function setting_bank_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting_bank');
+			$this->page('admin_setting_bank', null, 'setting_page', 'bank');
 		else
 			$this->no_right_access();
 		
@@ -186,7 +192,7 @@ class Admin extends CI_Controller {
 	
 	public function booking_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_booking_page');
+			$this->page('admin_booking_page', null, 'booking_page', 'booking_page');
 		else
 			$this->no_right_access();
 		
@@ -194,7 +200,7 @@ class Admin extends CI_Controller {
 	
 	public function booking_issued(){
 		if($this->check_session('administrator'))
-			$this->page('admin_booking_page_issued');
+			$this->page('admin_booking_page_issued', null, 'booking_page', 'booking_issued');
 		else
 			$this->no_right_access();
 		
@@ -202,7 +208,7 @@ class Admin extends CI_Controller {
 	
 	public function booking_cancelled(){
 		if($this->check_session('administrator'))
-			$this->page('admin_booking_page_cancelled');
+			$this->page('admin_booking_page_cancelled', null, 'booking_page', 'booking_cancel');
 		else
 			$this->no_right_access();
 		
@@ -210,7 +216,7 @@ class Admin extends CI_Controller {
 	
 	public function validate_payment(){
 		if($this->check_session('administrator'))
-			$this->page('admin_booking_validate_payment');
+			$this->page('admin_booking_validate_payment', null, 'booking_page', 'validate_payment');
 		else
 			$this->no_right_access();
 		
@@ -219,12 +225,7 @@ class Admin extends CI_Controller {
 	public function setting_user_page(){
 		if($this->check_session('administrator')){
 			$uri3= $this->uri->segment(3);
-			if ($uri3=='office')
-				$this->page('admin_setting_user_office');
-			else if ($uri3=='tiket')
-				$this->page('admin_setting_user_tiket');
-			else if ($uri3=='uas')
-				$this->page('admin_setting_user_uas');
+			$this->page('admin_setting_user_'.$uri3, null, 'setting_page', 'user');
 		}
 		else
 			$this->no_right_access();
@@ -249,7 +250,7 @@ class Admin extends CI_Controller {
 
 	public function setting_city_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting_city');
+			$this->page('admin_setting_city', null, 'setting_page', 'city');
 		else
 			$this->no_right_access();
 			
@@ -257,7 +258,7 @@ class Admin extends CI_Controller {
 	
 	public function setting_yahoo_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting_yahoo');
+			$this->page('admin_setting_yahoo', null, 'setting_page', 'yahoo');
 		else
 			$this->no_right_access();
 		
@@ -273,7 +274,7 @@ class Admin extends CI_Controller {
 	
 	public function setting_kurs_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting_kurs');
+			$this->page('admin_setting_kurs', null, 'setting_page', 'kurs');
 		else
 			$this->no_right_access();
 		
@@ -281,7 +282,7 @@ class Admin extends CI_Controller {
 	
 	public function setting_kurs_modify(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting_kurs_modify');
+			$this->page('admin_setting_kurs_modify', null, 'setting_page', 'kurs');
 		else
 			$this->no_right_access();
 		
@@ -289,7 +290,7 @@ class Admin extends CI_Controller {
 	
 	public function setting_deposit_topup(){
 		if($this->check_session('administrator'))
-			$this->page('admin_deposit_topup_page');
+			$this->page('admin_deposit_topup_page', null, 'deposit_page', 'topup');
 		else
 			$this->no_right_access();
 		
@@ -297,7 +298,7 @@ class Admin extends CI_Controller {
 	
 	public function setting_deposit_withdraw(){
 		if($this->check_session('administrator'))
-			$this->page('admin_deposit_withdraw_page');
+			$this->page('admin_deposit_withdraw_page', null, 'deposit_page', 'withdraw');
 		else
 			$this->no_right_access();
 		
@@ -317,21 +318,28 @@ class Admin extends CI_Controller {
 	}
 	public function agent_data_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_agent_data_modify');
+			$this->page('admin_agent_data_modify', null, 'agent_page', 'agent_page');
+		else
+			$this->no_right_access();
+		
+	}
+	public function agent_reset_password(){
+		if($this->check_session('administrator'))
+			$this->page('admin_agent_reset_password', null, 'agent_page', 'reset_password');
 		else
 			$this->no_right_access();
 		
 	}
 	public function edit_agent(){
 		if($this->check_session('administrator'))
-			$this->page('admin_agent_data_modify');
+			$this->page('admin_agent_data_modify', null, 'agent_page', 'agent_page');
 		else
 			$this->no_right_access();
 		
 	}
 	public function user_edit_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting_user_modify');
+			$this->page('admin_setting_user_modify', null, 'setting_page', 'user');
 		else
 			$this->no_right_access();
 		
@@ -339,7 +347,7 @@ class Admin extends CI_Controller {
 	
 	public function my_account_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_my_account_page');
+			$this->page('admin_my_account_page', null, 'my_account_page', null);
 		else
 			$this->no_right_access();
 		
@@ -347,7 +355,7 @@ class Admin extends CI_Controller {
 	
 	public function cms_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_cms_page');
+			$this->page('admin_cms_page', null, 'cms_page', 'cms_page');
 		else
 			$this->no_right_access();
 		
@@ -355,20 +363,20 @@ class Admin extends CI_Controller {
 	
 	public function content_category_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_cms_content_category');
+			$this->page('admin_cms_content_category', null, 'cms_page', 'category');
 		else
 			$this->no_right_access();
 	}
 	public function content_review(){
 		if($this->check_session('administrator'))
-			$this->page('admin_cms_content_review');
+			$this->page('admin_cms_content_review', null, 'cms_page', 'review');
 		else
 			$this->no_right_access();
 		
 	}
 	public function edit_content_category(){
 		if($this->check_session('administrator'))
-			$this->page('admin_cms_content_category_modify');
+			$this->page('admin_cms_content_category_modify', null, 'cms_page', 'category');
 		else
 			$this->no_right_access();
 		
@@ -377,7 +385,7 @@ class Admin extends CI_Controller {
 		if($this->check_session('administrator')){
 			//create a blank row and insert to post, finally get the inserted ID
 		$get_id = $this->posts->add_blank_post();
-		$this->page('admin_cms_content_add', array('id' => $get_id));
+		$this->page('admin_cms_content_add', array('id' => $get_id), 'cms_page', 'add_paket');
 		}
 		else
 			$this->no_right_access();
@@ -387,7 +395,7 @@ class Admin extends CI_Controller {
 		if($this->check_session('administrator')){
 			//create a blank row and insert to post, finally get the inserted ID
 			$get_id = $this->posts->add_blank_post();
-			$this->page('admin_cms_content_add_nonpaket', array('id' => $get_id));
+			$this->page('admin_cms_content_add_nonpaket', array('id' => $get_id), 'cms_page', 'add_nonpaket');
 		}
 		else
 			$this->no_right_access();
@@ -396,7 +404,7 @@ class Admin extends CI_Controller {
 	public function content_modify(){
 		if($this->check_session('administrator')){
 			$id = $this->uri->segment(3);
-			$this->page('admin_cms_content_modify', array('id' => $id));
+			$this->page('admin_cms_content_modify', array('id' => $id), 'cms_page', 'modify');
 		}
 		else
 			$this->no_right_access();
@@ -406,7 +414,7 @@ class Admin extends CI_Controller {
 	public function content_modify_nonpaket(){
 		if($this->check_session('administrator')){
 			$id = $this->uri->segment(3);
-			$this->page('admin_cms_content_modify_nonpaket', array('id' => $id));
+			$this->page('admin_cms_content_modify_nonpaket', array('id' => $id), 'cms_page', 'modify');
 		}
 		else
 			$this->no_right_access();
@@ -415,7 +423,7 @@ class Admin extends CI_Controller {
 	
 	public function setting_email_dist(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting_email_dist');
+			$this->page('admin_setting_email_dist', null, 'setting_page', 'email_dist');
 		else
 			$this->no_right_access();
 		
@@ -423,7 +431,7 @@ class Admin extends CI_Controller {
 	
 	public function setting_email_dist_modify(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting_email_dist_modify');
+			$this->page('admin_setting_email_dist_modify', null, 'setting_page', 'email_dist');
 		else
 			$this->no_right_access();
 	}
@@ -437,35 +445,35 @@ class Admin extends CI_Controller {
 	
 	public function option_setting(){
 		if($this->check_session('administrator'))
-			$this->page('admin_cms_option_setting');
+			$this->page('admin_cms_option_setting', null, 'cms_page', 'option_setting');
 		else
 			$this->no_right_access();
 	}
 	
 	public function option_modify(){
 		if($this->check_session('administrator'))
-			$this->page('admin_cms_option_modify');
+			$this->page('admin_cms_option_modify', null, 'cms_page', 'option_setting');
 		else
 			$this->no_right_access();
 	}
 	
 	public function agent_news(){
 		if($this->check_session('administrator'))
-			$this->page('admin_cms_agent_news');
+			$this->page('admin_cms_agent_news', null, 'cms_page', 'agent_news');
 		else
 			$this->no_right_access();
 	}
 	
 	public function agent_news_add(){
 		if($this->check_session('administrator'))
-			$this->page('admin_cms_agent_news_add');
+			$this->page('admin_cms_agent_news_add', null, 'cms_page', 'agent_news');
 		else
 			$this->no_right_access();
 	}
 	
 	public function agent_news_modify(){
 		if($this->check_session('administrator'))
-			$this->page('admin_cms_agent_news_modify');
+			$this->page('admin_cms_agent_news_modify', null, 'cms_page', 'agent_news');
 		else
 			$this->no_right_access();
 	}
@@ -473,21 +481,48 @@ class Admin extends CI_Controller {
 	//cindy nordiansyah
 	public function assets_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_assets');
+			$this->page('admin_assets', null, 'assets_page', null);
 		else
 			$this->no_right_access();
 	}
 	
 	public function setting_switch_order_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_setting_switch_order_system');
+			$this->page('admin_setting_switch_order_system', null, 'setting_page', 'switch_order');
 		else
 			$this->no_right_access();
 	}
 	
 	public function send_email_page(){
 		if($this->check_session('administrator'))
-			$this->page('admin_send_email_manual');
+			$this->page('admin_send_email_manual', null, 'booking_page', 'booking_page');
+		else
+			$this->no_right_access();
+	}
+	
+	
+	public function detail_agent(){
+		if($this->check_session('administrator'))
+			$this->page('admin_agent_data_detail', null, 'agent_page', 'agent_page');
+		else
+			$this->no_right_access();
+	}
+	
+	public function proceed_order(){
+		$id = $this->uri->segment(4);
+		//lock to user
+		$lock = array('locked_by' => $this->session->userdata('account_id'));
+		$upd = $this->general->update_data_on_table('orders', 'order_id', $id, $lock);
+		
+		if($this->check_session('administrator'))
+			$this->page('admin_booking_checkout', null, 'booking_page', 'booking_page');
+		else
+			$this->no_right_access();
+	}
+
+	public function view_detail_order(){
+		if($this->check_session('administrator'))
+			$this->page('admin_booking_view_detail_order', null, 'booking_page', 'booking_page');
 		else
 			$this->no_right_access();
 	}
@@ -506,35 +541,6 @@ class Admin extends CI_Controller {
 		redirect(base_url('index.php/admin/agent_page'));
 	}
 	
-	public function detail_agent(){
-		$data = array(
-			'user_name' => $this->session->userdata('user_name'),
-			'ip_address' => $this->session->userdata('ip_address')
-		);
-		$this->load->view('admin_page_header', $data);
-		$this->load->view('admin_agent_data_detail');
-		$this->load->view('admin_page_footer');
-	}
-	
-	public function proceed_order(){
-		$data = array(
-			'user_name' => $this->session->userdata('user_name'),
-			'ip_address' => $this->session->userdata('ip_address')
-		);
-		$this->load->view('admin_page_header', $data);
-		$this->load->view('admin_booking_checkout');
-		$this->load->view('admin_page_footer');
-	}
-
-	public function view_detail_order(){
-		$data = array(
-			'user_name' => $this->session->userdata('user_name'),
-			'ip_address' => $this->session->userdata('ip_address')
-		);
-		$this->load->view('admin_page_header', $data);
-		$this->load->view('admin_booking_view_detail_order');
-		$this->load->view('admin_page_footer');
-	}
 	
 	public function agent_add(){
 		/*$config['upload_path'] = './assets/uploads/agent_license_files';
@@ -1124,11 +1130,11 @@ class Admin extends CI_Controller {
 	}
 	
 	public function bank_edit(){
-		$this->page('admin_setting_bank_modify');
+		$this->page('admin_setting_bank_modify', null, 'setting_page', 'bank');
 	}
 	
 	public function bank_via_edit(){
-		$this->page('admin_setting_bank_modify');
+		$this->page('admin_setting_bank_modify', null, 'setting_page', 'bank');
 	}
 	
 	public function bank_edit_by_id(){
@@ -1686,7 +1692,7 @@ class Admin extends CI_Controller {
 	}
 	//cindy nordiansyah
 	public function city_edit_page() {
-		$this->page('admin_setting_city_modify');
+		$this->page('admin_setting_city_modify', null, 'setting_page', 'city');
 	}
 	//cindy nordiansyah
 	public function city_edit() {
@@ -1730,7 +1736,7 @@ class Admin extends CI_Controller {
 	
 	//cindy nordiansyah
 	public function ym_update() {
-		$this->page('admin_setting_yahoo_modify');
+		$this->page('admin_setting_yahoo_modify', null, 'setting_page', 'yahoo');
 	}
 	//cindy nordiansyah
 	public function ym_edit() {
@@ -2370,7 +2376,8 @@ class Admin extends CI_Controller {
 				'order_status' => $row['order_status'],
 				'price' => $row['total_price'],
 				'currency' => $row['currency'],
-				'total_person' => $row['total_person_registered']
+				'total_person' => $row['total_person_registered'],
+				'locked_by_name' => $row['locked_by_name']
 			);
 		}
 		echo json_encode($data);
@@ -2507,11 +2514,11 @@ class Admin extends CI_Controller {
 	public function assets_airlines(){
 		$uri3= $this->uri->segment(3);
 		if ($uri3=='airlines')
-			$this->page('admin_assets_airlines');
+			$this->page('admin_assets_airlines', null, 'assets_page', 'airlines');
 		else if ($uri3=='rute')
-			$this->page('admin_assets_airlines_rute');
+			$this->page('admin_assets_airlines_rute', null, 'assets_page', 'airlines');
 		else if ($uri3=='password')
-			$this->page('admin_assets_airlines_password');
+			$this->page('admin_assets_airlines_password', null, 'assets_page', 'airlines');
 	}
 	//------airlines-----------
 	//cindy nordiansyah
@@ -2741,19 +2748,19 @@ class Admin extends CI_Controller {
 	public function assets_hotel(){
 		$uri3= $this->uri->segment(3);
 		if ($uri3=='hotel_list')
-			$this->page('admin_assets_hotel_list');
+			$this->page('admin_assets_hotel_list', null, 'assets_page', 'hotel');
 		else if ($uri3=='hotel_supplier')
-			$this->page('admin_assets_hotel_supplier');
+			$this->page('admin_assets_hotel_supplier', null, 'assets_page', 'hotel');
 		else if ($uri3=='hotel_price')
-			$this->page('admin_assets_hotel_price');
+			$this->page('admin_assets_hotel_price', null, 'assets_page', 'hotel');
 		else if ($uri3=='hotel_coordinate')
-			$this->page('admin_assets_hotel_coordinate');
+			$this->page('admin_assets_hotel_coordinate', null, 'assets_page', 'hotel');
 		else if ($uri3=='hotel_tipe')
-			$this->page('admin_assets_hotel_tipe');
+			$this->page('admin_assets_hotel_tipe', null, 'assets_page', 'hotel');
 		else if ($uri3=='hotel_room')
-			$this->page('admin_assets_hotel_room');
+			$this->page('admin_assets_hotel_room', null, 'assets_page', 'hotel');
 		else if ($uri3=='hotel_facility')
-			$this->page('admin_assets_hotel_facility');
+			$this->page('admin_assets_hotel_facility', null, 'assets_page', 'hotel');
 	}
 	
 	//------hotel list--------
@@ -3285,19 +3292,19 @@ class Admin extends CI_Controller {
 	public function assets_tour(){
 		$uri3= $this->uri->segment(3);
 		if ($uri3=='agent')
-			$this->page('admin_assets_tour_agent');
+			$this->page('admin_assets_tour_agent', null, 'assets_page', 'tour');
 		else if ($uri3=='list')
-			$this->page('admin_assets_tour_list');
+			$this->page('admin_assets_tour_list', null, 'assets_page', 'tour');
 		else if ($uri3=='price_custom')
-			$this->page('admin_assets_tour_price_custom');
+			$this->page('admin_assets_tour_price_custom', null, 'assets_page', 'tour');
 		else if ($uri3=='price_default')
-			$this->page('admin_assets_tour_price_default');
+			$this->page('admin_assets_tour_price_default', null, 'assets_page', 'tour');
 		else if ($uri3=='category')
-			$this->page('admin_assets_tour_category');
+			$this->page('admin_assets_tour_category', null, 'assets_page', 'tour');
 		else if ($uri3=='duration')
-			$this->page('admin_assets_tour_duration');
+			$this->page('admin_assets_tour_duration', null, 'assets_page', 'tour');
 		else if ($uri3=='location')
-			$this->page('admin_assets_tour_location');
+			$this->page('admin_assets_tour_location', null, 'assets_page', 'tour');
 	}
 	//------tour agent--------
 	//cindy nordiansyah
@@ -3840,15 +3847,15 @@ class Admin extends CI_Controller {
 	public function assets_travel(){
 		$uri3= $this->uri->segment(3);
 		if ($uri3=='agent')
-			$this->page('admin_assets_travel_agent');
+			$this->page('admin_assets_travel_agent', null, 'assets_page', 'travel');
 		else if ($uri3=='trayek')
-			$this->page('admin_assets_travel_trayek');
+			$this->page('admin_assets_travel_trayek', null, 'assets_page', 'travel');
 		else if ($uri3=='jemput')
-			$this->page('admin_assets_travel_jemput');
+			$this->page('admin_assets_travel_jemput', null, 'assets_page', 'travel');
 		else if ($uri3=='mobil')
-			$this->page('admin_assets_travel_mobil');
+			$this->page('admin_assets_travel_mobil', null, 'assets_page', 'travel');
 		else if ($uri3=='price')
-			$this->page('admin_assets_travel_price');		
+			$this->page('admin_assets_travel_price', null, 'assets_page', 'travel');
 	}
 	//------travel agent--------
 	//cindy nordiansyah
@@ -4260,19 +4267,19 @@ class Admin extends CI_Controller {
 	public function assets_umroh(){
 		$uri3= $this->uri->segment(3);
 		if ($uri3=='agent')
-			$this->page('admin_assets_umroh_agent');
+			$this->page('admin_assets_umroh_agent', null, 'assets_page', 'umrah');
 		else if ($uri3=='list')
-			$this->page('admin_assets_umroh_list');
+			$this->page('admin_assets_umroh_list', null, 'assets_page', 'umrah');
 		else if ($uri3=='price_custom')
-			$this->page('admin_assets_umroh_price_custom');
+			$this->page('admin_assets_umroh_price_custom', null, 'assets_page', 'umrah');
 		else if ($uri3=='price_default')
-			$this->page('admin_assets_umroh_price_default');
+			$this->page('admin_assets_umroh_price_default', null, 'assets_page', 'umrah');
 		else if ($uri3=='category')
-			$this->page('admin_assets_umroh_category');
+			$this->page('admin_assets_umroh_category', null, 'assets_page', 'umrah');
 		else if ($uri3=='duration')
-			$this->page('admin_assets_umroh_duration');
+			$this->page('admin_assets_umroh_duration', null, 'assets_page', 'umrah');
 		else if ($uri3=='location')
-			$this->page('admin_assets_umroh_location');
+			$this->page('admin_assets_umroh_location', null, 'assets_page', 'umrah');
 	}
 	//------agent--------
 	//cindy nordiansyah
@@ -4810,11 +4817,11 @@ class Admin extends CI_Controller {
 	public function assets_rental(){
 		$uri3= $this->uri->segment(3);
 		if ($uri3=='agent')
-			$this->page('admin_assets_rental_agent');
+			$this->page('admin_assets_rental_agent', null, 'assets_page', 'rental');
 		else if ($uri3=='vehicle')
-			$this->page('admin_assets_rental_vehicle');
+			$this->page('admin_assets_rental_vehicle', null, 'assets_page', 'rental');
 		else if ($uri3=='list')
-			$this->page('admin_assets_rental_list');
+			$this->page('admin_assets_rental_list', null, 'assets_page', 'rental');
 	}
 	//------agent--------
 	//cindy nordiansyah
@@ -5046,7 +5053,7 @@ class Admin extends CI_Controller {
 	//======point reward======
 	public function assets_point_reward(){
 		
-		$this->page('admin_assets_point_reward');
+		$this->page('admin_assets_point_reward', null, 'assets_page', 'point');
 		
 	}
 	public function get_assets_point_reward() {
@@ -5515,5 +5522,64 @@ class Admin extends CI_Controller {
 			$headers = array('Nomor', 'Username Agen','ID Agen','Nama Agen', 'Tipe Agen', 'Tanggal Bergabung', 'No. Telepon', 'Kota', 'Email', 'Upline', 'Nilai Deposit', 'Voucher', 'Status Approval');
 		}
 		$this->export_to_excel($data, $headers, 'Data Semua Agen Aktif', 'data semua agen aktif.xls');
+	}
+	
+	public function unlock_user_at_order(){
+		$id = $this->uri->segment(3);
+		//lock to user
+		$lock = array('locked_by' => '0');
+		$upd = $this->general->update_data_on_table('orders', 'order_id', $id, $lock);
+		
+		redirect(base_url().'index.php/admin/booking_page');
+	}
+	
+	public function reset_password_for_agent(){
+		$username = $this->input->post('username', NULL);
+		$password = $this->input->post('password', NULL);
+		
+		$query = $this->general->get_detail_by_id('users', 'user_name', $username);
+		if($query==false)
+			$response['response'] = false;
+		else{
+			foreach($query->result_array() as $row){
+				$email = $row['email_login'];
+				$name = $row['name'];
+			}
+			
+			$response['response'] = true;
+			$data = array('password' => md5($password));
+			$upd = $this->general->update_data_on_table('users', 'user_name', $username, $data);
+			
+			//preparing to send email
+			$content = array(
+				'name' => $name,
+				'username' => $username,
+				'password' => $password
+			);
+			//get email distribution
+			$this->load->model('notification');
+			list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('new-agent-register');
+			//sending email
+			$email_config = array(
+				'protocol' => 'mail',
+				'mailpath' => '/usr/sbin/sendmail',
+				'charset' => 'iso-8859-1',
+				'wordwrap' => TRUE,
+				'mailtype' => 'html'
+			);
+			$this->load->library('email', $email_config);
+			
+			$this->email->from($email_sender, $sender_name);
+			$this->email->to($email);
+			$this->email->cc($cc);
+			$this->email->bcc($bcc);
+			
+			$this->email->subject('Password Reset');
+			$messages = $this->load->view('email_tpl/agent_reset_password', $content, TRUE);
+			$this->email->message($messages);
+
+			$this->email->send();
+		}
+		echo json_encode($response);
 	}
 }

@@ -490,15 +490,15 @@ $(function() {
 <div class="tabmenu">
 <span id="toptab">
 <?php
-	$uri2 = $this->uri->segment(2);
-	echo ($uri2=='admin_page' ? '<span class="select">Home</span>': '<a href="'.base_url('index.php/admin/admin_page').'">Home</a>');
-	echo ($uri2=='agent_page' ? '<span class="select">Agent Administration</span>': '<a href="'.base_url('index.php/admin/agent_page').'">Agen Administration</a>');
-	echo ($uri2=='booking_page' ? '<span class="select">Booking</span>': '<a href="'.base_url('index.php/admin/booking_page').'">Booking</a>');
-	echo ($uri2=='deposit_page' ? '<span class="select">Deposit</span>': '<a href="'.base_url('index.php/admin/deposit_page').'">Deposit</a>');
-	echo ($uri2=='setting_page' ? '<span class="select">Setting</span>': '<a href="'.base_url('index.php/admin/setting_page').'">Setting</a>');
-	echo ($uri2=='assets_page' ? '<span class="select">Assets</span>': '<a href="'.base_url('index.php/admin/assets_page').'">Assets</a>');
-	echo ($uri2=='my_account_page' ? '<span class="select">My Account</span>': '<a href="'.base_url('index.php/admin/my_account_page').'">My Account</a>');
-	echo ($uri2=='cms_page' ? '<span class="select">Content Management</span>': '<a href="'.base_url('index.php/admin/cms_page').'">Content Management</a>');
+	//$uri2 = $this->uri->segment(2);
+	echo ($active_menu=='admin_page' ? '<span class="select">Home</span>': '<a href="'.base_url('index.php/admin/admin_page').'">Home</a>');
+	echo ($active_menu=='agent_page' ? '<span class="select">Agent Administration</span>': '<a href="'.base_url('index.php/admin/agent_page').'">Agen Administration</a>');
+	echo ($active_menu=='booking_page' ? '<span class="select">Booking</span>': '<a href="'.base_url('index.php/admin/booking_page').'">Booking</a>');
+	echo ($active_menu=='deposit_page' ? '<span class="select">Deposit</span>': '<a href="'.base_url('index.php/admin/deposit_page').'">Deposit</a>');
+	echo ($active_menu=='setting_page' ? '<span class="select">Setting</span>': '<a href="'.base_url('index.php/admin/setting_page').'">Setting</a>');
+	echo ($active_menu=='assets_page' ? '<span class="select">Assets</span>': '<a href="'.base_url('index.php/admin/assets_page').'">Assets</a>');
+	echo ($active_menu=='my_account_page' ? '<span class="select">My Account</span>': '<a href="'.base_url('index.php/admin/my_account_page').'">My Account</a>');
+	echo ($active_menu=='cms_page' ? '<span class="select">Content Management</span>': '<a href="'.base_url('index.php/admin/cms_page').'">Content Management</a>');
 	//echo ($uri2=='cashflow_page' ? '<span class="select">Cashflow</span>': '<a href="'.base_url('index.php/admin/cashflow_page').'">Cashflow</a>');
 ?>
 

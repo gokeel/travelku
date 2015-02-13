@@ -29,14 +29,15 @@ class Orders extends CI_Model {
 	}
 	
 	function get_registered_order($cat, $account_id=null, $all=null){
-		$this->db->select('orders.*, agents.agent_name, payments.status');
+		$this->db->select('orders.*, agents.agent_name, payments.status, users.user_name as locked_by_name');
 		$this->db->from('orders');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
+		$this->db->join('users', 'orders.locked_by = users.account_id', 'left');
 		if($all==null)
-			$this->db->where("trip_category ='". $cat."' and (order_status = 'Registered' or order_status = 'Paid')");
+			$this->db->where("order_system_id ='internal' and trip_category ='". $cat."' and (order_status = 'Registered' or order_status = 'Paid')");
 		else if($all==true)
-			$this->db->where('trip_category', $cat);
+			$this->db->where("order_system_id ='internal' and trip_category", $cat);
 		if($account_id<>null)
 			$this->db->where('orders.account_id', $account_id);
 		$this->db->order_by('orders.order_id desc');
@@ -51,7 +52,7 @@ class Orders extends CI_Model {
 		$this->db->from('orders');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
-		$this->db->where("trip_category ='". $cat."' and (order_status = 'Done' or order_status = 'Issued')");
+		$this->db->where("order_system_id = 'internal' and trip_category ='". $cat."' and (order_status = 'Done' or order_status = 'Issued')");
 		$this->db->order_by('orders.order_id desc');
 		//$this->db->where("order_status = 'Registered' or order_status = 'Paid'");
 		
@@ -225,12 +226,13 @@ class Orders extends CI_Model {
 	}
 	
 	public function get_registered_order_paket_2(){
-		$this->db->select('orders.*, posts.currency, posts.title, post_categories.category, post_categories.description, agents.agent_name, payments.status');
+		$this->db->select('orders.*, posts.currency, posts.title, post_categories.category, post_categories.description, agents.agent_name, payments.status, users.user_name as locked_by_name');
 		$this->db->from('orders');
 		$this->db->join('posts', 'orders.post_id = posts.post_id');
 		$this->db->join('post_categories', 'posts.category = post_categories.id');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
+		$this->db->join('users', 'orders.locked_by = users.account_id', 'left');
 		$where_string = "trip_category = 'paket' and (order_status = 'Registered' or order_status = 'Paid')";
 		$this->db->where($where_string);
 		$this->db->order_by('order_id desc');

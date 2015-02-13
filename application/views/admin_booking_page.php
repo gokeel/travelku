@@ -58,7 +58,7 @@ YUI().use('tabview', function(Y) {
 			success:function(datajson){
 				var div = $('#faqkonten');
 				for(var i=0; i<datajson.length; i++){
-					data[i] = {number_row: datajson[i].number_row, order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, category: datajson[i].category, description: datajson[i].category, title: datajson[i].title, price: currency_separator(datajson[i].price, '.'), payment_status: datajson[i].payment_status, currency: datajson[i].currency, total_person: datajson[i].total_person};
+					data[i] = {number_row: datajson[i].number_row, order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, category: datajson[i].category, description: datajson[i].category, title: datajson[i].title, price: currency_separator(datajson[i].price, '.'), payment_status: datajson[i].payment_status, currency: datajson[i].currency, total_person: datajson[i].total_person, locked_by_name: datajson[i].locked_by_name};
 				}
 			}
 		});
@@ -93,10 +93,23 @@ YUI().use('tabview', function(Y) {
 					{key:"price", label:"Total Harga"},
 					{key:"payment_status", label:"Status Pembayaran"},
 					{
-						key:"order_id", 
-						label: "Book",
-						formatter:'<a href="<?php echo base_url();?>index.php/admin/proceed_order/paket/{value}" style="color:red"><button>Book</button></a>',
-						allowHTML: true
+						label:"Book",
+						nodeFormatter:function (o) {
+							if(o.data.locked_by_name==null || o.data.locked_by_name==""){
+								o.cell.setHTML('<a href="<?php echo base_url();?>index.php/admin/proceed_order/paket/'+o.data.order_id+'" style="color:red"><button>Book</button></a>');
+							}
+							else{
+								var str = '';
+								var disabled = '';
+								if(o.data.locked_by_name=="<?php echo $this->session->userdata('user_name');?>" || o.data.locked_by_name=="admin")
+									disabled = '';
+								else
+									disabled = 'disabled';
+								o.cell.setHTML('<i>Locked by: '+o.data.locked_by_name+'</i><br /><a href="<?php echo base_url();?>index.php/admin/proceed_order/paket/'+o.data.order_id+'" style="color:red"><button '+disabled+'>Book</button></a><br /><br /><a href="<?php echo base_url();?>index.php/admin/unlock_user_at_order/'+o.data.order_id+'"><button '+disabled+'>Unlock</button></a>');
+							}
+							
+							return false;
+						}
 					},
 					{
 						key:"order_id", 
@@ -127,7 +140,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {order_id: datajson[i].order_id, is_round_trip: datajson[i].is_round_trip,agent_name:datajson[i].agent_name, airline_name_depart: datajson[i].airline_name_depart,airline_name_return: datajson[i].airline_name_return, flight_id: datajson[i].flight_id, route: datajson[i].route, datetime_depart: datajson[i].departing_date+' '+datajson[i].time_travel, datetime_return: datajson[i].returning_date+' '+datajson[i].time_travel_ret, total_price: datajson[i].total_price, adult: datajson[i].adult, price_adult: datajson[i].price_adult, child: datajson[i].child, price_child: datajson[i].price_child, infant: datajson[i].infant, price_infant: datajson[i].price_infant, payment_status: datajson[i].payment_status};
+					data[i] = {order_id: datajson[i].order_id, is_round_trip: datajson[i].is_round_trip,agent_name:datajson[i].agent_name, airline_name_depart: datajson[i].airline_name_depart,airline_name_return: datajson[i].airline_name_return, flight_id: datajson[i].flight_id, route: datajson[i].route, datetime_depart: datajson[i].departing_date+' '+datajson[i].time_travel, datetime_return: datajson[i].returning_date+' '+datajson[i].time_travel_ret, total_price: datajson[i].total_price, adult: datajson[i].adult, price_adult: datajson[i].price_adult, child: datajson[i].child, price_child: datajson[i].price_child, infant: datajson[i].infant, price_infant: datajson[i].price_infant, payment_status: datajson[i].status, locked_by_name: datajson[i].locked_by_name};
 			}
 		});
 		
@@ -191,10 +204,23 @@ YUI().use('tabview', function(Y) {
 					//{key:"total_price", label:"Total Harga", formatter:formatCurrency},
 					{key:"payment_status", label:"Status Pembayaran"},
 					{
-						key:"order_id", 
-						label: "Book",
-						formatter:'<a href="<?php echo base_url();?>index.php/admin/proceed_order/flight/{value}" style="color:red"><button>Book</button></a>',
-						allowHTML: true
+						label:"Book",
+						nodeFormatter:function (o) {
+							if(o.data.locked_by_name==null || o.data.locked_by_name==""){
+								o.cell.setHTML('<a href="<?php echo base_url();?>index.php/admin/proceed_order/flight/'+o.data.order_id+'" style="color:red"><button>Book</button></a>');
+							}
+							else{
+								var str = '';
+								var disabled = '';
+								if(o.data.locked_by_name=="<?php echo $this->session->userdata('user_name');?>" || o.data.locked_by_name=="admin")
+									disabled = '';
+								else
+									disabled = 'disabled';
+								o.cell.setHTML('<i>Locked by: '+o.data.locked_by_name+'</i><br /><a href="<?php echo base_url();?>index.php/admin/proceed_order/flight/'+o.data.order_id+'" style="color:red"><button '+disabled+'>Book</button></a><br /><br /><a href="<?php echo base_url();?>index.php/admin/unlock_user_at_order/'+o.data.order_id+'"><button '+disabled+'>Unlock</button></a>');
+							}
+							
+							return false;
+						}
 					},
 					{
 						key:"order_id", 

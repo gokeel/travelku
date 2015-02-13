@@ -25,7 +25,7 @@ class Agent extends CI_Controller {
 		$id = $this->session->userdata('account_id');
 		$get = $this->agents->get_agent_by_id_no_join($id);
 		foreach ($get->result_array() as $row){
-			$data_money['deposit'] = $row['deposit_amount'];
+			$data_money['deposit'] = number_format($row['deposit_amount'], 0, ',', '.');
 			$data_money['voucher'] = $row['voucher'];
 			$data_money['point_reward'] = $row['point_reward'];
 		}
@@ -53,7 +53,8 @@ class Agent extends CI_Controller {
 		$get_deposit = $this->agents->get_afield_by_agent_id('deposit_amount', $agent_id);
 		foreach($get_deposit->result_array() as $row)
 			$deposit_amount = $row['deposit_amount'];
-		$data = array('response'=>'', 'deposit_amount'=>$deposit_amount);
+		$deposit_amount_after_cut = intval($deposit_amount)-50000;
+		$data = array('response'=>'', 'deposit_amount' => number_format($deposit_amount_after_cut, 0, ',', '.'));
 		$this->page('agent_deposit_withdraw', $data);
 	}
 	
@@ -93,7 +94,10 @@ class Agent extends CI_Controller {
 		$data['message'] = '';
 		$this->page('agent_change_password', $data);
 	}
-	
+	public function login_airlines_page() {
+		$data['message'] = '';
+		$this->page('agent_login_airlines', $data);
+	}
 	/**********************************/
 	/**			END-OF-PAGES				 **/
 	/**********************************/

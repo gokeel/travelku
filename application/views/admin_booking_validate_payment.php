@@ -19,7 +19,7 @@
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row, payment_id: datajson[i].payment_id, order_id: datajson[i].order_id, category:datajson[i].category, sender: datajson[i].sender, bank_name: datajson[i].bank_name, transfer_date: datajson[i].transfer_date, total_paid: datajson[i].total_paid, status: datajson[i].status, total_price: datajson[i].total_price};
+					data[i] = {number_row:datajson[i].number_row, payment_id: datajson[i].payment_id, order_id: datajson[i].order_id, category:datajson[i].category, sender: datajson[i].sender, bank_name: datajson[i].bank_name, transfer_date: datajson[i].transfer_date, total_paid: datajson[i].total_paid, status: datajson[i].status, total_price: datajson[i].total_price, validated_by: datajson[i].validated_by};
 			}
 		});
 		
@@ -57,7 +57,8 @@
 						label: "Action",
 						formatter:'<a href="<?php echo base_url();?>index.php/order/validate_payment_id/{value}" style="color:red"><button>Validasi Pembayaran</button></a>',
 						allowHTML: true
-					}
+					},
+					{key:"validated_by", label:"Divalidasi oleh"}
 				],
 				data: data_order,
 				caption: "Daftar Konfirmasi Pembayaran",

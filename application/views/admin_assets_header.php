@@ -1,18 +1,8 @@
-<!--cindy nordiansyah-->
-<?php
-	$uri2 = $this->uri->segment(2);
-	if ($uri2 == 'setting_page')
-		$uri3 = '';
-	//else if ($uri2 == 'agent_page_by_status')
-	//	$uri3 = $this->uri->segment(3);
-	
-?>
-<!--slidemenu--> 
 <div class="navigator">
 	<div class="pagetitle"></div>
 	<div id="top_menu">
 		<ul class="sub0 sortleftmenu" id="ul_0" >
-			<?php echo ($uri2=='setting_bank_page' ? '<li id="grp_5" class="selected">' : '<li id="grp_5">');?>
+			<?php echo ($active_submenu=='airlines' ? '<li id="grp_5" class="selected">' : '<li id="grp_5">');?>
 				<span >Airlines
 					<div class="nextrow">&nbsp;</div>
 				</span>
@@ -28,7 +18,7 @@
 					</li>
 				</ul>
 			</li>
-			<?php echo ($uri2=='setting_user_page' ? '<li id="grp_4" class="selected">' : '<li id="grp_4">');?>
+			<?php echo ($active_submenu=='hotel' ? '<li id="grp_4" class="selected">' : '<li id="grp_4">');?>
 				<span >Hotel
 					<div class="nextrow">&nbsp;</div>
 				</span>
@@ -56,7 +46,7 @@
 					</li>
 				</ul>
 			</li>
-			<?php echo ($uri2=='setting_commission_page' ? '<li id="grp_12" class="selected">' : '<li id="grp_12">');?>
+			<?php echo ($active_submenu=='tour' ? '<li id="grp_12" class="selected">' : '<li id="grp_12">');?>
 				<span >Tour
 					<div class="nextrow">&nbsp;</div>
 				</span>
@@ -84,7 +74,7 @@
 					</li>
 				</ul>
 			</li>
-			<?php echo ($uri2=='setting_city_page' ? '<li id="grp_401" class="selected">' : '<li id="grp_401">');?>
+			<?php echo ($active_submenu=='travel' ? '<li id="grp_401" class="selected">' : '<li id="grp_401">');?>
 				<span >Travel
 					<div class="nextrow">&nbsp;</div>
 				</span>
@@ -106,7 +96,7 @@
 					</li>
 				</ul>
 			</li>
-			<?php echo ($uri2=='setting_agent_news_page' ? '<li id="grp_426" class="selected">' : '<li id="grp_426">');?>
+			<?php echo ($active_submenu=='umrah' ? '<li id="grp_426" class="selected">' : '<li id="grp_426">');?>
 				<span >Umroh/Haji
 					<div class="nextrow">&nbsp;</div>
 				</span>
@@ -134,7 +124,7 @@
 					</li>
 				</ul>
 			</li>
-			<?php echo ($uri2=='setting_agent_news_page' ? '<li id="grp_426" class="selected">' : '<li id="grp_426">');?>
+			<?php echo ($active_submenu=='rental' ? '<li id="grp_426" class="selected">' : '<li id="grp_426">');?>
 				<span >Rental
 					<div class="nextrow">&nbsp;</div>
 				</span>
@@ -150,7 +140,7 @@
 					</li>
 				</ul>
 			</li>
-			<?php echo ($uri2=='setting_yahoo_page' ? '<li id="grp_426" class="selected">' : '<li id="grp_426">');?>
+			<?php echo ($active_submenu=='point' ? '<li id="grp_426" class="selected">' : '<li id="grp_426">');?>
 				<a href="<?php echo base_url();?>index.php/admin/assets_point_reward" >Point Reward</a>
 			</li>
 			

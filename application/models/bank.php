@@ -81,10 +81,11 @@ class Bank extends CI_Model {
 	}
 	
 	function get_payment_list(){
-		$this->db->select('trip_category, payments.*, bank_name, bank_account_number, orders.total_price');
+		$this->db->select('trip_category, payments.*, bank_name, bank_account_number, orders.total_price, users.user_name, users.name as employee_name');
 		$this->db->from('orders');
 		$this->db->join('payments', 'orders.order_id = payments.order_id');
 		$this->db->join('bank_accounts', 'payments.bank_receiver_id = bank_accounts.bank_id');
+		$this->db->join('users', 'payments.validated_by = users.account_id', 'left');
 		//$this->db->where('payments.status', 'requested');
 		$this->db->order_by('payments.payment_id desc');
 		$query = $this->db->get();

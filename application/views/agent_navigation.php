@@ -22,10 +22,10 @@
 				</li>
 				<!--<li>
 					<a href="<?php echo base_url();?>form_issued_tiket" >Cart</a>
-				</li>
-				<li>
-					<a href="<?php echo base_url();?>form_issued_tiket" >Login Airlines</a>
 				</li>-->
+				<li>
+					<a href="<?php echo base_url();?>index.php/agent/login_airlines_page" >Login Airlines</a>
+				</li>
 				<li class="with-right-arrow">
 					<span>
 						<span class="list-count">3</span>

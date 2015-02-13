@@ -703,6 +703,8 @@ class Order extends CI_Controller {
 		if($not_ready){
 			$data = array(
 				'order_status' => 'Issued',
+				'issued_by' => $this->session->userdata('account_id'),
+				'locked_by' => '0',
 				'issued_date' => date('Y-m-d H:i:s')
 			);
 			$this->general->update_data_on_table('orders', 'order_id', $id, $data);
@@ -753,7 +755,7 @@ class Order extends CI_Controller {
 	public function confirm_payment_order(){
 		
 		$order_id = $this->input->post('order_id');
-		$date = $this->input->post('tgl_transfer');
+		$date = $this->input->post('tgl-transfer');
 		$bank_receiver = $this->input->post('bank_tujuan');
 		$total = $this->input->post('total');
 		$sender = $this->input->post('sender');
@@ -1011,7 +1013,8 @@ class Order extends CI_Controller {
 				'transfer_date' => $row['transfer_date'],
 				'total_paid' => $row['total_paid'],
 				'total_price' => $row['total_price'],
-				'status' => $row['status']
+				'status' => $row['status'],
+				'validated_by' => $row['user_name']
 			);
 		}
 		echo json_encode($data);
@@ -1038,7 +1041,12 @@ class Order extends CI_Controller {
 	
 	public function validate_payment_id(){
 		$id = $this->uri->segment(3);
-		$upd = $this->bank->update_payment_status($id, 'validated');
+		$data = array(
+			'status' => 'validated',
+			'validated_by' => $this->session->userdata('account_id')
+		);
+		//$upd = $this->bank->update_payment_status($id, 'validated');
+		$upd = $this->general->update_data_on_table('payments', 'payment_id', $id, $data);
 		//get order_id
 		$order_id = $this->bank->get_order_id($id);
 		//after validate payment, change order status to Paid
