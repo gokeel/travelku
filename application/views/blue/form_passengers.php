@@ -294,7 +294,7 @@
 							</div><div class="clearfix"></div>\
 						</div>';
 						
-						input_return = '<input type="hidden" name="ret_flight_id" value="'+flight_id_pulang+'">\
+						input_return = '<input type="hidden" name="flight_id_ret" value="'+data.items[0].returns.flight_number+'">\
 						<input type="hidden" name="airline_name_ret" value="'+data.items[0].returns.airlines_name+'">\
 						<input type="hidden" name="flight_number_ret" value="'+data.items[0].returns.flight_number+'">\
 						<input type="hidden" name="time_travel_ret" value="'+data.items[0].returns.simple_departure_time+' - '+data.items[0].returns.simple_arrival_time+'">\
@@ -362,7 +362,7 @@
 					var token = "<?php echo $this->session->userdata('token');?>";
 					$('#form-passenger').append('\
 						<input type="hidden" name="token" value="'+token+'">\
-						<input type="hidden" name="flight_id" value="'+flight_id_pergi+'">\
+						<input type="hidden" name="flight_id" value="'+data.items[0].departures.flight_number+'">\
 						<input type="hidden" name="adult" value="'+data.items[0].departures.count_adult+'">\
 						<input type="hidden" name="child" value="'+data.items[0].departures.count_child+'">\
 						<input type="hidden" name="infant" value="'+data.items[0].departures.count_infant+'">\

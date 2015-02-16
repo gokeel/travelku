@@ -65,13 +65,13 @@
 						echo '<ul class="leftatr">
 								<li>ID Pesanan</li>
 								<li>Total</li>
-								<li>Langkah Pembayaran</li>
+								'.($method<>"tiket_internal" ? "<li>Langkah Pembayaran</li>" : "").'
 							</ul>';
 									
 						echo '<ul class="rightatr">
 								<li>'.$order_id.'</li>
 								<li>IDR '.number_format($total,0,',','.').'</li>
-								<li><button id="show-steps" class="bluebtn">Tampilkan</button></li>
+								'.($method<>"tiket_internal" ? '<li><button id="show-steps" class="bluebtn">Tampilkan</button></li>' : '').'
 							</ul>';
 					}
 				?>

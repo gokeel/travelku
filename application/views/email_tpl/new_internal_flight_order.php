@@ -8,9 +8,10 @@
 		</p>
 		<p></p><br /><br />
 		<p>Cek pemesanan anda di link berikut: <br />
-			<a href="<?php echo base_url();?>index.php/webfront/detail_order">Cek Pemesanan</a><br />
+			<a href="<?php echo base_url();?>index.php/webfront/detail_order?order_id=<?php echo $order_id;?>&email=<?php echo $customer_email;?>">Cek Pemesanan</a><br />
 			Masukkan ID dan email anda di atas ke dalam formulir yang tampil
 		</p>
+		<p>Gunakan link berikut untuk membantu anda.</p>
 		<p><a href="<?php echo base_url();?>index.php/webfront/general_payment_method">Metode Pembayaran</a></p>
 		<p><a href="<?php echo base_url();?>index.php/webfront/confirm_payment">Konfirmasi Pembayaran</a></p>
 		<p></p>

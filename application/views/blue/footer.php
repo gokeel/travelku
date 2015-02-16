@@ -24,6 +24,8 @@
 					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/tentang-kami">Tentang Kami</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/menjadi-agen">Keagenan</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/syarat-ketentuan">Syarat dan Ketentuan</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/karir">Karir</a></li>
+					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/kontak">Kontak Kami</a></li>
 				</ul>
 			</div>
 			<!-- End of column 2-->		
@@ -50,7 +52,7 @@
 				<br/><br/>-->
 				<span class="ftitleblack">Customer support</span><br/><br/>
 				<div id="ym-customer-service"></div>
-				<span class="pnr"><?php echo $support_by_call;?></span><br/>
+				<span class="grey2"><?php echo $support_by_call;?></span><br/>
 				<span class="grey2"><?php echo $support_by_email;?></span>
 			</div>			
 			<!-- End of column 4-->			
@@ -61,9 +63,9 @@
 	<div class="footerbg3">
 		<div class="container center grey"> 
 		<a href="<?php echo base_url();?>">Home</a> | 
-		<a href="<?php echo base_url();?>index.php/webfront/load_about_content">Tentang Kami</a> | 
-		<a href="<?php echo base_url();?>index.php/webfront/load_termcondition_content">Syarat & Ketentuan</a> | 
-		<a href="<?php echo base_url();?>index.php/webfront/load_contact_content">Contact</a>
+		<a href="<?php echo base_url();?>index.php/webfront/load_non_paket/tentang-kami">Tentang Kami</a> | 
+		<a href="<?php echo base_url();?>index.php/webfront/load_non_paket/syarat-ketentuan">Syarat & Ketentuan</a> | 
+		<a href="<?php echo base_url();?>index.php/webfront/load_non_paket/kontak">Contact</a>
 		<a href="#top" class="gotop scroll"><img src="<?php echo BLUE_THEME_DIR;?>/images/spacer.png" alt=""/></a>
 		</div>
 	</div>

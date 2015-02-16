@@ -204,6 +204,19 @@ class Agents extends CI_Model {
 		else
 			return false;
 	}
+	
+	function set_news_agent_off($id=null){
+		$data = array('pop_up' => 'false');
+		if($id <> null)
+			$this->db->where('id', $id);
+		$this->db->update('agent_news', $data);
+	}
+	
+	function set_news_agent_on($id){
+		$data = array('pop_up' => 'true');
+		$this->db->where('id', $id);
+		$this->db->update('agent_news', $data);
+	}
 }
 
 ?>

@@ -9,7 +9,7 @@
 
   <div class="frametab">
 		<h3 style="margin:5px 0 5px 5px;">Dashboard</h3>
-		Download <br/><a href="<?php echo base_url();?>index.php/admin/excel_all_transaction" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+		Download Semua Transaksi<br/><a href="<?php echo base_url();?>index.php/admin/excel_all_transaction" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
 		<div id="data-booking"></div>
 	</div>
 	<div id="end"></div>
@@ -30,7 +30,7 @@
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row, payment_status: datajson[i].payment_status, order_id: datajson[i].order_id, category:datajson[i].category, total_price: datajson[i].total_price, order_status: datajson[i].order_status, timestamp: datajson[i].timestamp, agent_name: datajson[i].agent_name};
+					data[i] = {order_system_id: datajson[i].order_system_id, party_order_id: datajson[i].party_order_id, payment_status: datajson[i].payment_status, order_id: datajson[i].order_id, category:datajson[i].category, total_price: datajson[i].total_price, order_status: datajson[i].order_status, timestamp: datajson[i].timestamp, agent_name: datajson[i].agent_name};
 			},
 			complete: function() {
 			// Schedule the next request when the current one's complete
@@ -58,9 +58,18 @@
 			var data_order = data;
 			var table = new Y.DataTable({
 				columns: [
-					{key:"number_row", label:"No."},
-					{key:"agent_name", label:"Nama Agen"},
 					{key:"order_id", label:"ID Pesanan"},
+					{key:"agent_name", label:"Nama Agen"},
+					{
+						label:"Sistem Pemesanan",
+						nodeFormatter:function (o) {
+							if (o.data.order_system_id=="internal")
+								o.cell.setHTML('<b>Internal</b>');
+							else
+								o.cell.setHTML('<i>'+o.data.order_system_id+'</i><br /><b>ID: '+o.data.party_order_id+'</b>');
+							return false;
+						}
+					},
 					{key:"category", label:"Kategori"},
 					{key:"total_price", label:"Total Harga", formatter:formatCurrency},
 					{key:"order_status", label:"Status Pesanan"},
@@ -68,7 +77,7 @@
 					{key:"timestamp", label:"Tanggal Pemesanan"}
 				],
 				data: data_order,
-				caption: "Daftar Pesanan",
+				caption: "Daftar Pesanan Terbaru",
 				rowsPerPage: 10
 			});
 			table.render("#data-booking");

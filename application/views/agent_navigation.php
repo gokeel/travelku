@@ -201,7 +201,7 @@
 		for (var i=0; i<data_ym.length; i++){ 
 			var li = document.createElement('li'); 
 			var a = document.createElement('a'); 
-			a.setAttribute('href', "ymsgr:sendIM?"+data_ym[i].name+"&m=hai..+hellotraveler."); 
+			a.setAttribute('href', "ymsgr:sendIM?"+data_ym[i].name); 
 			var img = document.createElement('img'); 
 			img.setAttribute('src', "http://opi.yahoo.com/online?u="+data_ym[i].name+"&m=g&t=1"); 
 			img.setAttribute('border', 0); 

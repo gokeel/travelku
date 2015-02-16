@@ -107,7 +107,7 @@ Your browser does not support JavaScript! Some features won't work as expected..
 		<div style="clear: both; height: 20px;"></div>  
 	</div>
     <!-- ---------T-Flight--------- -->
-		<!--<div id="T-Flight" class="">
+		<div id="T-Flight" class="">
 			<div style="clear: both; height: 20px;"></div>  
 			<div class="bggrey" id="formlokal">
 				<form id="form_flight" style="margin:0 30px;" >
@@ -140,6 +140,14 @@ Your browser does not support JavaScript! Some features won't work as expected..
 						</span>
 					</div>
 					<br/>
+				  <!-- tidak support untuk return
+				  <div id="boxpulang" style="float:left; width:135px;">
+					<p>Pulang</p>
+					<span class="input"> 
+					<span class="icon-calendar"></span>
+					<input readonly="readonly" type="text" name="flight-pulang" id="tgl_pulang" class="input-unstyled datepicker_dashboard" value="" style="width: 80px;"/>
+					</span>
+				  </div>-->
 				  
 					<div style="float:left; width:80px;">
 						<p> Dewasa </p>
@@ -169,12 +177,14 @@ Your browser does not support JavaScript! Some features won't work as expected..
             
 					<div style="float:left; width:92px; padding-top:30px;">
 						<input type="submit" name="submit" class="button blue-gradient" id="submit-flight" value="CARI" tabindex="8" style="float:left;">
+						<!--<button type="submit" class="button blue-gradient" id="submit-flight">Cek</button>-->
 						<div class="loader waiting big" style="display:none;"></div>
 					</div>
 				</form>
 				<div style="clear: both; height: 10px;"></div>
 				<div id="container_p"><strong>
 					<span id="jumlah"><b class=""></b></span> </strong>
+					<!-- Progress bar -->
 					<div id="progress_bar" style="display: none;" class="ui-progress-bar ui-container hide-on-mobile">
 						<div class="ui-progress hide-on-mobile">
 						<span class="ui-label" style="display:none;">Processing <b class="value hide-on-mobile"></b></span>
@@ -187,18 +197,102 @@ Your browser does not support JavaScript! Some features won't work as expected..
                 $('#progress_bar .ui-progress').css('width', '3%');
               });
             </script>
+        <!-- end cek harga -->
 			</div>
 			<div style="clear: both; height: 30px;"></div>
 			<div class="bggrey" id="result-flight"> </div>
+      <!--<div class="bggrey" style="display: none;" id="div_flight_result">
+        <h3 class="thin underline">Pencarian Rute</h3>
+        <fieldset class="fieldset">
+          <table class="simple-table responsive-table" id="tb_result">
+            <thead>
+              <tr>
+                <th scope="col" class="">Airlines</th>
+                <th scope="col" class="hide-on-mobile">F Number</th>
+                <th scope="col" class="">Berangkat</th>
+                <th scope="col" class="hide-on-mobile">Sampai</th>
+                <th scope="col" class="hide-on-mobile">Fasilitas</th>
+                <th scope="col" class="hide-on-mobile-portrait">Seat</th>
+                <th scope="col" class="">Harga</th>
+                <th scope="col" class=""></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </fieldset>
+      </div>-->
+
 			<div style="clear: both; height: 30px;"> </div>
+      <!--<div class="boxhotel hide-on-mobile" style="text-align: center;">
+                        <div style="clear: both; height: 10px;"></div>
+                        <div style="clear: both;"> </div><div class="result_inner_right  hide-on-mobile" style="width: 250px;"><h3>Our Partner</h3><hr/><table><tr><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/airasia.jpg" /></div></td><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/batavia.jpg" /></div></td></tr><tr><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/garuda.jpg" /></div></td><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/kalstar.jpg" /></div></td></tr><tr><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/sky.jpg" /></div></td><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/sriwijaya.jpg" /></div></td></tr><tr><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/trigana.jpg" /></div></td><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/lion.jpg" /></div></td></tr><tr><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/citylink.jpg" /></div></td><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/mandala.jpg" /></div></td></tr><tr><td>
+                        <div class="imgbox"><img src="http://www.hellotraveler.co.id/theme/theme_default/images/logomaskapai/tigerairways.jpg" /></div></td><td></tr></table>
+                        </div>
+                        <div class="result_inner_left  hide-on-mobile"><h3>Daftar Tiket Promo</h3><hr/>
+                        <table class="simple-table responsive-table  hide-on-mobile" style="padding: 0px 1px;">
+                            <thead><tr><th scope="col" style="text-align:center;">Maskapai</th>
+                                <th scope="col" style="text-align:left;">Tanggal</th>
+                                <th scope="col" style="text-align:left;">Dept</th>
+                                <th scope="col" style="text-align:left;">Arriv</th>
+                                <th scope="col" style="text-align:left;">Harga</th>
+                            </tr></thead><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon_lion_2.jpg" title="LION"/><br/>JT 804</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">28-08-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Surabaya / 06:05</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Denpasar, Bali / 07:55</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 304.420</td></tr><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon_sriwijaya_2.jpg" title="SRIWIJAYA"/><br/>SJ 9277</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">29-08-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Denpasar, Bali / 17:30</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Surabaya / 17:20</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 304.420</td></tr><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon_sriwijaya_2.jpg" title="SRIWIJAYA"/><br/>SJ 231</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">26-08-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Yogyakarta / 10:30</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Jakarta / 11:40</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 265.920</td></tr><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon__2.jpg" title=""/><br/>SL 8548</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">27-08-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Bangkok, Don Mueang / 05:50</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Hat Yai / 07:15</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 261.000</td></tr><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon_sriwijaya_2.jpg" title="SRIWIJAYA"/><br/>SJ 9277</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">01-09-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Denpasar, Bali / 17:30</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Surabaya / 17:20</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 304.420</td></tr><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon_airasia_2.jpg" title="AIRASIA"/><br/>QZ 8448</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">26-08-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Denpasar, Bali / 08:00</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Yogyakarta / 08:10</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 368.220</td></tr><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon_lion_2.jpg" title="LION"/><br/>JT 929</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">30-08-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Denpasar, Bali / 07:00</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Surabaya / 06:50</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 304.420</td></tr><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon_airasia_2.jpg" title="AIRASIA"/><br/>QZ 7552</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">30-08-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Jakarta / 10:30</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Yogyakarta / 11:35</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 371.520</td></tr><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon_lion_2.jpg" title="LION"/><br/>JT 511</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">30-08-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Semarang / 06:20</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Jakarta / 07:25</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 338.300</td></tr><tr><td style="text-align:center;padding: 0px 1px;"><img src="http://www.master18.tiket.com/images/tiket2/icon_sriwijaya_2.jpg" title="SRIWIJAYA"/><br/>SJ 221</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">29-08-2014</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Semarang / 06:10</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Jakarta / 07:10</td>
+                                                 <td style="text-align:left;padding: 0px 1px;">Rp. 338.300</td></tr></table></div><div style="clear: both;text-align: left;">*) harga dapat berubah setiap saat </div>
+                        </div> -->
 			<div style="clear: both; height: 30px;"> </div>
 			<div style="clear: both;"> </div>
 		</div>
-		-->
      <!-- ---------/T-Flight--------- -->
      <!-- ---------Kereta Api--------- -->
-    <!--
-	<div id="T-KA"  style="display: none;">
+    <div id="T-KA"  style="display: none;">
       <div class="bggrey">
       <form id="ka_form" style="position:relative; z-index:1110; margin-left:20px;">
        <div style="float:left; width:250px;">
@@ -250,6 +344,7 @@ Your browser does not support JavaScript! Some features won't work as expected..
             
           <div style="float:left; width:90px; padding-top:30px;">
 			<input type="submit" class="button blue-gradient" id="submit-train" value="CARI">
+            <!--<button type="submit" class="button blue-gradient" id="submit_ruteka">Cari</button>-->
             <div class="loader waiting big" style="display:none;"></div>
           </div>
           
@@ -259,13 +354,32 @@ Your browser does not support JavaScript! Some features won't work as expected..
        
        <div style="clear: both; height: 30px;"> </div>
 	   <div class="bggrey" id="result-train"></div>
+      <!--<div class="bggrey" style="display: none;" id="div_rail_result">
+        <h3 class="thin underline">Jadwal Kereta</h3>
+        <fieldset class="fieldset">
+          <table class="simple-table responsive-table">
+            <thead>
+              <tr>
+                <th scope="col" class="">Kereta</th>
+                <th scope="col" class="hide-on-mobile">Berangkat</th>
+                <th scope="col" class="hide-on-mobile">Sampai</th>
+                <th scope="col" class="hide-on-mobile">Kelas/Sub</th>
+                <th scope="col" class="hide-on-mobile">Kursi</th>
+                <th scope="col" class="hide-on-mobile">Harga</th>
+                <th scope="col" class=""></th>
+              </tr>
+            </thead>
+            <tbody><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody>
+          </table>
+        </fieldset>
+      </div>
+          -->
+    
     </div>
-	-->
     <!-- ---------/Kereta Api--------- -->
     
     <!-- ---------Hotel--------- -->
-    <!--
-	<div id="T-Hotel" style="display: none;">
+    <div id="T-Hotel" style="display: none;">
       <div class="bggrey">
         <form  id="hotel-form" style="position:relative; z-index:1110; margin-left:20px;">
           <div style="float:left; width:180px;">
@@ -316,18 +430,20 @@ Your browser does not support JavaScript! Some features won't work as expected..
           </div>
           <div style="float:left; width:110px; padding-top:30px;">
             <input type="submit" class="button blue-gradient" id="submit-hotel" value="CARI">
-			<div class="loader waiting big" style="display:none;"></div>
+			<!--<input type="submit" class="button cari-hotel button red-gradient" id="submit_hotel" value="CARI" tabindex="8" >-->
+            <div class="loader waiting big" style="display:none;"></div>
           </div>
         </form>
           <div style="clear: both; height: 30px;"></div>
           <div class="" style="text-align:center; margin-left:0.9%; ">
             <div id="msge_hotel" class="twelve-columns twelve-columns-tablet twelve-columns-mobile"> </div>
 			<div class="bggrey" id="result-hotel"></div>
-            <div style="clear: both; height: 30px;"></div>
+            <!--<div class="twelve-columns twelve-columns-tablet twelve-columns-mobile" style="display: ; border:0px solid #CCC;" id="hotel_result">
+            </div>  -->
+             <div style="clear: both; height: 30px;"></div>
           </div>
          </div>
     </div>
-	-->
     <!-- ---------/Hotel--------- --> 
     
 </div> 
@@ -379,14 +495,13 @@ function addDays(theDate, days) {
 	<!-- Side tabs shortcuts -->
     
 	<!-- input flsh news-->
-	<input type="textarea" id="news_flash" hidden="hidden" value="" />
 		<!--<input type="textarea" id="news_flash" hidden="hidden" value="&lt;ul&gt;&lt;h4 class=&quot;green underline&quot;&gt;CLOSING ALL TRANSAKSI&lt;/h4&gt;&lt;p&gt;&lt;p style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif; font-size: 14px; background-color: #f5f5f5;&quot;&gt;Bersama&amp;nbsp;&lt;span id=&quot;tg522l_6&quot; class=&quot;tg522l&quot; style=&quot;list-style: none; float: none; padding: 0px; margin: 0px; border-width: 1px; border-style: solid; border-top-color: transparent; border-right-color: transparent; border-left-color: transparent; text-decoration: underline; cursor: pointer; display: inline !important; color: #009900 !important;&quot;&gt;ini&lt;/span&gt;&amp;nbsp;kami informasikan bahwa CLOSING ALL TRANSAKSI sedang Mengalami Gangguan&lt;/p&gt;
 &lt;p style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif; font-size: 14px; background-color: #f5f5f5;&quot;&gt;Dan akan kami closing sementara waktu yang ditentuan.&lt;/p&gt;
 &lt;p style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif; font-size: 14px; background-color: #f5f5f5;&quot;&gt;Kami mohon maaf atas ketidaknyamanan yang terjadi. Atas pengertian, dukungan dan kerjasamanya, kami mengucapkan terimakasih&lt;/p&gt;
 &lt;p style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif; font-size: 14px; background-color: #f5f5f5;&quot;&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif; font-size: 14px; background-color: #f5f5f5;&quot;&gt;&amp;nbsp;&lt;/p&gt;
 &lt;p style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif; font-size: 14px; background-color: #f5f5f5;&quot;&gt;&amp;nbsp;&lt;/p&gt;
-&lt;p style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif; font-size: 14px; background-color: #f5f5f5;&quot;&gt;14 Juni 2014 &amp;nbsp;Administrator HELLO TRAVELER&lt;/p&gt;&lt;p&gt;" />-->
+&lt;p style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif; font-size: 14px; background-color: #f5f5f5;&quot;&gt;14 Juni 2014 &amp;nbsp;Administrator HELLO TRAVELER&lt;/p&gt;&lt;p&gt;"  />-->
 
 	<!-- load agent_navigation.php -->
 
@@ -443,18 +558,9 @@ function addDays(theDate, days) {
 							tr_body.appendChild(set_td_data('td', data[i].publish_date));
 							
 							table.appendChild(tr_body);
-							
-							//generate news_flash if pop up = true
-							if(data[i].pop_up=="true"){
-								//alert();
-								var alert = '<h4 style="color:white"><u>'+data[i].title+'</u></h4><br /><br />'+data[i].content+'<br /><br />'+data[i].publish_date;
-								$('#news_flash').val(alert);
-								openAlert();
-							}
 						}
 								
 						div.append(table);
-						 
 					}
 				}
 			})

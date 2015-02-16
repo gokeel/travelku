@@ -114,7 +114,7 @@ class Order extends CI_Controller {
 		
 		/* for round trip*/
 		$flight_id_ret = $this->input->post('flight_id_ret', TRUE);
-		$airline_name_ret = $this->input->post('airlines_name_ret', TRUE);
+		$airline_name_ret = $this->input->post('airline_name_ret', TRUE);
 		$depart_date_ret = $this->input->post('date_ret', TRUE);
 		$time_travel_ret = $this->input->post('time_travel_ret', TRUE);
 		$total_price_ret = $this->input->post('total_price_ret', TRUE);
@@ -122,8 +122,8 @@ class Order extends CI_Controller {
 		$price_child_ret = $this->input->post('price_child_ret', TRUE);
 		$price_infant_ret = $this->input->post('price_infant_ret', TRUE);
 		
-		if ($airline_name_dep == 'LION' || $airline_name_ret =='LION')
-			list ($lioncaptcha, $lionsessionid) = $this->get_lion_captcha();
+		//if ($airline_name_dep == 'LION' || $airline_name_ret =='LION')
+			//list ($lioncaptcha, $lionsessionid) = $this->get_lion_captcha();
 		$token = $this->session->userdata('token');
 		//$account_id = ($this->session->userdata('account_id')<>'' ? $this->session->userdata('account_id'): $account_id = $this->config->item('account_id'));
 		if($this->session->userdata('account_id')<>''){
@@ -167,8 +167,6 @@ class Order extends CI_Controller {
 			'price_infant' => $price_infant_dep,
 			'price_infant_ret' => $price_infant_ret,
 			'order_status' => 'Registered',
-			'lion_captcha' => (isset($lioncaptcha) ? $lioncaptcha : ''),
-			'lion_session_id' => (isset($lionsessionid) ? $lionsessionid : ''),
 			'registered_date' => $time_stamp
 		);
 		
@@ -297,7 +295,7 @@ class Order extends CI_Controller {
 				//redirect(base_url('index.php/webfront/order_success/'.$order_id));
 				$response = array(
 					'status' => '200',
-					'message' => 'Anda akan segera dihubungi oleh admin kami untuk proses lebih lanjut dalam 3 jam.',
+					'message' => 'Terima kasih, kami akan memproses pemesanan anda.',
 					'method' => 'tiket_internal',
 					'order_id' => $order_id,
 					'total' => $tot_price
@@ -1010,9 +1008,10 @@ class Order extends CI_Controller {
 				'payment_id' => $row['payment_id'],
 				'sender' => $row['sender_name'],
 				'bank_name' => $row['bank_name'],
-				'transfer_date' => $row['transfer_date'],
-				'total_paid' => $row['total_paid'],
-				'total_price' => $row['total_price'],
+				'transfer_date' => date_format(new DateTime($row['transfer_date']), 'd M Y'),
+				'not_valid_datetime' => ($row['not_valid_set_datetime']<>null ? date_format(new DateTime($row['not_valid_set_datetime']), 'd M Y H:i:s') : ""),
+				'total_paid' => number_format($row['total_paid'], 0, ',', '.'),
+				'total_price' => number_format($row['total_price'], 0, ',', '.'),
 				'status' => $row['status'],
 				'validated_by' => $row['user_name']
 			);
@@ -1026,10 +1025,11 @@ class Order extends CI_Controller {
 		foreach ($list->result_array() as $row){
 			$number_row++;
 			$data[] = array(
-				'number_row' => $number_row,
 				'agent_name' => $row['agent_name'],
+				'order_system_id' => $row['order_system_id'],
 				'category' => $row['trip_category'],
 				'order_id' => $row['order_id'],
+				'party_order_id' => $row['3rd_party_order_id'],
 				'total_price' => $row['total_price'],
 				'order_status' => $row['order_status'],
 				'timestamp' => $row['registered_date'],
@@ -1051,7 +1051,53 @@ class Order extends CI_Controller {
 		$order_id = $this->bank->get_order_id($id);
 		//after validate payment, change order status to Paid
 		$paid = $this->orders->update_order_status($order_id, 'Paid');
+		
 		redirect(base_url('index.php/admin/validate_payment'));
+	}
+	
+	public function unvalidate_payment_id(){
+		$id = $this->input->post('id');
+		$cc = $this->input->post('cc');
+		$message = $this->input->post('email_content');
+		
+		$data = array(
+			'status' => 'not valid',
+			'validated_by' => $this->session->userdata('account_id'),
+			'not_valid_set_datetime' => date('Y-m-d H:i:s')
+		);
+		
+		$upd = $this->general->update_data_on_table('payments', 'payment_id', $id, $data);
+		$response['message'] = $upd;
+		//get order_id
+		$order_id = $this->bank->get_order_id($id);
+		//after validate payment, change order status to Paid
+		$paid = $this->orders->update_order_status($order_id, 'Payment Not Valid');
+		
+		//get customer email
+		$query = $this->general->get_detail_by_id('orders', 'order_id', $order_id);
+		foreach($query->result_array() as $row){
+			$email = $row['customer_email'];
+		}
+		//sending email
+		$email_config = array(
+			'protocol' => 'mail',
+			'mailpath' => '/usr/sbin/sendmail',
+			'charset' => 'iso-8859-1',
+			'wordwrap' => TRUE,
+			'mailtype' => 'html'
+		);
+		$this->load->library('email', $email_config);
+		
+		$this->email->from('ticketing@travelku.co', 'Admin Ticketing');
+		$this->email->to($email);
+		$this->email->cc($cc);
+				
+		$this->email->subject('Pembayaran Anda Ditolak');
+		$this->email->message($message);
+
+		$this->email->send();
+		
+		echo json_encode($response);
 	}
 	
 	public function add_order_tiketcom(){
@@ -1221,12 +1267,13 @@ class Order extends CI_Controller {
 		//preparing to send email
 		$content = array(
 			'order_id' => $order_id,
+			'customer_email' => $this->input->post('email',TRUE),
 			'title' => $this->input->post('title', TRUE),
 			'first_name' => $this->input->post('first_name', TRUE),
 			'last_name' => $this->input->post('last_name', TRUE),
 			'total_price' => $total_price,
 			'currency' => $currency,
-			'rate' => $rate,
+			'rate' => $rate
 		);
 		
 		//get bank list
@@ -1858,81 +1905,97 @@ class Order extends CI_Controller {
 				$order_timestamp = new DateTime($query->result_array()[0]['registered_date']);
 				$limit_order_timestamp = $order_timestamp->add(new DateInterval('PT1H'));
 				
-				//$response = array();
-				//$response['responses'] = array();
-				//$response['responses']['general'] = array();
 				// generate response general info
 				foreach ($query->result_array() as $row){
 					if ($order_type == 'flight'){
-						$response = array(
-							'order_id' => $row['order_id'],
-							'order_type' => $order_type,
-							'order_system' => 'internal',
-							'agent_name' => $row['agent_name'],
-							'airline_name' => $row['airline_name_depart'],
-							'lion_captcha' => array('name' => 'lioncaptcha', 'value' => $row['lion_captcha']),
-							'lion_session_id' => array('name' => 'lionsessionid', 'value' => $row['lion_session_id']),
-							'route' => $row['route'],
-							'departing_date' => $row['departing_date'],
-							'time_travel' => $row['time_travel'],
-							'total_price' => $row['total_price'],
-							'adult' => array('name' => 'adult', 'value' => $row['adult']),
-							'price_adult' => $row['price_adult'],
-							'child' => array('name' => 'child', 'value' => $row['child']),
-							'price_child' => $row['price_child'],
-							'infant' => array('name' => 'infant', 'value' => $row['infant']),
-							'price_infant' => $row['price_infant'],
-							'payment_status' => $row['payment_status']
-						);
-						$response['cart_detail']['category'] = $order_type;
-						$response['cart_detail']['order_name'] = $row['route'];
-						$response['cart_detail']['order_name_detail'] = $row['flight_id_depart'];
-					}
-					else if ($order_type == 'train'){
-						list ($d_station, $a_station) = explode('-', $row['route']);
-						$response = array(
-							'order_id' => $row['order_id'],
-							'order_type' => $order_type,
-							'agent_name' => $row['agent_name'],
-							'token' => array('name' => 'token', 'value' => $row['token']),
-							'train_name' => $row['train_name'],
-							'train_id' => array('name' => 'train_id', 'value' => $row['train_id']),
-							'route' => $row['route'],
-							'depart_station' => array('name' => 'd', 'value' => $d_station),
-							'arrival_station' => array('name' => 'a', 'value' => $a_station),
-							'departing_date' => array('name' => 'date', 'value' => $row['departing_date']),
-							'subclass' => array('name' => 'subclass', 'value' => $row['train_subclass']),
-							'kelas' => $row['train_class'],
-							'time_travel' => $row['time_travel'],
-							'total_price' => $row['total_price'],
-							'adult' => array('name' => 'adult', 'value' => $row['adult']),
-							'price_adult' => $row['price_adult'],
-							'child' => array('name' => 'child', 'value' => $row['child']),
-							'price_child' => $row['price_child'],
-							'infant' => array('name' => 'infant', 'value' => $row['infant']),
-							'price_infant' => $row['price_infant'],
-							'payment_status' => $row['payment_status']
-						);
-					}
-					else if ($order_type == 'hotel'){ // for hotel there is no need to proceed it with Tiket.com API
-						$response = array(
-							'order_id' => $row['order_id'],
-							'order_type' => $order_type,
-							'agent_name' => $row['agent_name'],
-							//'token' => array('name' => 'token', 'value' => $row['token']),
-							'hotel_name' => $row['hotel_name'],
-							'hotel_id' => $row['hotel_id'],
-							'hotel_address' => $row['hotel_address'],
-							'hotel_regional' => $row['hotel_regional'],
-							'room' => $row['hotel_room'],
-							'checkin' => $row['departing_date'],
-							'checkout' => $row['returning_date'],
-							'night' => $row['time_travel'],
-							'total_price' => $row['total_price'],
-							'adult' => $row['adult'],
-							'child' => $row['child'],
-							'payment_status' => $row['payment_status']
-						);
+						$response['order_id'] = $row['order_id'];
+						$response['order_system'] = 'internal';
+						$response['order_timestamp'] = date_format(new DateTime($row['registered_date']), 'd M Y H:i:s');
+						$response['limit_order_timestamp'] = date_format($limit_order_timestamp, 'd M Y H:i:s');
+						$response['payment_timestamp'] = ($row['transfer_date']==null ? '' : date_format(new DateTime($row['transfer_date']), 'd M Y H:i:s'));
+						$response['payment_status'] = strtolower($row['payment_status']);
+						$response['total_customer_price'] = number_format($row['total_price'], 0, ',', '.');
+						$response['customer_currency'] = 'IDR';
+						$response['contact_phone'] = '';
+						$response['order_type'] = $row['trip_category'];
+						
+						$response['cart_detail'][0]['category'] = $order_type;
+						$response['cart_detail'][0]['order_name'] = $row['route'].'<br />'.($row['is_round_trip']=='true' ? 'Round Trip' : 'Single Trip');
+						$response['cart_detail'][0]['order_name_detail'] = $row['airline_name_depart'].' / '.$row['flight_id_depart'];
+						$response['cart_detail'][0]['ticket_status'] = strtolower($row['order_status']);
+						$response['cart_detail'][0]['departure_date'] = date_format(new DateTime($row['departing_date']), 'd M Y');
+						$response['cart_detail'][0]['arrival_date'] = date_format(new DateTime($row['departing_date']), 'd M Y');
+						$response['cart_detail'][0]['departure_time'] = $row['time_travel'];
+						$response['cart_detail'][0]['arrival_time'] = '';
+						$response['cart_detail'][0]['booking_code'] = $row['booking_code'];
+						//check if round trip = true then array become 2 data
+						if($row['is_round_trip']=='true'){
+							$response['cart_detail'][1]['category'] = $order_type;
+							$response['cart_detail'][1]['order_name'] = '';
+							$response['cart_detail'][1]['order_name_detail'] = $row['airline_name_return'].' / '.$row['flight_id_return'];
+							$response['cart_detail'][1]['ticket_status'] = '';
+							$response['cart_detail'][1]['departure_date'] = date_format(new DateTime($row['returning_date']), 'd M Y');
+							$response['cart_detail'][1]['arrival_date'] = date_format(new DateTime($row['returning_date']), 'd M Y');
+							$response['cart_detail'][1]['departure_time'] = $row['time_travel_ret'];
+							$response['cart_detail'][1]['arrival_time'] = '';
+							$response['cart_detail'][1]['booking_code'] = $row['booking_code_ret'];
+						}
+						//masukin penumpang
+						//fetch & generate passengers
+						$get_adult = $this->orders->get_passenger($order_id, 'adult');
+						$get_child = $this->orders->get_passenger($order_id, 'child');
+						$get_infant = $this->orders->get_passenger($order_id, 'infant');
+						
+						//fetch & generate adult
+						$idx_adult = 0;
+						if($get_adult->num_rows() > 0){
+							foreach ($get_adult->result_array() as $row){
+								$response['passenger'][0]['adult'][$idx_adult]['baggage'] = $row['baggage'];
+								$response['passenger'][0]['adult'][$idx_adult]['baggage_return'] = $row['baggage_return'];
+								$response['passenger'][0]['adult'][$idx_adult]['name'] = $row['first_name'].' '.$row['last_name'];
+								$response['passenger'][0]['adult'][$idx_adult]['age_group'] = 'adult';
+								$response['passenger'][0]['adult'][$idx_adult]['id_number'] = $row['identity_number'];
+								$response['passenger'][0]['adult'][$idx_adult]['birth_date'] = ($row['birthday']=='0000-00-00' ? '' : date_format(new DateTime($row['birthday']), 'd M Y'));
+								$response['passenger'][0]['adult'][$idx_adult]['ticket_number'] = '';
+								$idx_adult++;
+							}
+						}
+						else
+							$response['passenger'][0]['adult'] = array();
+						
+						$idx_child = 0;
+						if($get_child->num_rows() > 0){
+							foreach ($get_child->result_array() as $row){
+								$response['passenger'][0]['child'][$idx_child]['baggage'] = $row['baggage'];
+								$response['passenger'][0]['child'][$idx_child]['baggage_return'] = $row['baggage_return'];
+								$response['passenger'][0]['child'][$idx_child]['name'] = $row['first_name'].' '.$row['last_name'];
+								$response['passenger'][0]['child'][$idx_child]['age_group'] = 'child';
+								$response['passenger'][0]['child'][$idx_child]['id_number'] = $row['identity_number'];
+								$response['passenger'][0]['child'][$idx_child]['birth_date'] = ($row['birthday']=='0000-00-00' ? '' : date_format(new DateTime($row['birthday']), 'd M Y'));
+								$response['passenger'][0]['child'][$idx_child]['ticket_number'] = '';
+								$idx_child++;
+							}
+						}
+						else
+							$response['passenger'][0]['child'] = array();
+						
+						$idx_infant = 0;
+						if($get_infant->num_rows() > 0){
+							foreach ($get_infant->result_array() as $row){
+								$response['passenger'][0]['infant'][$idx_infant]['baggage'] = $row['baggage'];
+								$response['passenger'][0]['infant'][$idx_infant]['baggage_return'] = $row['baggage_return'];
+								$response['passenger'][0]['infant'][$idx_infant]['name'] = $row['first_name'].' '.$row['last_name'];
+								$response['passenger'][0]['infant'][$idx_infant]['age_group'] = 'infant';
+								$response['passenger'][0]['infant'][$idx_infant]['id_number'] = $row['identity_number'];
+								$response['passenger'][0]['infant'][$idx_infant]['birth_date'] = ($row['birthday']=='0000-00-00' ? '' : date_format(new DateTime($row['birthday']), 'd M Y'));
+								$response['passenger'][0]['infant'][$idx_infant]['ticket_number'] = '';
+								$idx_infant++;
+							}							
+						}
+						else
+							$response['passenger'][0]['infant'] = array();
+						
+						// end masukin penumpang
 					}
 					else if ($order_type == 'paket'){ // for paket there is no need to proceed it with Tiket.com API
 						$response['order_id'] = $row['order_id'];
@@ -1946,14 +2009,16 @@ class Order extends CI_Controller {
 						$response['cart_detail']['category'] = $row['category'];
 						$response['cart_detail']['order_name'] = $row['title'];
 						$response['cart_detail']['order_name_detail'] = $row['mini_slogan'];
+						//get the contact person
+						$con = $this->orders->get_passenger($order_id, 'contact');
+						$column = $con->result_array()[0];
+						$response['contact']['name'] = $column['title'].' '.$column['first_name'];
+						$response['contact']['email'] = $column['email'];
+						$response['contact']['phone'] = $column['phone_1'];
+						
 					}
 					//array_push($response['responses']['general'], $general);
 				}
-				$con = $this->orders->get_passenger($order_id, 'contact');
-				$column = $con->result_array()[0];
-				$response['contact']['name'] = $column['title'].' '.$column['first_name'];
-				$response['contact']['email'] = $column['email'];
-				$response['contact']['phone'] = $column['phone_1'];
 				
 				break;
 			case "tiketcom":

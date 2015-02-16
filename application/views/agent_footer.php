@@ -129,7 +129,7 @@
 		};*/
 
 		// Demo alert
-		/*function openAlert()
+		function openAlert()
 		{
 			var news=$('#news_flash').val();
 			// alert (news);
@@ -147,7 +147,7 @@
 
 			}
 		};
-		*/
+		
 		// Demo prompt
 		/*function openPrompt()
 		{
@@ -195,8 +195,8 @@
 		 */
 
 			// Days
-		/*$(document).ready(function(){
-				openAlert();
+		$(document).ready(function(){
+				//openAlert();
 			
 		  $('.datepicker').glDatePicker(
           { 
@@ -220,7 +220,7 @@
                 $('#p_kembali').slideUp();
             }
           });
-		});*/
+		});
         
         
     

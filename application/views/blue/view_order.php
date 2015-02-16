@@ -218,7 +218,7 @@
 								<div class="margtop7"><span class="dark">Status Pembayaran:</span></div>\
 							</div>\
 							<div class="col-md-3">\
-							<div class="margtop7"><strong><span class="'+(datajson.payment_status=="paid" ? "green" : "red")+'">'+toUpperCase(payment_status)+'</span></strong></div>\
+							<div class="margtop7"><strong><span class="'+((datajson.payment_status=="paid" || datajson.payment_status=="validated") ? "green" : "red")+'">'+toUpperCase(payment_status)+'</span></strong></div>\
 							</div>\
 							<div class="clearfix"></div>\
 							<br/>';
@@ -302,9 +302,9 @@
 					for(var i=0; i<datajson.cart_detail.length;i++){
 						var departure_date_time = '';
 						if(datajson.cart_detail[i].departure_date==datajson.cart_detail[i].arrival_date)
-							departure_date = datajson.cart_detail[i].departure_date+' '+datajson.cart_detail[i].departure_time+'-'+datajson.cart_detail[i].arrival_time;
+							departure_date = datajson.cart_detail[i].departure_date+'<br />'+datajson.cart_detail[i].departure_time+(datajson.cart_detail[i].arrival_time==''? '' : '-')+datajson.cart_detail[i].arrival_time;
 						else
-							departure_date = datajson.cart_detail[i].departure_date+' '+datajson.cart_detail[i].departure_time+'-'+datajson.cart_detail[i].departure_date+' '+datajson.cart_detail[i].arrival_time;
+							departure_date = datajson.cart_detail[i].departure_date+'<br />'+datajson.cart_detail[i].departure_time+'-'+datajson.cart_detail[i].departure_date+' '+datajson.cart_detail[i].arrival_time;
 						content += '<div class="col-md-3">\
 										<div class="margtop7"><span class="grey">'+datajson.cart_detail[i].order_name+'</span></div>\
 									</div>\
@@ -315,7 +315,7 @@
 										<div class="margtop7"><span class="grey">'+departure_date+'</span></div>\
 									</div>\
 									<div class="col-md-3">\
-										<div class="margtop7"><span class="grey">Kode Booking: <strong>'+(datajson.cart_detail[i].booking_code==null ? "Tidak Tersedia" : datajson.cart_detail[i].booking_code)+'</strong></span></div>\
+										<div class="margtop7"><span class="grey">Kode Booking: <strong>'+(datajson.cart_detail[i].booking_code==null ? "Belum Tersedia" : datajson.cart_detail[i].booking_code)+'</strong></span></div>\
 									</div>\
 									<div class="clearfix"></div>\
 									<br/>';
@@ -337,12 +337,12 @@
 					var infant = '' ;
 					if(datajson.passenger[0].hasOwnProperty('adult')){
 						for(var j=0; j<datajson.passenger[0].adult.length; j++){
-							adult += datajson.passenger[0].adult[j].name+'<br/>'+datajson.passenger[0].adult[j].birth_date+'<br/>Bagasi '+datajson.passenger[0].adult[j].baggage+'kg<br/><br/>';
+							adult += datajson.passenger[0].adult[j].name+'<br/>'+datajson.passenger[0].adult[j].birth_date+'<br/>Bagasi '+datajson.passenger[0].adult[j].baggage+'kg'+(datajson.passenger[0].adult[j].baggage_return=='' ? '' : '<br/>Bagasi Kembali '+datajson.passenger[0].adult[j].baggage_return)+'kg<br/><br/>';
 						}
 					}
 					if(datajson.passenger[0].hasOwnProperty('child')){
 						for(var j=0; j<datajson.passenger[0].child.length; j++){
-							child += datajson.passenger[0].child[j].name+'<br/>'+datajson.passenger[0].child[j].birth_date+'<br/>Bagasi '+datajson.passenger[0].child[j].baggage+'kg<br/><br/>';
+							child += datajson.passenger[0].child[j].name+'<br/>'+datajson.passenger[0].child[j].birth_date+'<br/>Bagasi '+datajson.passenger[0].child[j].baggage+'kg'+(datajson.passenger[0].child[j].baggage_return=='' ? '' : '<br/>Bagasi Kembali '+datajson.passenger[0].child[j].baggage_return)+'kg<br/><br/>';
 						}
 					}
 					if(datajson.passenger[0].hasOwnProperty('infant')){

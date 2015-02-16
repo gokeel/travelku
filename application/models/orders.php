@@ -79,6 +79,7 @@ class Orders extends CI_Model {
 		$this->db->from('orders');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
+		$this->db->where('order_status', 'Registered');
 		$this->db->order_by('orders.order_id desc');
 		
 		$query = $this->db->get();

@@ -27,7 +27,7 @@ YUI().use('tabview', function(Y) {
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {id:parseInt(datajson[i].id), content:datajson[i].content, title: datajson[i].title, status: datajson[i].status, creation_date: datajson[i].creation_date, publish_date: datajson[i].publish_date};
+					data[i] = {id:parseInt(datajson[i].id), content:datajson[i].content, title: datajson[i].title, status: datajson[i].status, creation_date: datajson[i].creation_date, publish_date: datajson[i].publish_date, pop_up: datajson[i].pop_up};
 			}
 		});
 		var column_paket ;
@@ -37,6 +37,16 @@ YUI().use('tabview', function(Y) {
 			{key:"status", label:"Status"},
 			{key:"creation_date", label:"Tgl Dibuat"},
 			{key:"publish_date", label:"Tgl Publish"},
+			{
+				label: "PopUp News",
+				nodeFormatter:function(o){
+					if(o.data.pop_up=='false')
+						o.cell.setHTML('<img src="<?php echo IMAGES_DIR;?>/icon_no_delete_noentry.png" width="30px" height="30px" /><br /><a href="<?php echo base_url();?>index.php/admin/agent_news_popup_on/'+o.data.id+'"><button>Jadikan Popup</button></a>');
+					else
+						o.cell.setHTML('<img src="<?php echo IMAGES_DIR;?>/icon_yes_agree_ok.png" width="30px" height="30px" /><br /><a href="<?php echo base_url();?>index.php/admin/agent_news_popup_on/'+o.data.id+'"><button>Jadikan Popup</button></a><br /><a href="<?php echo base_url();?>index.php/admin/agent_news_popup_off/'+o.data.id+'"><button>Matikan Popup</button></a>');
+						return false;
+				}
+			},
 			{
 				key:"id", 
 				label: "Ubah",

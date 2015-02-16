@@ -70,10 +70,10 @@ class Admin extends CI_Controller {
         if ($this->input->post('username') and $this->input->post('password')) {
 
             if ($this->users->login($this->input->post('username'), md5($this->input->post('password'))) ){
-				if ($this->session->userdata('user_level')=='administrator')
-					redirect(base_url('index.php/admin/admin_page'));
-				else if ($this->session->userdata('user_level')=='agent')
+				if ($this->session->userdata('user_level')=='agent')
 					redirect(base_url('index.php/agent/home'));
+				else
+					redirect(base_url('index.php/admin/admin_page'));
 			}
 				
             else $this->warning = '<p style="color:#f30;">Username atau Password Anda Salah..! Silahkan ulangi lagi </p>';
@@ -143,7 +143,7 @@ class Admin extends CI_Controller {
 	}
 	
 	public function admin_page(){
-		if($this->check_session('administrator'))
+		if(!$this->check_session('agent'))
 			$this->page('admin_page', null, 'admin_page', null);
 		else
 			$this->no_right_access();
@@ -152,21 +152,21 @@ class Admin extends CI_Controller {
 		$this->page('admin_no_right_access');
 	}
 	public function agent_page(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin'))
 			$this->page('admin_agent', null, 'agent_page', 'agent_page');
 		else
 			$this->no_right_access();
 	}
 	
 	public function setting_page(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin'))
 			$this->page('admin_setting', null, 'setting_page', null);
 		else
 			$this->no_right_access();
 	}
 	
 	public function deposit_page(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin') || $this->check_session('ticketing'))
 			$this->page('admin_deposit', null, 'deposit_page', null);
 		else
 			$this->no_right_access();
@@ -191,7 +191,7 @@ class Admin extends CI_Controller {
 	}
 	
 	public function booking_page(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin') || $this->check_session('ticketing'))
 			$this->page('admin_booking_page', null, 'booking_page', 'booking_page');
 		else
 			$this->no_right_access();
@@ -346,7 +346,7 @@ class Admin extends CI_Controller {
 	}
 	
 	public function my_account_page(){
-		if($this->check_session('administrator'))
+		if(!$this->check_session('agent'))
 			$this->page('admin_my_account_page', null, 'my_account_page', null);
 		else
 			$this->no_right_access();
@@ -354,7 +354,7 @@ class Admin extends CI_Controller {
 	}
 	
 	public function cms_page(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin'))
 			$this->page('admin_cms_page', null, 'cms_page', 'cms_page');
 		else
 			$this->no_right_access();
@@ -480,7 +480,7 @@ class Admin extends CI_Controller {
 	
 	//cindy nordiansyah
 	public function assets_page(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin'))
 			$this->page('admin_assets', null, 'assets_page', null);
 		else
 			$this->no_right_access();
@@ -5356,7 +5356,8 @@ class Admin extends CI_Controller {
 					'content' => $row['news_content'],
 					'status' => $row['status'],
 					'creation_date' => date_format(new DateTime($row['creation_datetime']), 'd M Y H:i:s'),
-					'publish_date' => ($row['publish_datetime']=="0000-00-00 00:00:00" ? "" : date_format(new DateTime($row['publish_datetime']), 'd M Y H:i:s'))
+					'publish_date' => ($row['publish_datetime']=="0000-00-00 00:00:00" ? "" : date_format(new DateTime($row['publish_datetime']), 'd M Y H:i:s')),
+					'pop_up' => $row['pop_up']
 				);
 			}
 		}
@@ -5581,5 +5582,23 @@ class Admin extends CI_Controller {
 			$this->email->send();
 		}
 		echo json_encode($response);
+	}
+	
+	public function agent_news_popup_on(){
+		$id = $this->uri->segment(3);
+		//turn off all popup
+		$this->agents->set_news_agent_off();
+		//turn on popup by id
+		$upd = $this->agents->set_news_agent_on($id);
+		
+		redirect(base_url().'index.php/admin/agent_news');
+	}
+	
+	public function agent_news_popup_off(){
+		$id = $this->uri->segment(3);
+		//turn off all popup
+		$this->agents->set_news_agent_off($id);
+		
+		redirect(base_url().'index.php/admin/agent_news');
 	}
 }
