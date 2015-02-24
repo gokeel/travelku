@@ -7,7 +7,7 @@ YUI().use('tabview', function(Y) {
 <div id="content"  style="min-height:400px;"> 
   <div class="frametab">
 		
-		<h3 style="margin:5px 0 5px 5px;">Daftar Pesanan yang Dibatalkan</h3>
+		<h3 style="margin:5px 0 5px 5px;">Daftar Pesanan yang Ditolak</h3>
 		<button id="add-reason">Tambah/Ubah Alasan</button>
 		<div id="tabs">
 			<ul>
@@ -69,7 +69,7 @@ YUI().use('tabview', function(Y) {
 				cache: false,
 				dataType: "json",
 				success:function(data){
-					window.location.assign("<?php echo base_url('index.php/admin/booking_cancelled');?>");
+					window.location.assign("<?php echo base_url('index.php/admin/booking_rejected');?>");
 				}
 			})
 		}
@@ -120,7 +120,7 @@ YUI().use('tabview', function(Y) {
 		$.ajax({
 			type : "GET",
 			async: false,
-			url: '<?php echo base_url();?>index.php/admin/tiketcom_get_order_list/canceled',
+			url: '<?php echo base_url();?>index.php/admin/tiketcom_get_order_list/rejected',
 			dataType: "json",
 			success:function(datajson){
 				var div = $('#faqkonten');
@@ -155,7 +155,7 @@ YUI().use('tabview', function(Y) {
 		$.ajax({
 			type : "GET",
 			async: false,
-			url: '<?php echo base_url();?>index.php/admin/get_cancelled_rejected_order_paket/Cancelled',
+			url: '<?php echo base_url();?>index.php/admin/get_cancelled_rejected_order_paket/Rejected',
 			dataType: "json",
 			success:function(datajson){
 				var div = $('#faqkonten');
@@ -191,7 +191,7 @@ YUI().use('tabview', function(Y) {
 		$.ajax({
 			type : "GET",
 			async: false,
-			url: '<?php echo base_url();?>index.php/admin/get_cancelled_rejected_order_internal_nonpaket/flight/Cancelled',
+			url: '<?php echo base_url();?>index.php/admin/get_cancelled_rejected_order_internal_nonpaket/flight/Rejected',
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)

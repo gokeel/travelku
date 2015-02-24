@@ -770,37 +770,39 @@
 			<p>&copy; 2013 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
 			</footer>
 		</div>		-->
-		<div class="footerbg">
+		<div style="overflow:hidden;padding:30px 0;width:100%;">
+		<!--<div class="footerbg">-->
 			<div class="container">	
-				<div class="col-md-6" style="background-color:#F2F2F2">
+				<!--<div class="col-md-6" style="background-color:#F2F2F2">-->
+				<div class="col-md-6">
 					<!--<img src="<?php echo base_url();?>assets/images/banner-partner.png" alt="" width="100%" height="155px"/>-->
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/sriwijaya.png" height="60px" width="70px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Lion Air.png" height="60px" width="90px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Air asia.png" height="60px" width="90px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Garuda Indonesia.png" height="60px" width="90px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/CITILINK.png" height="60px" width="90px"/><br />
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Wings Air.png" height="60px" width="70px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Batik air.png" height="60px" width="90px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Tiger air.png" height="60px" width="90px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Kalstar.png" height="60px" width="90px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/xpress air.png" height="60px" width="90px"/><br />
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Trigana Air.png" height="60px" width="70px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Malindo Air.png" height="60px" width="90px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Susi Air.png" height="60px" width="90px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/NAM.png" height="60px" width="80px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Thai Air.png" height="60px" width="90px"/>
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/sriwijaya.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Lion Air.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Air asia.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Garuda Indonesia.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/CITILINK.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Wings Air.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Batik air.png" height="40px" width="65px"/><br /><br />
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Tiger air.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Kalstar.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/xpress air.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Trigana Air.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Malindo Air.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Susi Air.png" height="40px" width="65px"/>&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/NAM.png" height="40px" width="65px"/><br /><br />
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Thai Air.png" height="40px" width="65px"/>
 				</div>
-				<div class="col-md-3" style="background-color:#F2F2F2">
-					<img src="<?php echo base_url();?>assets/images/payment/BCA.png" height="45px" width="90px"/>&nbsp;&nbsp;
-					<img src="<?php echo base_url();?>assets/images/payment/mandiri.png" height="40px" width="90px"/><br /><br />
-					<img src="<?php echo base_url();?>assets/images/payment/BRI.png" height="45px" width="70px"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<img src="<?php echo base_url();?>assets/images/payment/BNI.png" height="45px" width="90px"/>
+				<div class="col-md-3">
+					<img src="<?php echo base_url();?>assets/images/payment/BCA.png" height="50px" width="90px"/>&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/payment/mandiri.png" height="50px" width="90px"/><br /><br />
+					<img src="<?php echo base_url();?>assets/images/payment/BRI.png" height="50px" width="90px"/>&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/payment/BNI.png" height="50px" width="90px"/>
 				</div>
-				<div class="col-md-3" style="background-color:#F2F2F2">
-					<img src="<?php echo base_url();?>assets/images/Asita.png" height="45px" width="90px"/>&nbsp;&nbsp;&nbsp;
-					<img src="<?php echo base_url();?>assets/images/Al Qadri.png" height="40px" width="90px"/><br /><br />
-					<img src="<?php echo base_url();?>assets/images/Abacus.png" height="45px" width="70px"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<img src="<?php echo base_url();?>assets/images/Wonderfull Indonesia.png" height="45px" width="90px"/>
+				<div class="col-md-3">
+					<img src="<?php echo base_url();?>assets/images/Asita.png" height="50px" width="90px"/>&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/Al Qadri.png" height="50px" width="90px"/><br /><br />
+					<img src="<?php echo base_url();?>assets/images/Abacus.png" height="50px" width="90px"/>&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/Wonderfull Indonesia.png" height="50px" width="90px"/>
 				</div>
 			</div>
 		</div>

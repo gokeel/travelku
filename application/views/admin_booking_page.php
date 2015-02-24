@@ -14,6 +14,7 @@ YUI().use('tabview', function(Y) {
 				<!--<li><a href="#tab-2">Tiket Kereta Api</a></li>
 				<li><a href="#tab-3">Tiket Hotel</a></li>-->
 				<li><a href="#tab-4">Paket</a></li>
+				<li><a href="#tab-5">Tiket.com</a></li>
 			</ul>
 			<div>
 				<div id="tab-1">
@@ -29,9 +30,9 @@ YUI().use('tabview', function(Y) {
 				<div id="tab-4">
 					<div id="order-paket"></div>
 				</div>
-				<!--<div id="tab-7">
-					<div id="order-paket-promo"></div>
-				</div>-->
+				<div id="tab-5">
+					<div id="order-tiketcom"></div>
+				</div>
 			</div>
 		</div>
 		
@@ -47,7 +48,9 @@ YUI().use('tabview', function(Y) {
 		//load_order_train();
 		//load_order_hotel();
 		load_order_paket();
+		load_order_tiketcom();
 	});
+	
 	function load_order_paket(){
 		var data = [];
 		$.ajax({
@@ -131,6 +134,7 @@ YUI().use('tabview', function(Y) {
 			table.render("#order-paket");
 		});
 	}
+	
 	function load_order_flight(){
 		var data = [];
 		$.ajax({
@@ -382,6 +386,41 @@ YUI().use('tabview', function(Y) {
 				rowsPerPage: 10
 			});
 			table.render("#order-hotel");
+		});
+	}
+	
+	function load_order_tiketcom(){
+		var data = [];
+		$.ajax({
+			type : "GET",
+			async: false,
+			url: '<?php echo base_url();?>index.php/admin/tiketcom_get_order_list/booked',
+			dataType: "json",
+			success:function(datajson){
+				var div = $('#faqkonten');
+				for(var i=0; i<datajson.length; i++){
+					data[i] = {order_system_id: datajson[i].order_system_id, party_order_id: datajson[i].party_order_id, payment_status: datajson[i].payment_status, order_id: datajson[i].order_id, category:datajson[i].category, total_price: datajson[i].total_price, order_status: datajson[i].order_status, timestamp: datajson[i].timestamp, agent_name: datajson[i].agent_name};
+				}
+			}
+		});
+		YUI({gallery: 'gallery-2013.01.09-23-24'}).use('datatable','datatable-sort','datatype-number','datatype-date','datatable-paginator', function (Y) {
+			
+			var data_order = data;
+			var table = new Y.DataTable({
+				columns: [
+					{key:"order_id", label:"ID Pesanan"},
+					{key:"agent_name", label:"Nama Agen"},
+					{key:"category", label:"Kategori"},
+					{key:"total_price", label:"Total Harga"},
+					{key:"order_status", label:"Status Pesanan"},
+					{key:"payment_status", label:"Status Pembayaran"},
+					{key:"timestamp", label:"Tanggal Pemesanan"}
+				],
+				data: data_order,
+				caption: "Daftar Antrian Pesanan",
+				rowsPerPage: 10
+			});
+			table.render("#order-tiketcom");
 		});
 	}
 </script>

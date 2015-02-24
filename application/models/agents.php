@@ -94,12 +94,13 @@ class Agents extends CI_Model {
 		else return false;
 	}
 	
-	function get_topup_by_status($status){
+	function get_topup_by_status($status=null){
 		$this->db->select('deposit_requests.*, agents.agent_name, bank_accounts.bank_name');
 		$this->db->from('deposit_requests');
 		$this->db->join('agents', 'deposit_requests.agent_id = agents.agent_id');
 		$this->db->join('bank_accounts', 'deposit_requests.bank_receiver_id = bank_accounts.bank_id');
-		$this->db->where('deposit_requests.status', $status);
+		if($status<>null)
+			$this->db->where('deposit_requests.status', $status);
 		$this->db->order_by('deposit_requests.id desc');
 		$get = $this->db->get();
 		return $get;
@@ -116,11 +117,12 @@ class Agents extends CI_Model {
 		return $get;
 	}
 	
-	function get_withdraw_by_status($status){
+	function get_withdraw_by_status($status=null){
 		$this->db->select('withdraw_requests.*, agents.agent_name');
 		$this->db->from('withdraw_requests');
 		$this->db->join('agents', 'withdraw_requests.agent_id = agents.agent_id');
-		$this->db->where('withdraw_requests.status', $status);
+		if($status<>null)
+			$this->db->where('withdraw_requests.status', $status);
 		$this->db->order_by('withdraw_requests.id desc');
 		$get = $this->db->get();
 		return $get;

@@ -19,14 +19,28 @@ class Order extends CI_Controller {
 		$this->curl->option('followlocation', 1);
 		//$this->curl->option('HEADER', true);
 		$this->curl->option('connecttimeout', 600);
+		$this->curl->option('SSL_VERIFYPEER', false); // For ssl site
+		$this->curl->option('SSL_VERIFYHOST', false);
+		$this->curl->option('SSLVERSION', 3); // end ssl
 		$data = $this->curl->execute();
 		
 		return $data;
     }
 	
+	function insert_event_logging($event_name, $request, $response, $method){
+		$data = array(
+			'event_name' => $event_name,
+			'request_text' => $request,
+			'response_text' => $response,
+			'request_method' => $method
+		);
+		$this->load->model('general');
+		$insert = $this->general->add_to_table('event_logs', $data);
+	}
+	
 	function get_lion_captcha()
 	{	
-		$getdata = $this->get_content($this->config->item('api_server').'/flight_api/getLionCaptcha?token='.$this->session->userdata('token').'&output=json');
+		$getdata = file_get_contents('http://'.$this->config->item('api_server').'/flight_api/getLionCaptcha?token='.$this->session->userdata('token').'&output=json');
 		$json = json_decode($getdata);
 		$lion_captcha = $json->lioncaptcha;
 		$lion_session_id = $json->lionsessionid;
@@ -36,7 +50,9 @@ class Order extends CI_Controller {
 	
 	public function get_token()
 	{
-		$getdata = $this->get_content($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json';
+		$getdata = file_get_contents($url);
+		$this->insert_event_logging('get token', $url, $getdata, 'file_get_contents');
 		$json = json_decode($getdata);
 		$token = $json->token;
 		// set session token
@@ -523,6 +539,7 @@ class Order extends CI_Controller {
 		$conPhone = $this->input->post('conPhone', TRUE);
 		$conEmailAddress = $this->input->post('conEmailAddress', TRUE);
 		$conOtherPhone = $this->input->post('conOtherPhone', TRUE);
+		$country = $this->input->post('country', TRUE);
 		$token = $this->session->userdata('token');
 		$time_stamp = date ('Y-m-d H:i:s');
 		//$account_id = ($this->session->userdata('account_id')<>'' ? $this->session->userdata('account_id'): $account_id = $this->config->item('account_id'));
@@ -1331,9 +1348,9 @@ class Order extends CI_Controller {
 		$airline_name_ret = $this->input->post('airline_name_ret', TRUE);
 		$date_go = $this->input->post('date_go', TRUE);
 		$error_passport_date = false;
-		
+	
 		//all post key & value will be passed except these keys
-		$exception_post_key = array('airline_name', 'airline_name_ret', 'date_go', 'date_ret', 'admin_fee', 'price_adult', 'price_child', 'price_infant', 'price_adult_ret', 'price_child_ret', 'price_infant_ret', 'flight_number_dep', 'flight_number_ret', 'time_travel', 'time_travel_ret', 'total_price', 'total_price_ret', 'route'); 
+		$exception_post_key = array('airline_name_dep', 'airline_name_ret', 'date_go', 'date_ret', 'admin_fee', 'price_adult_dep', 'price_child_dep', 'price_infant_dep', 'price_adult_ret', 'price_child_ret', 'price_infant_ret', 'flight_number_dep', 'flight_number_ret', 'time_travel_dep', 'time_travel_ret', 'total_price_dep', 'total_price_ret', 'route'); 
 		//end
 		foreach($post as $key => $value){
 			if(in_array($key, $exception_post_key)==false)
@@ -1382,8 +1399,11 @@ class Order extends CI_Controller {
 			list ($lioncaptcha, $lionsessionid) = $this->get_lion_captcha();
 			$url_param .= 'lioncaptcha='.$lioncaptcha.'&lionsessionid='.$lionsessionid;
 			$url_param .= '&lang=id&output=json';
-			$url = $this->config->item('api_server').'/order/add/flight?'.$url_param;
-			$send_request = $this->get_content($url);
+			$url = 'http://'.$this->config->item('api_server').'/order/add/flight?'.$url_param;
+			
+			$send_request = file_get_contents($url);
+			$this->insert_event_logging('add order flight', $url, $send_request, 'file_get_contents');
+			
 			if($send_request === FALSE){
 				$response = array(
 					'status' => '213',
@@ -1398,14 +1418,16 @@ class Order extends CI_Controller {
 				if($diagnose->status <> '200'){
 					$response = array(
 						'status' => $diagnose->status,
-						'error' => $diagnose->error_msgs,
+						'error' => 'Add order: '.$diagnose->error_msgs,
 						'category' => 'flight'
 					);
 				}
 				else {
 					// continue to order
-					$url_order = $this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
-					$send_order = $this->get_content($url_order);
+					$url_order = 'http://'.$this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
+					$send_order = file_get_contents($url_order);
+					$this->insert_event_logging('order flight', $url_order, $send_order, 'file_get_contents');
+					
 					if($send_order === FALSE){
 						$response = array(
 							'status' => '213',
@@ -1421,7 +1443,7 @@ class Order extends CI_Controller {
 						if($diagnose_order->status<>'200'){
 							$response = array(
 								'status' => $diagnose_order->status,
-								'error' => $diagnose_order->error_msgs,
+								'error' => 'Order: '.$diagnose_order->error_msgs,
 								'category' => 'flight'
 							);
 						}
@@ -1480,7 +1502,7 @@ class Order extends CI_Controller {
 								'adult' => $this->input->post('adult'),
 								'child' => $this->input->post('child'),
 								'infant' => $this->input->post('infant'),
-								'order_status' => 'Issued',
+								'order_status' => 'booked',
 								'registered_date' => date('Y-m-d H:i:s')
 								
 							);
@@ -1589,7 +1611,9 @@ class Order extends CI_Controller {
 		$url = $uri.'?token='.$token.'&lang=id&output=json';
 		$http_url = str_replace('https','http',$url);
 		
-		$send_request = $this->get_content($http_url);
+		$send_request = file_get_contents($http_url);
+		$this->insert_event_logging('checkout login', $http_url, $send_request, 'file_get_contents');
+		
 		$response = json_decode($send_request);
 		$diagnose = $response->diagnostic;
 		
@@ -1603,7 +1627,9 @@ class Order extends CI_Controller {
 			$token = $response->token;
 			$param = 'token='.$token.'&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&saveContinue=2&lang=id&output=json';
 			$cc_url = str_replace('https','http',$cc_uri.$param);
-			$send_request_2 = $this->get_content($cc_url);
+			$send_request_2 = file_get_contents($cc_url);
+			$this->insert_event_logging('checkout customer', $cc_url, $send_request_2, 'file_get_contents');
+			
 			$response_2 = json_decode($send_request_2);
 			$diagnose_2 = $response_2->diagnostic;
 			
@@ -1621,7 +1647,7 @@ class Order extends CI_Controller {
 	}
 	
 	public function tiketcom_get_available_payment(){
-		$uri = $this->config->item('api_server').'/checkout/checkout_payment';
+		$uri = 'http://'.$this->config->item('api_server').'/checkout/checkout_payment';
 		$token = $this->input->get('token',TRUE);
 		$internal_order_id = $this->input->get('id',TRUE);
 		//get tiketcom order id
@@ -1632,7 +1658,10 @@ class Order extends CI_Controller {
 		$grand_total = $req_grand_total->result_array()[0]['total_price'];
 		//get available payment by tiketcom
 		$url = $uri.'?token='.$token.'&lang=id&output=json';
-		$send_request = $this->get_content($url);
+		
+		$send_request = file_get_contents($url);
+		$this->insert_event_logging('get available payment', $url, $send_request, 'file_get_contents');
+		
 		$response = json_decode($send_request);
 		//print_r($send_request);
 		$diagnose = $response->diagnostic;
@@ -1735,7 +1764,10 @@ class Order extends CI_Controller {
 			$url = str_replace('https','http',$this->input->post('link'));
 			$param = '?token='.$this->input->post('token');
 			$param .= '&btn_booking=1&currency=IDR&lang=id&output=json';
-			$send_request = $this->get_content($url.$param);
+			$url_string = 'http://'.$url.$param;
+			$send_request = file_get_contents($url_string);
+			$this->insert_event_logging('checkout deposit', $url_string, $send_request, 'file_get_contents');
+			
 			$json = json_decode($send_request);
 			$order_id = $json->orderId;
 			$tot_price = $json->grand_total;
@@ -1763,7 +1795,7 @@ class Order extends CI_Controller {
 					'first_name' => $this->session->userdata('con_firstname'),
 					'last_name' => $this->session->userdata('con_lastname'),
 					'total_price' => $tot_price,
-					'admin_fee' => '10000'
+					'customer_email' => $this->session->userdata('con_email'),
 				);
 				
 				//get bank list
@@ -1810,7 +1842,7 @@ class Order extends CI_Controller {
 				//insert notification
 				$notif = array(
 					'category' => 'new-order-request',
-					'message' => 'Order baru - Pesawat',
+					'message' => 'Order baru di Tiketcom',
 					'created_datetime' => date('Y-m-d H:i:s')
 				);
 				$this->general->add_to_table('notifications', $notif);
@@ -2023,8 +2055,10 @@ class Order extends CI_Controller {
 				break;
 			case "tiketcom":
 				$token = $this->get_token();
-				$url = $this->config->item('api_server').'/check_order?token='.$token.'&order_id='.$order_id.'&email='.$email.'&lang=id&output=json';
-				$check_order = $this->get_content($url);
+				$url = 'http://'.$this->config->item('api_server').'/check_order?token='.$token.'&order_id='.$order_id.'&email='.$email.'&lang=id&output=json';
+				$check_order = file_get_contents($url);
+				$this->insert_event_logging('check order', $url, $check_order, 'file_get_contents');
+				
 				$json = json_decode($check_order);
 				
 				$order_timestamp = new DateTime($json->result->order_timestamp);
@@ -2034,7 +2068,7 @@ class Order extends CI_Controller {
 				$response['order_system'] = 'tiketcom';
 				$response['order_timestamp'] = date_format(new DateTime($json->result->order_timestamp), 'd M Y H:i:s');
 				$response['limit_order_timestamp'] = date_format($limit_order_timestamp, 'd M Y H:i:s');
-				$response['payment_timestamp'] = date_format(new DateTime($json->result->payment_timestamp), 'd M Y H:i:s');
+				$response['payment_timestamp'] = ($json->result->payment_timestamp==null ? '' : date_format(new DateTime($json->result->payment_timestamp), 'd M Y H:i:s'));
 				$response['payment_status'] = strtolower($json->result->payment_status);
 				$response['total_customer_price'] = number_format($json->result->total_customer_price, 0, ',', '.');
 				$response['customer_currency'] = $json->result->customer_currency;
@@ -2065,6 +2099,7 @@ class Order extends CI_Controller {
 						for($j=0;$j<sizeof($passenger);$j++){
 							if($passenger[$j]->passenger_age_group=='adult'){
 								$response['passenger'][$i]['adult'][$idx_adult]['baggage'] = $passenger[$j]->passanger_baggage;
+								$response['passenger'][$i]['adult'][$idx_adult]['baggage_return'] = '';
 								$response['passenger'][$i]['adult'][$idx_adult]['name'] = $passenger[$j]->passenger_name;
 								$response['passenger'][$i]['adult'][$idx_adult]['age_group'] = $passenger[$j]->passenger_age_group;
 								$response['passenger'][$i]['adult'][$idx_adult]['id_number'] = $passenger[$j]->passenger_id_number;
@@ -2074,6 +2109,7 @@ class Order extends CI_Controller {
 							}
 							if($passenger[$j]->passenger_age_group=='child'){
 								$response['passenger'][$i]['child'][$idx_child]['baggage'] = $passenger[$j]->passanger_baggage;
+								$response['passenger'][$i]['child'][$idx_child]['baggage_return'] = '';
 								$response['passenger'][$i]['child'][$idx_child]['name'] = $passenger[$j]->passenger_name;
 								$response['passenger'][$i]['child'][$idx_child]['age_group'] = $passenger[$j]->passenger_age_group;
 								$response['passenger'][$i]['child'][$idx_child]['id_number'] = $passenger[$j]->passenger_id_number;
@@ -2083,6 +2119,7 @@ class Order extends CI_Controller {
 							}
 							if($passenger[$j]->passenger_age_group=='infant'){
 								$response['passenger'][$i]['infant'][$idx_infant]['baggage'] = $passenger[$j]->passanger_baggage;
+								$response['passenger'][$i]['infant'][$idx_infant]['baggage_return'] = '';
 								$response['passenger'][$i]['infant'][$idx_infant]['name'] = $passenger[$j]->passenger_name;
 								$response['passenger'][$i]['infant'][$idx_infant]['age_group'] = $passenger[$j]->passenger_age_group;
 								$response['passenger'][$i]['infant'][$idx_infant]['id_number'] = $passenger[$j]->passenger_id_number;
@@ -2097,4 +2134,67 @@ class Order extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
+	
+	public function tiketcom_sync_order_status(){
+		echo nl2br("=======================================================================\n");
+		echo nl2br("=======================================================================\n");
+		
+		$now = date('Y-m-d H:i:s');
+		$now_datetime = new DateTime($now);
+		
+		
+		$halfday_later_datetime = $now_datetime->sub(new DateInterval('PT12H0S'));
+		$halfday_later = $halfday_later_datetime->format('Y-m-d H:i:s');
+		echo nl2br("Collecting and syncing order registered after $halfday_later \n");
+		//query
+		$query = $this->orders->get_tiketcom_active_order_in_last_spesific_hours($halfday_later);
+		if($query==false)
+			echo nl2br("No active order in 12 hours. Abort syncing.\n");
+		else{
+			foreach($query->result_array() as $row){
+				$order_id = $row['order_id'];
+				$tiketcom_order_id = $row['3rd_party_order_id'];
+				$customer_email = $row['customer_email'];
+				//get the status using API
+				$token = $this->get_token();
+				$url = 'http://'.$this->config->item('api_server').'/check_order?token='.$token.'&order_id='.$tiketcom_order_id.'&email='.$customer_email.'&lang=id&output=json';
+				$check_order = file_get_contents($url);
+				$this->insert_event_logging('update tiketcom order status', $url, $check_order, 'file_get_contents');
+				
+				$json = json_decode($check_order);
+				$last_status = strtolower($json->result->order__cart_detail[0]->detail->ticket_status);
+				
+				//update the status
+				$data = array('order_status' => $last_status);
+				$upd = $this->general->update_data_on_table('orders', 'order_id', $order_id, $data);
+				if($upd)
+					echo nl2br("Update order status of order_id = ".$order_id.", tiketcom_order_id = ".$tiketcom_order_id." is succeed.\n");
+				else
+					echo nl2br("Update order status of order_id = ".$order_id.", tiketcom_order_id = ".$tiketcom_order_id." is failed.\n");
+			}
+		}
+		// collect active order that registered more than 12 hours
+		//query
+		$query = $this->orders->get_tiketcom_active_order_more_than_spesific_hours($halfday_later);
+		if($query==false)
+			echo nl2br("No active order more than 12 hour. Abort syncing.\n");
+		else{
+			echo nl2br("There are some orders registered more than 12 hours, and will change the status to cancelled.\n");
+			foreach($query->result_array() as $row){
+				$order_id = $row['order_id'];
+				$tiketcom_order_id = $row['3rd_party_order_id'];
+				
+				//update the status
+				$data = array('order_status' => 'canceled');
+				$upd = $this->general->update_data_on_table('orders', 'order_id', $order_id, $data);
+				if($upd)
+					echo nl2br("Update order status of order_id = ".$order_id.", tiketcom_order_id = ".$tiketcom_order_id." is succeed.\n");
+				else
+					echo nl2br("Update order status of order_id = ".$order_id.", tiketcom_order_id = ".$tiketcom_order_id." is failed.\n");
+			}
+		}
+		
+		echo nl2br("Process done.\n\n\n");
+	}
+	
 }

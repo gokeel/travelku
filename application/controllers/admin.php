@@ -173,7 +173,7 @@ class Admin extends CI_Controller {
 	}
 	
 	public function agent_page_by_status(){
-		if($this->check_session('administrator')){
+		if($this->check_session('administrator') || $this->check_session('admin')){
 			$data = array('by_status' => $this->uri->segment(3));
 			$this->page('admin_agent_by_status', $data, 'agent_page', $this->uri->segment(3));
 		}
@@ -183,7 +183,7 @@ class Admin extends CI_Controller {
 	}
 	
 	public function setting_bank_page(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin'))
 			$this->page('admin_setting_bank', null, 'setting_page', 'bank');
 		else
 			$this->no_right_access();
@@ -199,7 +199,7 @@ class Admin extends CI_Controller {
 	}
 	
 	public function booking_issued(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin') || $this->check_session('ticketing'))
 			$this->page('admin_booking_page_issued', null, 'booking_page', 'booking_issued');
 		else
 			$this->no_right_access();
@@ -207,15 +207,23 @@ class Admin extends CI_Controller {
 	}
 	
 	public function booking_cancelled(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin') || $this->check_session('ticketing'))
 			$this->page('admin_booking_page_cancelled', null, 'booking_page', 'booking_cancel');
 		else
 			$this->no_right_access();
 		
 	}
 	
+	public function booking_rejected(){
+		if($this->check_session('administrator') || $this->check_session('admin') || $this->check_session('ticketing'))
+			$this->page('admin_booking_page_rejected', null, 'booking_page', 'booking_reject');
+		else
+			$this->no_right_access();
+		
+	}
+	
 	public function validate_payment(){
-		if($this->check_session('administrator'))
+		if($this->check_session('administrator') || $this->check_session('admin') || $this->check_session('ticketing'))
 			$this->page('admin_booking_validate_payment', null, 'booking_page', 'validate_payment');
 		else
 			$this->no_right_access();
@@ -1226,6 +1234,25 @@ class Admin extends CI_Controller {
 		echo json_encode($data);
 	}
 	
+	public function tiketcom_get_order_list(){
+		$status = $this->uri->segment(3);
+		$query = $this->orders->get_tiketcom_orders_by_status($status);
+		foreach ($query->result_array() as $row){
+			$data[] = array(
+				'agent_name' => $row['agent_name'],
+				'order_system_id' => $row['order_system_id'],
+				'category' => $row['trip_category'],
+				'order_id' => $row['order_id'],
+				'party_order_id' => $row['3rd_party_order_id'],
+				'total_price' => $row['total_price'],
+				'order_status' => $row['order_status'],
+				'timestamp' => $row['registered_date'],
+				'payment_status' => $row['status']
+			);
+		}
+		echo json_encode($data);
+	}
+	
 	public function get_issued_order(){
 		$category = $this->uri->segment(3);
 		$query = $this->orders->get_issued_order($category);
@@ -1297,75 +1324,12 @@ class Admin extends CI_Controller {
 		echo json_encode($data);
 	}
 	
-	public function get_rejected_order(){
+	public function get_cancelled_rejected_order_internal_nonpaket(){
 		$category = $this->uri->segment(3);
-		$query = $this->orders->get_cancelled_order($category);
-		$number_row = 0;
-		foreach ($query->result_array() as $row){
-			$number_row ++;
-			if ($category=='flight')
-				$data[] = array(
-					'number_row' => $number_row,
-					'order_id' => $row['order_id'],
-					'agent_name' => $row['agent_name'],
-					'airline_name' => $row['airline_name'],
-					'flight_id' => $row['flight_id'],
-					'route' => $row['route'],
-					'departing_date' => $row['departing_date'],
-					'time_travel' => $row['time_travel'],
-					'total_price' => $row['total_price'],
-					'adult' => $row['adult'],
-					'price_adult' => $row['price_adult'],
-					'child' => $row['child'],
-					'price_child' => $row['price_child'],
-					'infant' => $row['infant'],
-					'price_infant' => $row['price_infant'],
-					'payment_status' => $row['status'],
-					'order_status' => $row['order_status'],
-					'reason' => $row['reason']
-				);
-			else if ($category=='train')
-				$data[] = array(
-					'number_row' => $number_row,
-					'order_id' => $row['order_id'],
-					'agent_name' => $row['agent_name'],
-					'name' => $row['train_name'],
-					'id' => $row['train_id'],
-					'subclass' => $row['train_class'],
-					'route' => $row['route'],
-					'departing_date' => $row['departing_date'],
-					'time_travel' => $row['time_travel'],
-					'total_price' => $row['total_price'],
-					'adult' => $row['adult'],
-					'price_adult' => $row['price_adult'],
-					'child' => $row['child'],
-					'price_child' => $row['price_child'],
-					'infant' => $row['infant'],
-					'price_infant' => $row['price_infant'],
-					'payment_status' => $row['status'],
-					'order_status' => $row['order_status'],
-					'reason' => $row['reason']
-				);
-				else if ($category=='hotel')
-				$data[] = array(
-					'number_row' => $number_row,
-					'order_id' => $row['order_id'],
-					'agent_name' => $row['agent_name'],
-					'name' => $row['hotel_name'],
-					'id' => $row['hotel_id'],
-					'address' => $row['hotel_address'],
-					'regional' => $row['hotel_regional'],
-					'checkin' => $row['departing_date'],
-					'checkout' => $row['returning_date'],
-					'night' => $row['time_travel'],
-					'room' => $row['hotel_room'],
-					'total_price' => $row['total_price'],
-					'adult' => $row['adult'],
-					'child' => $row['child'],
-					'payment_status' => $row['status'],
-					'order_status' => $row['order_status'],
-					'reason' => $row['reason']
-				);
+		$status = $this->uri->segment(4);
+		$query = $this->orders->get_cancelled_rejected_order_internal_nonpaket($category, $status);
+		foreach ($query->result_array() as $key => $value){
+			$data[$key] = $value;
 		}
 		echo json_encode($data);
 	}
@@ -1409,15 +1373,55 @@ class Admin extends CI_Controller {
 		echo json_encode($data);
 	}
 	
+	function send_email_topup_withdraw_issued_rejected($content, $recipient){
+		//preparing to send email
+		//get email distribution
+		$this->load->model('notification');
+		list ($to, $cc, $bcc, $email_sender, $sender_name) = $this->notification->get_email_distribution('topup-withdraw-issued-rejected');
+		//sending email
+		$email_config = array(
+			'protocol' => 'mail',
+			'mailpath' => '/usr/sbin/sendmail',
+			'charset' => 'iso-8859-1',
+			'wordwrap' => TRUE,
+			'mailtype' => 'html'
+		);
+		$this->load->library('email', $email_config);
+			
+		$this->email->from($email_sender, $sender_name);
+		$this->email->to($recipient);
+		$this->email->cc($cc);
+		$this->email->bcc($bcc);
+			
+		$this->email->subject('Permintaan '.$content['category'].' - '.$content['action']);
+		$messages = $this->load->view('email_tpl/topup_withdraw_issued_reject', $content, TRUE);
+		$this->email->message($messages);
+
+		$this->email->send();
+	}
+	
 	function topup_issued(){
 		$id = $this->uri->segment(3);
 		//get the nominal requested
 		$nominal = $this->agents->get_afield_in_topup($id, 'nominal');
 		$agent_id = $this->agents->get_afield_in_topup($id, 'agent_id');
+		$agent_name = $this->agents->get_afield_in_topup($id, 'agent_name');
+		$agent_email = $this->agents->get_afield_in_topup($id, 'agent_email');
 		$issued = $this->agents->set_toptup_status($id, 'Issued');
 		if ($issued){
 			// add deposit into account
 			$upd = $this->agents->add_nominal_into_account($agent_id, $nominal);
+			
+			//preparing to send email
+			$content = array(
+				'name' => $agent_name,
+				'category' => 'Top Up',
+				'action' => 'Issued',
+				'action_in_bahasa' => 'setujui',
+				'message' => 'Saldo sudah ditambahkan secara otomatis.'
+			);
+			$this->send_email_topup_withdraw_issued_rejected($content, $agent_email);
+			
 			redirect(base_url('index.php/admin/setting_deposit_topup'));
 		}
 		else
@@ -1426,9 +1430,23 @@ class Admin extends CI_Controller {
 	
 	function topup_reject(){
 		$id = $this->uri->segment(3);
+		$agent_name = $this->agents->get_afield_in_topup($id, 'agent_name');
+		$agent_email = $this->agents->get_afield_in_topup($id, 'agent_email');
 		$reject = $this->agents->set_toptup_status($id, 'Rejected');
-		if ($reject)
+		if ($reject){	
+			//preparing to send email
+			$content = array(
+				'name' => $agent_name,
+				'category' => 'Top Up',
+				'action' => 'Rejected',
+				'action_in_bahasa' => 'Tolak',
+				'message' => 'Mohon menghubungi customer service kami atau admin kami melalui telepon/email.'
+			);
+			$this->send_email_topup_withdraw_issued_rejected($content, $agent_email);
+			
 			redirect(base_url('index.php/admin/setting_deposit_topup'));
+		}
+			
 		else
 			$this->show_message_page('reject top up', $this->db->_error_message());
 	}
@@ -1458,10 +1476,23 @@ class Admin extends CI_Controller {
 		//get the nominal requested
 		$nominal = $this->agents->get_afield_in_withdraw($id, 'nominal');
 		$agent_id = $this->agents->get_afield_in_withdraw($id, 'agent_id');
+		$agent_name = $this->agents->get_afield_in_topup($id, 'agent_name');
+		$agent_email = $this->agents->get_afield_in_topup($id, 'agent_email');
 		$issued = $this->agents->set_withdraw_status($id, 'Issued');
 		if ($issued){
 			// add deposit into account
 			$upd = $this->agents->substract_nominal_into_account($agent_id, $nominal);
+			
+			//preparing to send email
+			$content = array(
+				'name' => $agent_name,
+				'category' => 'Withdraw',
+				'action' => 'Issued',
+				'action_in_bahasa' => 'setujui',
+				'message' => 'Saldo akan dikurangi secara otomatis.'
+			);
+			$this->send_email_topup_withdraw_issued_rejected($content, $agent_email);
+			
 			redirect(base_url('index.php/admin/setting_deposit_withdraw'));
 		}
 		else
@@ -1470,9 +1501,22 @@ class Admin extends CI_Controller {
 	
 	function withdraw_reject(){
 		$id = $this->uri->segment(3);
+		$agent_name = $this->agents->get_afield_in_topup($id, 'agent_name');
+		$agent_email = $this->agents->get_afield_in_topup($id, 'agent_email');
 		$reject = $this->agents->set_withdraw_status($id, 'Rejected');
-		if ($reject)
+		if ($reject){
+			//preparing to send email
+			$content = array(
+				'name' => $agent_name,
+				'category' => 'Withdraw',
+				'action' => 'Rejected',
+				'action_in_bahasa' => 'Tolak',
+				'message' => 'Mohon menghubungi customer service kami atau admin kami melalui telepon/email.'
+			);
+			$this->send_email_topup_withdraw_issued_rejected($content, $agent_email);
+			
 			redirect(base_url('index.php/admin/setting_deposit_withdraw'));
+		}
 		else
 			$this->show_message_page('reject withdraw', $this->db->_error_message());
 	}
@@ -2407,11 +2451,10 @@ class Admin extends CI_Controller {
 		echo json_encode($data);
 	}
 	
-	public function get_rejected_order_paket(){
-		$cat = $this->uri->segment(3);
-		$cat_array = explode('-',$cat);
+	public function get_cancelled_rejected_order_paket(){
+		$status = $this->uri->segment(3);
 		
-		$query = $this->orders->get_cancelled_order_paket_2();
+		$query = $this->orders->get_cancelled_rejected_order_paket($status);
 		$number_row = 0;
 		foreach ($query->result_array() as $row){
 			$number_row ++;
@@ -2424,7 +2467,7 @@ class Admin extends CI_Controller {
 				'agent_name' => $row['agent_name'],
 				'payment_status' => $row['status'],
 				'order_status' => $row['order_status'],
-				'price' => $row['total_price'],
+				'price' => number_format($row['total_price'], 0, ',', '.'),
 				'reason' => $row['reason']
 			);
 		}
@@ -5295,10 +5338,10 @@ class Admin extends CI_Controller {
 		$number_row = 0;
 		foreach ($list->result_array() as $row){
 			$number_row++;
-			$data[] = array($number_row,$row['agent_username'],$row['agent_name'],$row['trip_category'],$row['order_id'],$row['total_price'],$row['order_status'],$row['registered_date'],$row['issued_date'],$row['status'],$row['transfer_date']);
+			$data[] = array($number_row,$row['agent_username'],$row['agent_name'],$row['order_system_id'],$row['trip_category'],$row['order_id'],$row['total_price'],$row['order_status'],$row['registered_date'],$row['issued_date'],$row['status'],$row['transfer_date']);
 		}
 		
-		$headers = array('Nomor', 'Username Agen','Nama Agen', 'Kategori Pembelian', 'ID Pesanan', 'Total Harga', 'Status Pesanan', 'Tanggal Pemesanan', 'Tanggal Issued', 'Status Pembayaran', 'Tanggal Transfer');
+		$headers = array('Nomor', 'Username Agen','Nama Agen', 'Kategori Pembelian','Sistem Order', 'ID Pesanan', 'Total Harga', 'Status Pesanan', 'Tanggal Pemesanan', 'Tanggal Issued', 'Status Pembayaran', 'Tanggal Transfer');
 
 		$this->export_to_excel($data, $headers, 'Data Semua Transaksi', 'data transaksi semua agen.xls');
 	}
@@ -5315,6 +5358,54 @@ class Admin extends CI_Controller {
 		$headers = array('Nomor', 'Username Agen','ID Agen','Nama Agen', 'Tipe Agen', 'Tanggal Bergabung', 'No. Telepon', 'Kota', 'Email', 'Upline', 'Nilai Deposit', 'Voucher', 'Status Approval');
 
 		$this->export_to_excel($data, $headers, 'Data Semua Agen', 'data semua agen.xls');
+	}
+	
+	public function excel_all_topup(){
+		//get status if requested in URL
+		$status = $this->uri->segment(3);
+		//load from database
+		if($status=="all")
+			$topup = $this->agents->get_topup_by_status();
+		else
+			$topup = $this->agents->get_topup_by_status($status);
+		if ($topup->num_rows() > 0)
+			foreach ($topup->result_array() as $row){
+				$data[] = array($row['id'],$row['agent_name'],$row['bank_from'],$row['sender_account_number'],$row['sender_account_name'],$row['bank_name'],date_format(new DateTime($row['transfer_date']), 'd M Y'), number_format($row['nominal'], 0, '.', ','), $row['status'], date_format(new DateTime($row['request_date']), 'd M Y H:i:s'));
+			}
+		
+		else
+			$data[0] = array('Tidak ada data');
+		
+		$headers = array('ID', 'Nama Agen', 'Bank Pengirim', 'Rekening Pengirim', 'Nama Pengirim', 'Bank Penerima', 'Tanggal Transfer', 'Nominal', 'Status', 'Tanggal Permintaan Top-Up');
+
+		if($status=="all")
+			$this->export_to_excel($data, $headers, 'Top Up', 'Daftar Semua Top Up.xls');
+		else
+			$this->export_to_excel($data, $headers, 'Top Up - '.$status, 'Daftar Top Up - '.$status.'.xls');
+	}
+	
+	public function excel_all_withdraw(){
+		//get status if requested in URL
+		$status = $this->uri->segment(3);
+		//load from database
+		if($status=="all")
+			$topup = $this->agents->get_withdraw_by_status();
+		else
+			$topup = $this->agents->get_withdraw_by_status($status);
+		if ($topup->num_rows() > 0)
+			foreach ($topup->result_array() as $row){
+				$data[] = array($row['id'],$row['agent_name'],$row['bank_to'],$row['receiver_account_number'],$row['receiver_account_name'],$row['message'], number_format($row['nominal'], 0, '.', ','), $row['status'], date_format(new DateTime($row['request_date']), 'd M Y H:i:s'));
+			}
+		
+		else
+			$data[0] = array('Tidak ada data');
+		
+		$headers = array('ID', 'Nama Agen', 'Bank Tujuan', 'Rekening Tujuan', 'Nama Penerima', 'Pesan', 'Nominal', 'Status', 'Tanggal Permintaan Withdraw');
+
+		if($status=="all")
+			$this->export_to_excel($data, $headers, 'Withdraw', 'Daftar Semua Withdraw.xls');
+		else
+			$this->export_to_excel($data, $headers, 'Withdraw - '.$status, 'Daftar Withdraw - '.$status.'.xls');
 	}
 	
 	public function test(){
@@ -5510,18 +5601,16 @@ class Admin extends CI_Controller {
 		//load from database
 		$query = $this->agents->get_agents_by_status('Yes');
 		$number_row = 0;
-		if ($query->num_rows() > 0){
+		if ($query->num_rows() > 0)
 			foreach ($query->result_array() as $row){
 				$number_row++;
 				$data[] = array($number_row,$row['agent_username'],$row['agent_id'],$row['agent_name'],$row['agent_type'],$row['join_date'],$row['agent_phone'],$row['agent_city'],$row['agent_email'],$row['parent_agent'],$row['deposit_amount'],$row['voucher'],$row['approved']);
 			}
-			
-			$headers = array('Nomor', 'Username Agen','ID Agen','Nama Agen', 'Tipe Agen', 'Tanggal Bergabung', 'No. Telepon', 'Kota', 'Email', 'Upline', 'Nilai Deposit', 'Voucher', 'Status Approval');
-		}
-		else{
+		
+		else
 			$data[0] = array('Tidak ada data');
-			$headers = array('Nomor', 'Username Agen','ID Agen','Nama Agen', 'Tipe Agen', 'Tanggal Bergabung', 'No. Telepon', 'Kota', 'Email', 'Upline', 'Nilai Deposit', 'Voucher', 'Status Approval');
-		}
+		
+		$headers = array('Nomor', 'Username Agen','ID Agen','Nama Agen', 'Tipe Agen', 'Tanggal Bergabung', 'No. Telepon', 'Kota', 'Email', 'Upline', 'Nilai Deposit', 'Voucher', 'Status Approval');
 		$this->export_to_excel($data, $headers, 'Data Semua Agen Aktif', 'data semua agen aktif.xls');
 	}
 	

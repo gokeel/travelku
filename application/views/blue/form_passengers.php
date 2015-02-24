@@ -294,7 +294,8 @@
 							</div><div class="clearfix"></div>\
 						</div>';
 						
-						input_return = '<input type="hidden" name="flight_id_ret" value="'+data.items[0].returns.flight_number+'">\
+						input_return = '<input type="hidden" name="ret_flight_id" value="'+data.items[0].returns.flight_id+'">\
+						<input type="hidden" name="flight_number_ret" value="'+data.items[0].returns.flight_number+'">\
 						<input type="hidden" name="airline_name_ret" value="'+data.items[0].returns.airlines_name+'">\
 						<input type="hidden" name="flight_number_ret" value="'+data.items[0].returns.flight_number+'">\
 						<input type="hidden" name="time_travel_ret" value="'+data.items[0].returns.simple_departure_time+' - '+data.items[0].returns.simple_arrival_time+'">\
@@ -362,7 +363,8 @@
 					var token = "<?php echo $this->session->userdata('token');?>";
 					$('#form-passenger').append('\
 						<input type="hidden" name="token" value="'+token+'">\
-						<input type="hidden" name="flight_id" value="'+data.items[0].departures.flight_number+'">\
+						<input type="hidden" name="flight_id" value="'+data.items[0].departures.flight_id+'">\
+						<input type="hidden" name="flight_number_dep" value="'+data.items[0].departures.flight_number+'">\
 						<input type="hidden" name="adult" value="'+data.items[0].departures.count_adult+'">\
 						<input type="hidden" name="child" value="'+data.items[0].departures.count_child+'">\
 						<input type="hidden" name="infant" value="'+data.items[0].departures.count_infant+'">\
@@ -898,6 +900,14 @@
 		
 		
 		$('#form-passenger').empty();
+		var options = '';
+		for(var i=0; i<data_country.length; i++){
+			if(data_country[i].value=="id")
+				options += '<option value="'+data_country[i].value+'" selected>'+data_country[i].teks+'</option>';
+			else
+				options += '<option value="'+data_country[i].value+'">'+data_country[i].teks+'</option>';
+		}
+		options += '</select>';
 		form += '<div class="padding30 grey">\
 			<span class="size16px bold dark left">Informasi Kontak</span>\
 			<div class="roundstep right">1</div>\
@@ -908,15 +918,23 @@
 				<option value="">--Pilih Title--</option><option value="Mr">Tuan</option><option value="Mrs">Nyonya</option><option value="Ms">Nona</option>\
 			</select>\
 			<span class="size13 dark">ID (KTP/SIM)</span>\
-				<input type="text" class="form-control" name="conId" placeholder="" required>\
+				<input type="text" class="form-control" name="conId" placeholder="" onBlur="return isValidNumber(this.value)" required>\
 			<span class="size13 dark">Nama Depan</span>\
-				<input type="text" class="form-control" name="conFirstName" placeholder="" required>\
+				<input type="text" class="form-control" name="conFirstName" placeholder="" onBlur="return nameIsCharacter(this.value)" required>\
 			<span class="size13 dark">Nama Belakang</span>\
-				<input type="text" class="form-control" name="conLastName" placeholder="" required>\
+				<input type="text" class="form-control" name="conLastName" placeholder="" onBlur="return nameIsCharacter(this.value)" required>\
 			<span class="size13 dark">Email</span>\
 				<input type="text" class="form-control" name="conEmailAddress" placeholder="" required>\
 			<span class="size13 dark">Telepon/HP</span>\
-				<input\ type="text" class="form-control" name="conPhone" placeholder="" required>\
+				<input\ type="text" class="form-control" name="conPhone" placeholder="" onBlur="return isValidNumber(this.value)" required>\
+			<span class="size13 dark">Kewarganegaraan</span>\
+				<select required class="form-control mySelectBoxClass" name="country" required>\
+				'+options+'<br />\
+				<input type="checkbox" name="reserve-for-other" value="yes">  Klik jika reservasi untuk orang lain.<br />\
+				<div id="guest" style="display:none;">\
+				<span class="size13 dark">Nama Lengkap Tamu</span>\
+				<input type="text" class="form-control" name="guest_name" placeholder="" onBlur="return nameIsCharacter(this.value)">\
+				</div>\
 			<br/><br/>\
 			<span class="size16px bold dark left">Review and book your trip</span>\
 			<div class="roundstep right">2</div>\
@@ -933,6 +951,14 @@
 		/*create input contains data*/
 		$('#form-passenger').append(inputs);
 		$('#form-passenger').append(form);
+		
+		$(document).ready(function(){
+        $('input[type="checkbox"]').click(function(){
+            if($(this).attr("value")=="yes"){
+                $('#guest').toggle();
+            }
+        });
+    });
 	};
 	
 	function create_form(el_div, n, who, tot_adult, category, numbering, last){

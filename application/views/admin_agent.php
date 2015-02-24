@@ -11,8 +11,6 @@
 	</div>-->
 	<div class="frametab">
 		<input type="button" onclick="document.location='<?php echo base_url('index.php/admin/agent_data_page');?>'" value="ADD NEW DATA" name="Add Data" style="margin:10px; float:right;">
-		<h3 style="margin:5px 0 5px 5px;">Agen Request</h3>
-		Download <br/><a href="<?php echo base_url();?>index.php/admin/excel_all_agent" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
 		<div id="data-agents"></div>
 	</div>
 	<div id="end"></div>

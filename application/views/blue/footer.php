@@ -1,7 +1,9 @@
-	<div class="footerbg">
+	<!--<div class="footerbg">-->
+	<div style="overflow:hidden;padding:30px 0;width:100%;" class="box-blue-rizky">
 		<div class="container">	
 			<div class="col-md-3">
-				<span class="ftitleblack">Let's socialize</span>
+				<!--<span class="ftitleblack">Let's socialize<br /><br /></span>-->
+				<span class="font-arial">Let's socialize<br /><br /></span>
 				<div class="scont">
 					<a target="_blank" href="<?php echo prep_url($facebook_link);?>" class="social1b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-facebook.png" alt=""/></a>
 					<a target="_blank" href="<?php echo prep_url($twitter_link);?>" class="social2b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-twitter.png" alt=""/></a>
@@ -17,9 +19,10 @@
 			<!-- End of column 1-->
 			
 			<div class="col-md-3">
-				<span class="ftitleblack">Informasi Umum</span>
+				<span class="font-arial">Informasi Umum</span>
 				<br/><br/>
-				<ul class="footerlistblack">
+				<!--<ul class="footerlistblack">-->
+				<ul class="font-arial">
 					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/faq">Frequently Asked Questions</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/tentang-kami">Tentang Kami</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/load_non_paket/menjadi-agen">Keagenan</a></li>
@@ -31,9 +34,9 @@
 			<!-- End of column 2-->		
 			
 			<div class="col-md-3">
-				<span class="ftitleblack">Layanan Tambahan</span>
+				<span class="font-arial">Layanan Tambahan</span>
 				<br/><br/>
-				<ul class="footerlistblack">
+				<ul class="font-arial">
 					<li><a href="<?php echo base_url();?>index.php/webfront/agent_registration">Registrasi Agen</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/confirm_payment">Konfirmasi Pembayaran Pesanan</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/detail_order">Cek Detil Pemesanan</a></li>
@@ -44,16 +47,16 @@
 			<!-- End of column 3-->		
 			
 			<div class="col-md-3 grey">
-				<!--<span class="ftitleblack">Newsletter</span>
+				<!--<span class="font-arial">Newsletter</span>
 				<div class="relative">
 					<input type="email" class="form-control fccustom2black" id="exampleInputEmail1" placeholder="Enter email">
 					<button type="submit" class="btn btn-default btncustom">Submit<img src="<?php echo BLUE_THEME_DIR;?>/images/arrow.png" alt=""/></button>
 				</div>
 				<br/><br/>-->
-				<span class="ftitleblack">Customer support</span><br/><br/>
+				<span class="font-arial">Customer support</span><br/><br/>
 				<div id="ym-customer-service"></div>
-				<span class="grey2"><?php echo $support_by_call;?></span><br/>
-				<span class="grey2"><?php echo $support_by_email;?></span>
+				<span class="font-arial"><?php echo $support_by_call;?></span><br/>
+				<span class="font-arial"><?php echo $support_by_email;?></span>
 			</div>			
 			<!-- End of column 4-->			
 		
@@ -79,8 +82,8 @@
 				var div = $('#ym-customer-service');
 				for(var i=0; i<datajson.length;i++)
 					//data_via[i] = {number_row: datajson[i].number_row, id:datajson[i].id, name:datajson[i].name, type:datajson[i].type};
-					div.append('</span><a href="ymsgr:SendIM?'+datajson[i].username+'">\
-						<img border=0 height="40px" src="http://opi.yahoo.com/online?u='+datajson[i].username+'&m=g&t=9"></a>&nbsp;&nbsp;'+datajson[i].username+'<br/><br/>');
+					div.append('<a href="ymsgr:SendIM?'+datajson[i].username+'">\
+						<img border=0 height="40px" src="http://opi.yahoo.com/online?u='+datajson[i].username+'&m=g&t=9"></a>&nbsp;&nbsp;<span class="font-arial">'+datajson[i].username+'</span><br/><br/>');
 			}
 		});
 	</script>

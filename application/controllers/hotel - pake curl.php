@@ -23,7 +23,7 @@ class Hotel extends CI_Controller {
     }
 	public function get_token()
 	{
-		$getdata = $this->get_content($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key_hotel').'&output=json');
+		$getdata = $this->get_content($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json');
 		$json = json_decode($getdata);
 		$token = $json->token;
 		return $token;
@@ -66,9 +66,12 @@ class Hotel extends CI_Controller {
 		$adult = $this->input->get('dewasa', TRUE);
 		$child = $this->input->get('anak', TRUE);
 		
-		$token = $this->get_token();
-		$this->session->set_userdata('token', $token);
-		
+		//$token = $this->session->userdata('token');
+		//if ($token =='') {
+			$token = $this->get_token();
+			$this->session->set_userdata('token', $token);
+		//}
+		//echo ($this->config->item('api_server').'/search/hotel?q='.$query.'&startdate='.$checkin.'&night='.$night.'&enddate='.$checkout.'&room='.$room.'&adult='.$adult.'&child='.$child.'&token='.$token.'&output=json');
 		$getdata = $this->get_content($this->config->item('api_server').'/search/hotel?q='.$query.'&startdate='.$checkin.'&night='.$night.'&enddate='.$checkout.'&room='.$room.'&adult='.$adult.'&child='.$child.'&token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		
@@ -159,42 +162,19 @@ class Hotel extends CI_Controller {
 					);
 				}
 				else{ //jika sukses
-					//save to internal database for order log
-					if($this->session->userdata('account_id')<>''){
-						if ($this->session->userdata('account_id')=='1')
-							$account_id = $this->config->item('account_id');
-						else
-							$account_id = $this->session->userdata('account_id');
-					}
-					else
-						$account_id = $this->config->item('account_id');
-							
-					$total = $myorder->total;
+					$total_before = intval($myorder->total_without_tax) + intval($myorder->total_tax);
 					//save to db
 					$data_insert = array(
-						'3rd_party_order_id' => $myorder->order_id,
-						'order_system_id' => 'tiketcom',
-						'account_id' => $account_id,
-						'trip_category' => 'hotel',
-						'customer_email' => $this->input->post('conEmailAddress'),
-						'hotel_id' => $room_id,
-						'hotel_name' => $myorder->data[0]->order_name,
-						'hotel_address' => $this->input->post('hotel_address'),
-						'hotel_regional' => $this->input->post('regional'),
-						'hotel_room_name' => $myorder->data[0]->order_name_detail,
-						'hotel_room' => $room,
-						'departing_date' => $checkin,
-						'returning_date' => $checkout,
-						'time_travel' => $night,
-						'total_price' => $total,
-						'admin_fee' => '10000',
-						'adult' => $adult,
-						'child' => $child,
-						'order_status' => 'booked',
-						'registered_date' => date('Y-m-d H:i:s')
+						'order_id' => $response_order->myorder->order_id,
+						'category' => 'hotel',
+						'token' => $response_order->token,
+						'delete_uri' => $myorder->data[0]->delete_uri,
+						'price_no_discount' => intval($myorder->total_without_tax),
+						'price_with_discount' => $total_before - intval($myorder->discount_amount),
+						'status' => 'checkout'
 					);
 					$this->load->model('orders');
-					$internal_order_id = $this->orders->add_order($data_insert);
+					$internal_order_id = $this->orders->add_order_tiketcom($data_insert);
 					
 					//generate parameter for form_passenger.php
 					$response = array(
@@ -220,7 +200,6 @@ class Hotel extends CI_Controller {
 					$this->session->set_userdata('con_lastname', $this->input->post('conLastName'));
 					$this->session->set_userdata('con_phone', $this->input->post('conPhone'));
 					$this->session->set_userdata('con_email', $this->input->post('conEmailAddress'));
-					$this->session->set_userdata('country', $this->input->post('country'));
 				}
 			}
 		$this->load_theme('issued_page', $response);
@@ -404,7 +383,7 @@ class Hotel extends CI_Controller {
 			}
 			else{//jika sukses, checkout customer
 				$cc_url = $response_1->next_checkout_uri.'?';
-				$params .=  '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&country='.$this->session->userdata('country').'&lang=id&output=json';
+				$params .=  '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&country=id&lang=id&output=json';
 				$cc_url .= $params;
 				//print_r($cc_url);
 				$send_request_3 = file_get_contents($cc_url);

@@ -35,9 +35,9 @@ class Orders extends CI_Model {
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
 		$this->db->join('users', 'orders.locked_by = users.account_id', 'left');
 		if($all==null)
-			$this->db->where("order_system_id ='internal' and trip_category ='". $cat."' and (order_status = 'Registered' or order_status = 'Paid')");
+			$this->db->where("trip_category ='". $cat."' and (order_status = 'Registered' or order_status = 'Booked' or order_status = 'Paid')");
 		else if($all==true)
-			$this->db->where("order_system_id ='internal' and trip_category", $cat);
+			$this->db->where("trip_category", $cat);
 		if($account_id<>null)
 			$this->db->where('orders.account_id', $account_id);
 		$this->db->order_by('orders.order_id desc');
@@ -60,13 +60,13 @@ class Orders extends CI_Model {
 		return $query;
 	}
 	
-	function get_cancelled_order($cat){
+	function get_cancelled_rejected_order_internal_nonpaket($cat, $status){
 		$this->db->select('orders.*, agents.agent_name, payments.status, reasons.reason');
 		$this->db->from('orders');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
 		$this->db->join('reasons', 'orders.order_id = reasons.order_id', 'left');
-		$this->db->where("trip_category ='". $cat."' and (order_status = 'Cancelled' or order_status = 'Rejected')");
+		$this->db->where("trip_category ='". $cat."' and order_status = '$status'");
 		$this->db->order_by('orders.order_id desc');
 		//$this->db->where("order_status = 'Registered' or order_status = 'Paid'");
 		
@@ -79,7 +79,7 @@ class Orders extends CI_Model {
 		$this->db->from('orders');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
-		$this->db->where('order_status', 'Registered');
+		//$this->db->where("order_status = 'Registered' or order_status = 'Booked' or order_status = 'booked'");
 		$this->db->order_by('orders.order_id desc');
 		
 		$query = $this->db->get();
@@ -314,7 +314,7 @@ class Orders extends CI_Model {
 		return $query;
 	}
 	
-	function get_cancelled_order_paket_2(){
+	function get_cancelled_rejected_order_paket($status){
 		$this->db->select('orders.*, posts.title, post_categories.category, post_categories.description, agents.agent_name, payments.status, reasons.reason');
 		$this->db->from('orders');
 		$this->db->join('posts', 'orders.post_id = posts.post_id');
@@ -322,7 +322,7 @@ class Orders extends CI_Model {
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
 		$this->db->join('reasons', 'orders.order_id = reasons.order_id', 'left');
-		$where_string = "trip_category = 'paket' and (order_status = 'Cancelled' or order_status = 'Rejected')";
+		$where_string = "trip_category = 'paket' and order_status = '$status'";
 		$this->db->where($where_string);
 		$this->db->order_by('orders.order_id desc');
 		
@@ -340,6 +340,46 @@ class Orders extends CI_Model {
 				$token = $row['token'];
 			return $token;
 		}
+		else
+			return false;
+	}
+	
+	function get_tiketcom_active_order_in_last_spesific_hours($datetime){
+		$query = $this->db->query("select * from orders where order_system_id = 'tiketcom' and order_status <> 'issued' and order_status <> 'canceled' and registered_date >= '$datetime'");
+		if($query->num_rows() > 0)
+			return $query;
+		else
+			return false;
+	}
+	
+	function get_tiketcom_active_order_more_than_spesific_hours($datetime){
+		$query = $this->db->query("select * from orders where order_system_id = 'tiketcom' and order_status <> 'issued' and order_status <> 'canceled' and registered_date < '$datetime'");
+		if($query->num_rows() > 0)
+			return $query;
+		else
+			return false;
+	}
+	
+	function get_tiketcom_orders_by_status($status){
+		$this->db->select('orders.*, agents.agent_name, agents.agent_username, payments.status, payments.transfer_date');
+		$this->db->from('orders');
+		$this->db->join('agents', 'orders.account_id = agents.agent_id');
+		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
+		//$this->db->where('order_system_id', 'tiketcom');
+		if($status=='booked')
+			$this->db->where("order_system_id = 'tiketcom' and (order_status = 'Booked' or order_status = 'booked')");
+		else if($status=='issued')
+			$this->db->where("order_system_id = 'tiketcom' and (order_status = 'Issued' or order_status = 'issued')");
+		else if($status=='canceled')
+			$this->db->where("order_system_id = 'tiketcom' and (order_status = 'Cancelled' or order_status = 'Cancelled' or order_status = 'Canceled' or order_status = 'canceled')");
+		else if($status=='rejected')
+			$this->db->where("order_system_id = 'tiketcom' and (order_status = 'Rejected' or order_status = 'rejected')");
+		
+		$this->db->order_by('orders.order_id desc');
+		//echo $this->db->get_compiled_select();
+		$query = $this->db->get();
+		if($query->num_rows > 0)
+			return $query;
 		else
 			return false;
 	}

@@ -178,18 +178,18 @@
 			success:function(data){
 				for(var i=0;i<data.length;i++){
 					$('#result').append('<div class="col-md-3 textright">\
-											<div class="margtop15"><img src="<?php echo base_url();?>assets/images/payment/'+data[i].logo+'" width="110px" height="35px"></div>\
-										</div>\
-										<div class="col-md-7">\
-											<b>'+data[i].holder+'</b><br/>\
-											Rekening: <b>'+data[i].account_number+'</b><br/>\
-											Cabang: '+data[i].branch+', '+data[i].city+'<br/>\
-										</div>\
-										<div class="col-md-2 textleft margtop15">\
-										</div>\
-										<div class="clearfix"></div>\
-										<br/>\
-									');
+									<div><img src="<?php echo base_url();?>assets/images/payment/'+data[i].logo+'" width="110px" height="55px"></div>\
+								</div>\
+							<div class="col-md-7">\
+								<b>'+data[i].holder+'</b><br/>\
+									Rekening: <b>'+data[i].account_number+'</b><br/>\
+									Cabang: '+data[i].branch+', '+data[i].city+'<br/>\
+							</div>\
+							<div class="col-md-2 textleft margtop15">\
+							</div>\
+							<div class="clearfix"></div>\
+							<br/>\
+					');
 				}	
 			}
 		});

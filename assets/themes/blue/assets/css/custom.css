@@ -2760,3 +2760,13 @@ padding-top:3px;
 .box-blue{
 	background-color:#0489F6;
 }
+
+.box-blue-rizky{
+	background: url('../../images/head blue.png') no-repeat;
+	background-size: 100% 100%;
+}
+.font-arial{font-family:"Arial"; Font-size:16px; color:white; font-weight:700;}
+ul.font-arial {padding-left:20px; list-style-image:url('../../images/li2.png');}
+ul.font-arial li{line-height:24px; }
+ul.font-arial li a{color:white; font-family:"Arial";}
+ul.font-arial li a:hover{color:white; text-decoration:none;}

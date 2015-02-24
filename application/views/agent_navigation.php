@@ -188,35 +188,22 @@
 		$.ajax({
 			type : "GET",
 			async: false,
-			url: '<?php echo base_url();?>index.php/admin/get_yahoo',
+			url: '<?php echo base_url();?>index.php/other/get_yahoo_by_type/customer-service',
 			dataType: "json",
 			success:function(datajson){
-				for(var i=0; i<datajson.length;i++) 
-					data_ym[i] = {name:datajson[i].name};
+				var div = $('#ym_list');
+				var str_output = '<ul>';
+				//for(var i=0; i<datajson.length;i++) 
+					//data_ym[i] = {name:datajson[i].name};
+				for(var i=0; i<datajson.length;i++){
+					//data_via[i] = {number_row: datajson[i].number_row, id:datajson[i].id, name:datajson[i].name, type:datajson[i].type};
+					str_output += '<li><a href="ymsgr:SendIM?'+datajson[i].username+'">\
+						<img border=0 src="http://opi.yahoo.com/online?u='+datajson[i].username+'&m=g&t=1"></a>&nbsp;&nbsp;'+datajson[i].username+'</li>';
+				}
+				str_output += '</ul>';
+				div.append(str_output);
 			}
 		});
-		
-		var div = document.getElementById('ym_list'); 
-		var ul = document.createElement('ul'); 
-		for (var i=0; i<data_ym.length; i++){ 
-			var li = document.createElement('li'); 
-			var a = document.createElement('a'); 
-			a.setAttribute('href', "ymsgr:sendIM?"+data_ym[i].name); 
-			var img = document.createElement('img'); 
-			img.setAttribute('src', "http://opi.yahoo.com/online?u="+data_ym[i].name+"&m=g&t=1"); 
-			img.setAttribute('border', 0); 
-			//insert img into a 
-			a.appendChild(img); 
-			//insert a into li 
-			li.appendChild(a); 
-			var span = document.createElement('span'); 
-			span.innerHTML = data_ym[i].name; 
-			//insert span into li 
-			li.appendChild(span); 
-			//finally insert li into ul 
-			ul.appendChild(li); 
-		} 
-		div.appendChild(ul);
 	}
 	
-</script>
+</script>	

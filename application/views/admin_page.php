@@ -8,9 +8,94 @@
 <div id="content"  style="min-height:400px;"> 
 
   <div class="frametab">
-		<h3 style="margin:5px 0 5px 5px;">Dashboard</h3>
-		Download Semua Transaksi<br/><a href="<?php echo base_url();?>index.php/admin/excel_all_transaction" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+		<h3 style="margin:5px 0 5px 5px;"><u>Dashboard</u></h3>
 		<div id="data-booking"></div>
+		<h3 style="margin:5px 0 5px 5px;"><u>Download Links</u></h3>
+		<table>
+			<tr>
+				<th>Kategori</th>
+				<th>Item</th>
+				<th>Download Link</th>
+			</tr>
+			<tr>
+				<td>Booking</td>
+				<td>Semua Transaksi Booking</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_transaction" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			<tr>
+				<td>Keagenan</td>
+				<td>Agen Request</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_agent" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Agen Aktif</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_active_agent" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			<tr>
+				<td>Top-Up</td>
+				<td>Semua Permintaan Top-Up</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_topup/all" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Top-Up - Request Baru</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_topup/Requested" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Top-Up - Issued</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_topup/Issued" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Top-Up - Ditolak</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_topup/Rejected" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>Withdraw</td>
+				<td>Semua Permintaan Withdraw</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_withdraw/all" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Withdraw - Request Baru</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_withdraw/Requested" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Withdraw - Issued</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_withdraw/Issued" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Withdraw - Ditolak</td>
+				<td align="center">
+					<a href="<?php echo base_url();?>index.php/admin/excel_all_topup/Rejected" style="padding-top:30px"><img src="<?php echo IMAGES_DIR;?>/excel-icon.png" width="45" height="45"/></a>
+				</td>
+			</tr>
+		</table>
 	</div>
 	<div id="end"></div>
   <!--&content--> 
