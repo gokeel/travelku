@@ -483,8 +483,11 @@ $(function() {
 		<a href="<?php echo base_url();?>index.php/admin/notification_page" id="notification">Notifikasi Hari Ini (50)</a>
 		<a href="<?php echo base_url();?>index.php/admin/logout">Logout..!</a>
 	</span> 
-	<span id="logocms"><b>cms</b>one
-	</span> 
+	<!--<span id="logocms"><b>cms</b>one
+	</span> -->
+	<span style="margin: -15px 0px 0px 0px;float:left;width:140px;height:35px;display:inline-block;">
+		<img src="<?php echo base_url();?>/assets/uploads/option_images/logo.png" />
+	</span>
 </div>
 
 <div class="tabmenu">

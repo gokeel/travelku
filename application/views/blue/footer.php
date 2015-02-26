@@ -1,6 +1,6 @@
 	<!--<div class="footerbg">-->
-	<div style="overflow:hidden;padding:30px 0;width:100%;" class="box-blue-rizky">
-		<div class="container">	
+	<div style="overflow:hidden;padding:30px 0;width:100%;" >
+		<div class="container box-blue-rizky">	
 			<div class="col-md-3">
 				<!--<span class="ftitleblack">Let's socialize<br /><br /></span>-->
 				<span class="font-arial">Let's socialize<br /><br /></span>
@@ -63,6 +63,7 @@
 			
 		</div>	
 	</div>
+	<!--
 	<div class="footerbg3">
 		<div class="container center grey"> 
 		<a href="<?php echo base_url();?>">Home</a> | 
@@ -71,7 +72,7 @@
 		<a href="<?php echo base_url();?>index.php/webfront/load_non_paket/kontak">Contact</a>
 		<a href="#top" class="gotop scroll"><img src="<?php echo BLUE_THEME_DIR;?>/images/spacer.png" alt=""/></a>
 		</div>
-	</div>
+	</div>-->
 	<script>
 		$.ajax({
 			type : "GET",

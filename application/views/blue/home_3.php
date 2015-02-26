@@ -81,25 +81,24 @@
 				
 					<div class="row">
 						<div class="col-md-4 scolleft">
-							
-						
 							<div class="w50percent">
 								<div class="radio">
 								  <label>
 									<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" checked>
-									<span class="flight-ico"></span> Pesawat
+									<!--<span class="flight-ico"></span> Pesawat-->
+									Pesawat
 								  </label>
 								</div>
 								<div class="radio">
 								  <label>
 									<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" >
-									<span class="hotel-ico"></span> Hotel
+									Hotel
 								  </label>
 								</div>
 								<div class="radio">
 								  <label>
 									<input type="radio" name="optionsRadios" id="optionsRadios3" value="option2">
-									<span class="suitcase-ico"></span> Kereta
+									Kereta
 								  </label>
 								</div>
 							</div>
@@ -208,7 +207,7 @@
 									
 										
 									<div class="clearfix"></div>
-									
+									<br />
 									<button type="submit" class="btn-search3">Search</button>
 								</form>
 							</div>
@@ -700,19 +699,13 @@
 		<div class="deals4">
 			<div class="container">	
 				<div class="row">
-					<div class="col-md-3">
-						<img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_1_logo;?>" width="100%" height="100%"/>
-						<!--<img src="<?php echo base_url();?>assets/images/tagline-bestchoice.png" width="75px" height="50px"> <b><?php echo $tag_line_1_title;?></b><br/><br/>
-						<span class="size13 grey mt-9"><?php echo $tag_line_1_content;?></span>-->
+					<div class="col-md-6">
+						<img style="margin-left:0px" src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_1_logo;?>" width="45%" height="100%"/>
+						<img style="margin-left:7%" src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_2_logo;?>" width="45%" height="100%"/>
 					</div>
-					<div class="col-md-3">
-						<img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_2_logo;?>" width="100%" height="100%"/>
-					</div>
-					<div class="col-md-3">
-						<img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_3_logo;?>" width="100%" height="100%"/>
-					</div>
-					<div class="col-md-3">
-						<img src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_4_logo;?>" width="100%" height="100%"/>
+					<div class="col-md-6">
+						<img style="margin-left:0px" src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_3_logo;?>" width="45%" height="100%"/>
+						<img style="margin-left:7%" src="<?php echo base_url();?>assets/uploads/option_images/<?php echo $tag_service_4_logo;?>" width="45%" height="100%"/>
 					</div>
 				</div>
 			</div>
@@ -776,32 +769,32 @@
 				<!--<div class="col-md-6" style="background-color:#F2F2F2">-->
 				<div class="col-md-6">
 					<!--<img src="<?php echo base_url();?>assets/images/banner-partner.png" alt="" width="100%" height="155px"/>-->
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/sriwijaya.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Lion Air.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Air asia.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Garuda Indonesia.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/CITILINK.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Wings Air.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Batik air.png" height="40px" width="65px"/><br /><br />
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Tiger air.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Kalstar.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/xpress air.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Trigana Air.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Malindo Air.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/Susi Air.png" height="40px" width="65px"/>&nbsp;
-					<img src="<?php echo base_url();?>assets/images/logomaskapai/NAM.png" height="40px" width="65px"/><br /><br />
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/sriwijaya.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Lion Air.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Air asia.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Garuda Indonesia.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/CITILINK.png" height="40px" width="65px"/><br /><br />
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Wings Air.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Batik air.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Tiger air.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Kalstar.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/xpress air.png" height="40px" width="65px"/><br /><br />
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Trigana Air.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Malindo Air.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/Susi Air.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/logomaskapai/NAM.png" height="40px" width="65px"/>&nbsp;&nbsp;&nbsp;&nbsp;
 					<img src="<?php echo base_url();?>assets/images/logomaskapai/Thai Air.png" height="40px" width="65px"/>
 				</div>
 				<div class="col-md-3">
-					<img src="<?php echo base_url();?>assets/images/payment/BCA.png" height="50px" width="90px"/>&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/payment/BCA.png" height="50px" width="90px"/>&nbsp;&nbsp;&nbsp;&nbsp;
 					<img src="<?php echo base_url();?>assets/images/payment/mandiri.png" height="50px" width="90px"/><br /><br />
-					<img src="<?php echo base_url();?>assets/images/payment/BRI.png" height="50px" width="90px"/>&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/payment/BRI.png" height="50px" width="90px"/>&nbsp;&nbsp;&nbsp;&nbsp;
 					<img src="<?php echo base_url();?>assets/images/payment/BNI.png" height="50px" width="90px"/>
 				</div>
 				<div class="col-md-3">
-					<img src="<?php echo base_url();?>assets/images/Asita.png" height="50px" width="90px"/>&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/Asita.png" height="50px" width="90px"/>&nbsp;&nbsp;&nbsp;&nbsp;
 					<img src="<?php echo base_url();?>assets/images/Al Qadri.png" height="50px" width="90px"/><br /><br />
-					<img src="<?php echo base_url();?>assets/images/Abacus.png" height="50px" width="90px"/>&nbsp;&nbsp;&nbsp;
+					<img src="<?php echo base_url();?>assets/images/Abacus.png" height="50px" width="90px"/>&nbsp;&nbsp;&nbsp;&nbsp;
 					<img src="<?php echo base_url();?>assets/images/Wonderfull Indonesia.png" height="50px" width="90px"/>
 				</div>
 			</div>

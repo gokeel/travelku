@@ -344,7 +344,7 @@
 													<div class="frow1">\
 														<ul class="flightstable mt20">\
 															<li class="ft1">\
-																<img src="<?php echo base_url();?>assets/images/logomaskapai/'+airline_name.toLowerCase()+'.png" width="120" height="50" alt=""><br/>\
+																<img src="<?php echo base_url();?>assets/images/logomaskapai/'+airline_name.toLowerCase()+'.png" width="120" height="70" alt=""><br/>\
 																<span class="grey">'+data.items[0].departures.result[i].airlines_name+'</span><br/>\
 															</li>\
 															<li class="ft2">\
