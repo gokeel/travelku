@@ -244,10 +244,10 @@ class Agent extends CI_Controller {
 				'sender_number' => $row['sender_account_number'],
 				'sender_name' => $row['sender_account_name'],
 				'bank_name' => $row['bank_name'],
-				'transfer_date' => $row['transfer_date'],
-				'nominal' => $row['nominal'],
+				'transfer_date' => date_format(new DateTime($row['transfer_date']), 'd M Y'),
+				'nominal' => number_format($row['nominal'], 0, ',', '.'),
 				'status' => $row['status'],
-				'request_date' => $row['request_date']
+				'request_date' => date_format(new DateTime($row['request_date']), 'd M Y H:i:s')
 			);
 		}
 		echo json_encode($data);
@@ -267,11 +267,83 @@ class Agent extends CI_Controller {
 				'receiver_number' => $row['receiver_account_number'],
 				'receiver_name' => $row['receiver_account_name'],
 				'message' => $row['message'],
-				'nominal' => $row['nominal'],
+				'nominal' => number_format($row['nominal'], 0, ',', '.'),
 				'status' => $row['status'],
-				'request_date' => $row['request_date']
+				'request_date' => date_format(new DateTime($row['request_date']), 'd M Y H:i:s')
 			);
 		}
+		echo json_encode($data);
+	}
+	
+	public function get_order_list(){
+		$category = $this->uri->segment(3);
+		$account_id = $this->session->userdata('account_id');
+		if($category=='flight'){
+			$query = $this->orders->agent_get_order_flight($account_id);
+			foreach($query->result_array() as $row){
+				$data[] = array(
+					'order_id' => $row['orderid'],
+					'order_system_id' => $row['order_system_id'],
+					'booking_code' => $row['booking_code'],
+					'booking_code_ret' => $row['booking_code_ret'],
+					'customer_email' => $row['customer_email'],
+					'is_round_trip' => $row['is_round_trip'],
+					'airline_name_dep' => $row['airline_name_depart'],
+					'airline_name_ret' => $row['airline_name_return'],
+					'flight_id_dep' => $row['flight_id_depart'],
+					'flight_id_ret' => $row['flight_id_return'],
+					'route' => $row['route'],
+					'departing_date' => date_format(new DateTime($row['departing_date']), 'd M Y'),
+					'returning_date' => date_format(new DateTime($row['returning_date']), 'd M Y'),
+					'time_travel' => $row['time_travel'],
+					'time_travel_ret' => $row['time_travel_ret'],
+					'total_price_dep' => number_format($row['total_price_dep'], 0, ',', '.'),
+					'total_price_ret' => number_format($row['total_price_ret'], 0, ',', '.'),
+					'payment_status' => $row['payment_status'],
+					'order_status' => $row['order_status'],
+					'registered_date' => date_format(new DateTime($row['registered_date']), 'd M Y H:i:s')
+				);
+			}
+		}
+		else if($category=='hotel'){
+			$query = $this->orders->agent_get_order_hotel($account_id);
+			foreach($query->result_array() as $row){
+				$data[] = array(
+					'order_id' => $row['orderid'],
+					'order_system_id' => $row['order_system_id'],
+					'booking_code' => $row['booking_code'],
+					'customer_email' => $row['customer_email'],
+					'hotel_name' => $row['hotel_name'],
+					'hotel_regional' => $row['hotel_regional'],
+					'hotel_room_name' => $row['hotel_room_name'],
+					'checkin' => date_format(new DateTime($row['departing_date']), 'd M Y'),
+					'checkout' => date_format(new DateTime($row['returning_date']), 'd M Y'),
+					'night' => $row['time_travel'],
+					'room' => $row['hotel_room'],
+					'total_price' => number_format($row['total_price'], 0, ',', '.'),
+					'payment_status' => $row['payment_status'],
+					'order_status' => $row['order_status'],
+					'registered_date' => date_format(new DateTime($row['registered_date']), 'd M Y H:i:s')
+				);
+			}
+		}
+		else if($category=='paket'){
+			$query = $this->orders->agent_get_order_paket($account_id);
+			foreach($query->result_array() as $row){
+				$data[] = array(
+					'order_id' => $row['order_id'],
+					'category' => $row['category'],
+					'title' => $row['title'],
+					'customer_email' => $row['customer_email'],
+					'currency' => $row['currency'],
+					'total_price' => number_format($row['total_price'], 0, ',', '.'),
+					'payment_status' => $row['payment_status'],
+					'order_status' => $row['order_status'],
+					'registered_date' => date_format(new DateTime($row['registered_date']), 'd M Y H:i:s')
+				);
+			}
+		}
+		
 		echo json_encode($data);
 	}
 	

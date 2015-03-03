@@ -208,7 +208,7 @@
 										
 									<div class="clearfix"></div>
 									<br />
-									<button type="submit" class="btn-search3">Search</button>
+									<button type="submit" class="btn-search-biru-tua">Search</button>
 								</form>
 							</div>
 							<!-- END OF HOTELS TAB -->
@@ -301,7 +301,7 @@
 										</div>
 									</div><div class="clearfix"></div>
 								
-									<button type="submit" class="btn-search3">Search</button>
+									<button type="submit" class="btn-search-biru-tua">Search</button>
 								</form>
 							</div>
 							<!-- END OF FLIGHTS TAB -->
@@ -392,7 +392,7 @@
 										</div>
 									</div><div class="clearfix"></div>
 									
-									<button type="submit" class="btn-search3">Search</button>
+									<button type="submit" class="btn-search-biru-tua">Search</button>
 								</form>
 							</div>
 							<!-- END OF TRAINS TAB -->
@@ -600,26 +600,14 @@
 			<div class="container">	
 				<div class="row">
 					<div class="col-md-4">
-						<?php
-						$index_latest_top = 0;
-						$i = 0;
-						while($index_latest_top<1) {
-							if($latest[$i]['price']<>"0"){
-					?>
 						<div class="lbl">
-							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[$i]['image'];?>" width="360" height="184" alt="" class="fwimg"/></a>
+							<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[0]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[0]['image'];?>" width="360" height="184" alt="" class="fwimg"/></a>
 							<div class="smallblacklabel">Paket Terbaru</div>
 						</div>
 					<?php
-								$index_latest_top++;
-							}
-							$i++;
-						}
-						
 						$index_latest = 0;
 						$i = 0;
-						while($index_latest<3) {
-							if($latest[$i]['price']<>"0"){
+						for($i=0; $i<3; $i++){
 					?>
 							<div class="deal">
 								<a href="<?php echo base_url();?>index.php/webfront/show_package_content/<?php echo $latest[$i]['id'];?>"><img src="<?php echo base_url();?>assets/uploads/posts/<?php echo $latest[$i]['image'];?>" alt="" class="dealthumb" width="50" height="50" /></a>
@@ -634,10 +622,7 @@
 									<p class="size12 grey lh2"><span class="price"><?php echo $latest[$i]['currency'];?> <?php echo $latest[$i]['price'];?></span></p>
 								</div>					
 							</div>
-					<?php 
-								$index_latest++;
-							}
-							$i++;
+					<?php
 						}
 					?>				
 					</div>

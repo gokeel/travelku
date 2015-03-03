@@ -87,28 +87,30 @@ class Admin extends CI_Controller {
 	/*******************************************/
 	function show_message_page($in, $message){
 		$data = array(
-				'user_name' => $this->session->userdata('user_name'),
-				'ip_address' => $this->session->userdata('ip_address'),
+				//'user_name' => $this->session->userdata('user_name'),
+				//'ip_address' => $this->session->userdata('ip_address'),
 				'title' => 'Pesan Kesalahan',
 				'subtitle' => 'Terjadi kesalahan pada saat '.$in,
 				'message' => $message
 			);
-		$this->load->view('admin_page_header', $data);
-		$this->load->view('admin_any_message', $data);
-		$this->load->view('admin_page_footer');
+		$this->page('admin_any_message', $data, 'cms_page', 'add_paket');
+		//$this->load->view('admin_page_header', $data);
+		//$this->load->view('admin_any_message', $data);
+		//$this->load->view('admin_page_footer');
 	}
 	
 	function show_success_page($message){
 		$data = array(
-			'user_name' => $this->session->userdata('user_name'),
-			'ip_address' => $this->session->userdata('ip_address'),
+			//'user_name' => $this->session->userdata('user_name'),
+			//'ip_address' => $this->session->userdata('ip_address'),
 			'title' => 'Pesan Berhasil',
 			'subtitle' => '',
 			'message' => $message
 		);
-		$this->load->view('admin_page_header', $data);
-		$this->load->view('admin_any_message', $data);
-		$this->load->view('admin_page_footer');
+		$this->page('admin_any_message', $data, 'cms_page', 'add_paket');
+		//$this->load->view('admin_page_header', $data);
+		//$this->load->view('admin_any_message', $data);
+		//$this->load->view('admin_page_footer');
 	}
 	
 	
@@ -1169,28 +1171,32 @@ class Admin extends CI_Controller {
 	public function get_registered_order(){
 		$category = $this->uri->segment(3);
 		$query = $this->orders->get_registered_order($category);
-		$number_row = 0;
-		foreach ($query->result_array() as $key => $value){
-			$number_row ++;
+		
+		foreach ($query->result_array() as $row){
 			if ($category=='flight')
-				$data[$key] = $value;
-				/*$data[] = array(
+				$data[] = array(
 					'order_id' => $row['order_id'],
 					'agent_name' => $row['agent_name'],
+					'booking_code' => $row['booking_code'],
+					'booking_code_ret' => $row['booking_code_ret'],
+					'customer_email' => $row['customer_email'],
+					'is_round_trip' => $row['is_round_trip'],
 					'airline_name_depart' => $row['airline_name_depart'],
-					'flight_id' => $row['flight_id'],
+					'airline_name_return' => $row['airline_name_return'],
+					'flight_id_dep' => $row['flight_id_depart'],
+					'flight_id_ret' => $row['flight_id_return'],
 					'route' => $row['route'],
-					'departing_date' => $row['departing_date'],
+					'departing_date' => date_format(new DateTime($row['departing_date']), 'd M Y'),
+					'returning_date' => date_format(new DateTime($row['returning_date']), 'd M Y'),
 					'time_travel' => $row['time_travel'],
-					'total_price' => $row['total_price'],
-					'adult' => $row['adult'],
-					'price_adult' => $row['price_adult'],
-					'child' => $row['child'],
-					'price_child' => $row['price_child'],
-					'infant' => $row['infant'],
-					'price_infant' => $row['price_infant'],
-					'payment_status' => $row['status']
-				);*/
+					'time_travel_ret' => $row['time_travel_ret'],
+					'total_price' => number_format(intval($row['total_price_dep']) + intval($row['total_price_ret']), 0, ',', '.'),
+					'total_price_dep' => number_format($row['total_price_dep'], 0, ',', '.'),
+					'total_price_ret' => number_format($row['total_price_ret'], 0, ',', '.'),
+					'payment_status' => $row['status'],
+					'order_status' => $row['order_status'],
+					'registered_date' => date_format(new DateTime($row['registered_date']), 'd M Y H:i:s')
+				);
 			else if ($category=='train')
 				$data[] = array(
 					'number_row' => $number_row,
@@ -1213,7 +1219,6 @@ class Admin extends CI_Controller {
 				);
 				else if ($category=='hotel')
 				$data[] = array(
-					'number_row' => $number_row,
 					'order_id' => $row['order_id'],
 					'agent_name' => $row['agent_name'],
 					'name' => $row['hotel_name'],
@@ -1244,9 +1249,9 @@ class Admin extends CI_Controller {
 				'category' => $row['trip_category'],
 				'order_id' => $row['order_id'],
 				'party_order_id' => $row['3rd_party_order_id'],
-				'total_price' => $row['total_price'],
+				'total_price' => number_format($row['total_price'], 0, ',', '.'),
 				'order_status' => $row['order_status'],
-				'timestamp' => $row['registered_date'],
+				'timestamp' => date_format(new DateTime($row['registered_date']), 'd M Y H:i:s'),
 				'payment_status' => $row['status']
 			);
 		}
@@ -1256,33 +1261,33 @@ class Admin extends CI_Controller {
 	public function get_issued_order(){
 		$category = $this->uri->segment(3);
 		$query = $this->orders->get_issued_order($category);
-		$number_row = 0;
-		foreach ($query->result_array() as $key => $value){
-			$number_row ++;
+		foreach ($query->result_array() as $row){
 			if ($category=='flight')
-				$data[$key] = $value;
-				/*$data[] = array(
-					'number_row' => $number_row,
+				$data[] = array(
 					'order_id' => $row['order_id'],
 					'agent_name' => $row['agent_name'],
-					'airline_name' => $row['airline_name'],
-					'flight_id' => $row['flight_id'],
+					'booking_code' => $row['booking_code'],
+					'booking_code_ret' => $row['booking_code_ret'],
+					'customer_email' => $row['customer_email'],
+					'is_round_trip' => $row['is_round_trip'],
+					'airline_name_depart' => $row['airline_name_depart'],
+					'airline_name_return' => $row['airline_name_return'],
+					'flight_id_dep' => $row['flight_id_depart'],
+					'flight_id_ret' => $row['flight_id_return'],
 					'route' => $row['route'],
-					'departing_date' => $row['departing_date'],
+					'departing_date' => date_format(new DateTime($row['departing_date']), 'd M Y'),
+					'returning_date' => date_format(new DateTime($row['returning_date']), 'd M Y'),
 					'time_travel' => $row['time_travel'],
-					'total_price' => $row['total_price'],
-					'adult' => $row['adult'],
-					'price_adult' => $row['price_adult'],
-					'child' => $row['child'],
-					'price_child' => $row['price_child'],
-					'infant' => $row['infant'],
-					'price_infant' => $row['price_infant'],
-					'payment_status' => $row['status'],
-					'order_status' => $row['order_status']
-				);*/
+					'time_travel_ret' => $row['time_travel_ret'],
+					'total_price' => number_format(intval($row['total_price_dep']) + intval($row['total_price_ret']), 0, ',', '.'),
+					'total_price_dep' => number_format($row['total_price_dep'], 0, ',', '.'),
+					'total_price_ret' => number_format($row['total_price_ret'], 0, ',', '.'),
+					'payment_status' => $row['payment_status'],
+					'order_status' => $row['order_status'],
+					'registered_date' => date_format(new DateTime($row['registered_date']), 'd M Y H:i:s')
+				);
 			else if ($category=='train')
 				$data[] = array(
-					'number_row' => $number_row,
 					'order_id' => $row['order_id'],
 					'agent_name' => $row['agent_name'],
 					'name' => $row['train_name'],
@@ -1303,22 +1308,21 @@ class Admin extends CI_Controller {
 				);
 				else if ($category=='hotel')
 				$data[] = array(
-					'number_row' => $number_row,
 					'order_id' => $row['order_id'],
 					'agent_name' => $row['agent_name'],
 					'name' => $row['hotel_name'],
 					'id' => $row['hotel_id'],
 					'address' => $row['hotel_address'],
 					'regional' => $row['hotel_regional'],
-					'checkin' => $row['departing_date'],
-					'checkout' => $row['returning_date'],
+					'checkin' => date_format(new DateTime($row['departing_date']), 'd M Y'),
+					'checkout' => date_format(new DateTime($row['returning_date']), 'd M Y'),
 					'night' => $row['time_travel'],
 					'room' => $row['hotel_room'],
-					'total_price' => $row['total_price'],
+					'room_name' => $row['hotel_room_name'],
+					'total_price' => number_format($row['total_price'], 0, ',', '.'),
 					'adult' => $row['adult'],
 					'child' => $row['child'],
-					'payment_status' => $row['status'],
-					'order_status' => $row['order_status']
+					'payment_status' => $row['payment_status']
 				);
 		}
 		echo json_encode($data);
@@ -1328,8 +1332,72 @@ class Admin extends CI_Controller {
 		$category = $this->uri->segment(3);
 		$status = $this->uri->segment(4);
 		$query = $this->orders->get_cancelled_rejected_order_internal_nonpaket($category, $status);
-		foreach ($query->result_array() as $key => $value){
-			$data[$key] = $value;
+		foreach ($query->result_array() as $row){
+			if ($category=='flight')
+				$data[] = array(
+					'order_id' => $row['order_id'],
+					'agent_name' => $row['agent_name'],
+					'booking_code' => $row['booking_code'],
+					'booking_code_ret' => $row['booking_code_ret'],
+					'customer_email' => $row['customer_email'],
+					'is_round_trip' => $row['is_round_trip'],
+					'airline_name_depart' => $row['airline_name_depart'],
+					'airline_name_return' => $row['airline_name_return'],
+					'flight_id_dep' => $row['flight_id_depart'],
+					'flight_id_ret' => $row['flight_id_return'],
+					'route' => $row['route'],
+					'departing_date' => date_format(new DateTime($row['departing_date']), 'd M Y'),
+					'returning_date' => date_format(new DateTime($row['returning_date']), 'd M Y'),
+					'time_travel' => $row['time_travel'],
+					'time_travel_ret' => $row['time_travel_ret'],
+					'total_price' => number_format(intval($row['total_price_dep']) + intval($row['total_price_ret']), 0, ',', '.'),
+					'total_price_dep' => number_format($row['total_price_dep'], 0, ',', '.'),
+					'total_price_ret' => number_format($row['total_price_ret'], 0, ',', '.'),
+					'payment_status' => $row['payment_status'],
+					'order_status' => $row['order_status'],
+					'registered_date' => date_format(new DateTime($row['registered_date']), 'd M Y H:i:s'),
+					'reason' => $row['reason']
+				);
+			else if ($category=='train')
+				$data[] = array(
+					'order_id' => $row['order_id'],
+					'agent_name' => $row['agent_name'],
+					'name' => $row['train_name'],
+					'id' => $row['train_id'],
+					'subclass' => $row['train_class'],
+					'route' => $row['route'],
+					'departing_date' => $row['departing_date'],
+					'time_travel' => $row['time_travel'],
+					'total_price' => $row['total_price'],
+					'adult' => $row['adult'],
+					'price_adult' => $row['price_adult'],
+					'child' => $row['child'],
+					'price_child' => $row['price_child'],
+					'infant' => $row['infant'],
+					'price_infant' => $row['price_infant'],
+					'payment_status' => $row['status'],
+					'order_status' => $row['order_status'],
+					'reason' => $row['reason']
+				);
+				else if ($category=='hotel')
+				$data[] = array(
+					'order_id' => $row['order_id'],
+					'agent_name' => $row['agent_name'],
+					'name' => $row['hotel_name'],
+					'id' => $row['hotel_id'],
+					'address' => $row['hotel_address'],
+					'regional' => $row['hotel_regional'],
+					'checkin' => date_format(new DateTime($row['departing_date']), 'd M Y'),
+					'checkout' => date_format(new DateTime($row['returning_date']), 'd M Y'),
+					'night' => $row['time_travel'],
+					'room' => $row['hotel_room'],
+					'room_name' => $row['hotel_room_name'],
+					'total_price' => number_format($row['total_price'], 0, ',', '.'),
+					'adult' => $row['adult'],
+					'child' => $row['child'],
+					'payment_status' => $row['payment_status'],
+					'reason' => $row['reason']
+				);
 		}
 		echo json_encode($data);
 	}
@@ -1366,8 +1434,8 @@ class Admin extends CI_Controller {
 				'sender_number' => $row['sender_account_number'],
 				'sender_name' => $row['sender_account_name'],
 				'bank_name' => $row['bank_name'],
-				'transfer_date' => $row['transfer_date'],
-				'nominal' => $row['nominal']
+				'transfer_date' => date_format(new DateTime($row['transfer_date']), 'd M Y'),
+				'nominal' => number_format($row['nominal'], 0, ',', '.')
 			);
 		}
 		echo json_encode($data);
@@ -1465,7 +1533,7 @@ class Admin extends CI_Controller {
 				'receiver_number' => $row['receiver_account_number'],
 				'receiver_name' => $row['receiver_account_name'],
 				'message' => $row['message'],
-				'nominal' => $row['nominal']
+				'nominal' => number_format($row['nominal'], 0, ',', '.')
 			);
 		}
 		echo json_encode($data);

@@ -15,10 +15,10 @@
 				if($uri=='flight') echo 'Penerbangan'; 
 				elseif($uri=='train') echo 'Kereta Api';
 				elseif($uri=='hotel') echo 'Hotel';
-				elseif($uri=='umrah') echo 'Umrah';
+				elseif($uri=='paket') echo 'Paket';
 			?>
 			</h3>
-			<div id="list"></div>
+			<div id="list" style="width:100%"></div>
 			<p></p>
 		</div>
 	</div>
@@ -26,162 +26,147 @@
 </section>
 <script>
 	$( window ).load(function() {
+		var category = '';
 		<?php 
 		if($uri=='flight')
-			echo 'load_order_flight();';
+			echo 'category = "flight";';
 		else if($uri=='train')
-			echo 'load_order_train();';
+			echo 'category = "train";';
 		else if($uri=='hotel')
-			echo 'load_order_hotel();';
-		else if($uri=='umrah')
-			echo 'load_order_paket("umrah");';
+			echo 'category = "hotel";';
+		else if($uri=='paket')
+			echo 'category = "paket";';
 		?>
+		load_order(category);
 	});
-	function load_order_flight(){
+	function load_order(category){
 		var data = [];
 		$.ajax({
 			type : "GET",
 			async: false,
-			url: '<?php echo base_url();?>index.php/agent/get_registered_order/flight',
+			url: '<?php echo base_url();?>index.php/agent/get_order_list/'+category,
 			dataType: "json",
 			success:function(datajson){
-				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, airline_name: datajson[i].airline_name, flight_id: datajson[i].flight_id, route: datajson[i].route, full_via: datajson[i].departing_date+' '+datajson[i].time_travel, total_price: datajson[i].total_price, adult: datajson[i].adult, price_adult: datajson[i].price_adult, child: datajson[i].child, price_child: datajson[i].price_child, infant: datajson[i].infant, price_infant: datajson[i].price_infant, payment_status: datajson[i].payment_status};
+				for(var i=0; i<datajson.length;i++){
+					if(category=='flight')
+						data[i] = {order_id: datajson[i].order_id, order_system_id: datajson[i].order_system_id, booking_code: datajson[i].booking_code, booking_code_ret: datajson[i].booking_code_ret, customer_email: datajson[i].customer_email, is_round_trip:datajson[i].is_round_trip, airline_name_depart: datajson[i].airline_name_dep, airline_name_return: datajson[i].airline_name_ret, flight_id_dep: datajson[i].flight_id_depart, flight_id_ret: datajson[i].flight_id_return, route: datajson[i].route, full_via_dep: datajson[i].departing_date+' '+datajson[i].time_travel, full_via_ret: datajson[i].returning_date+' '+datajson[i].time_travel_ret, total_price_dep: datajson[i].total_price_dep, total_price_ret: datajson[i].total_price_ret, payment_status: datajson[i].payment_status, order_status: datajson[i].order_status, registered_date: datajson[i].registered_date};
+					else if(category=='paket')
+						data[i] = {order_id: datajson[i].order_id, category: datajson[i].category, title: datajson[i].title, customer_email: datajson[i].customer_email, total_price: datajson[i].currency+' '+datajson[i].total_price, payment_status: datajson[i].payment_status, order_status: datajson[i].order_status, registered_date: datajson[i].registered_date};
+					else if(category=='hotel')
+						data[i] = {order_id: datajson[i].order_id, order_system_id: datajson[i].order_system_id, booking_code: datajson[i].booking_code, customer_email: datajson[i].customer_email, hotel_name: datajson[i].hotel_name+', '+datajson[i].hotel_regional, hotel_room_name: datajson[i].hotel_room_name, datetime: datajson[i].checkin+' - '+datajson[i].checkout, night: datajson[i].night, room: datajson[i].room, total_price: datajson[i].total_price, payment_status: datajson[i].payment_status, order_status: datajson[i].order_status, registered_date: datajson[i].registered_date};
+				}
+					
 			}
 		});
-		
-		YUI({gallery: 'gallery-2013.01.09-23-24'}).use('datatable','datatable-sort','datatype-number','datatype-date','datatable-paginator', function (Y) {
-			/*------------------------------------*/
-			function formatCurrency(cell) {
-				//console.log("column key : " + cell.column.key);
-				if(cell.column.key == "imps"){
-					console.log(JSON.stringify(cell));
-				}
-				format = {
-					//prefix: "Rp ",
-					thousandsSeparator: ".",
-					decimalSeparator: ",",
-					decimalPlaces: 2
-				};
-				cell.record.set(Number(cell.value));
-				return Y.DataType.Number.format(Number(cell.value), format);
-			}
-			
-			var data_order = data;
-			var table = new Y.DataTable({
-				columns: [
-					{key:"number_row", label:"No.", width:"10px"},
-					{key:"order_id", label:"ID Pesanan"},
-					{key:"agent_name", label:"Nama Agen"},
-					{key:"airline_name", label:"Maskapai"},
+		var cols;
+		if(category=='flight')
+			cols = [
+					{key:"order_id", label:"ID"},
+					{
+						label:"Trip",
+						nodeFormatter:function (o) {
+							if (o.data.is_round_trip=="true")
+								o.cell.setHTML('<img src="<?php echo IMAGES_DIR;?>/icon_round_trip.jpg" width="45px" height="45px" title="round-trip">');
+							else
+								o.cell.setHTML('<img src="<?php echo IMAGES_DIR;?>/icon_single_trip.jpg" width="45px" height="45px" title="single-trip">');
+							return false;
+						},
+						resizeable:true
+					},
+					{
+						label:"Booking Code",
+						nodeFormatter:function (o) {
+							var str = '<p><b>Dep:</b> '+o.data.booking_code;
+							if (o.data.is_round_trip=="true")
+								str += '<br /><b>Ret:</b> '+o.data.booking_code_ret;
+							str += '</p>';
+							
+							o.cell.setHTML(str);
+							return false;
+						}
+					},
+					{
+						label:"Maskapai",
+						nodeFormatter:function (o) {
+							var str = '<p><b>Dep:</b> '+o.data.airline_name_depart;
+							if (o.data.is_round_trip=="true")
+								str += '<br /><b>Ret:</b> '+o.data.airline_name_return;
+							str += '</p>';
+							
+							o.cell.setHTML(str);
+							return false;
+						}
+					},
 					{key:"route", label:"Rute"},
-					{key:"full_via", label:"Waktu"},
-					{key:"total_price", label:"Total Harga", formatter:formatCurrency},
+					{
+						label:"Waktu Penerbangan",
+						nodeFormatter:function (o) {
+							var str = '<p><b>Dep:</b><br/> '+o.data.full_via_dep;
+							if (o.data.is_round_trip=="true")
+								str += '<br /><b>Ret:</b><br/> '+o.data.full_via_ret;
+							str += '</p>';
+							
+							o.cell.setHTML(str);
+							return false;
+						}
+					},
+					{
+						label:"Harga",
+						nodeFormatter:function (o) {
+							var str = '<p><b>Dep:</b> '+o.data.total_price_dep;
+							if (o.data.is_round_trip=="true")
+								str += '<br /><b>Ret:</b> '+o.data.total_price_ret;
+							str += '</p>';
+							
+							o.cell.setHTML(str);
+							return false;
+						}
+					},
+					{key:"order_status", label:"Status Pemesanan"},
+					{key:"registered_date", label:"Tanggal Pesan"},
 					{key:"payment_status", label:"Status Pembayaran"}
-				],
-				data: data_order,
-				caption: "Daftar Pesanan",
-				rowsPerPage: 10
-			});
-			table.render("#list");
-		});
-	}
-	function load_order_train(){
-		var data = [];
-		$.ajax({
-			type : "GET",
-			async: false,
-			url: '<?php echo base_url();?>index.php/agent/get_registered_order/train',
-			dataType: "json",
-			success:function(datajson){
-				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, name: datajson[i].name, train_id: datajson[i].id, subclass: datajson[i].subclass, route: datajson[i].route, full_via: datajson[i].departing_date+' '+datajson[i].time_travel, total_price: datajson[i].total_price, adult: datajson[i].adult, price_adult: datajson[i].price_adult, child: datajson[i].child, price_child: datajson[i].price_child, infant: datajson[i].infant, price_infant: datajson[i].price_infant, payment_status: datajson[i].payment_status};
-			}
-		});
+				];
+				
+		else if(category=='hotel')
+			cols = [
+					{key:"order_id", label:"ID"},
+					{key:"booking_code", label:"Booking Code"},
+					{
+						label:"Detil Hotel",
+						nodeFormatter:function (o) {
+							var str = o.data.hotel_name+'<br/>'+o.data.hotel_room_name;
+							o.cell.setHTML(str);
+							return false;
+						}
+					},
+					{
+						label:"Detil Waktu Menginap",
+						nodeFormatter:function (o) {
+							var str = o.data.datetime+'<br/>Malam: '+o.data.night+'<br/>Kamar: '+o.data.room;
+							o.cell.setHTML(str);
+							return false;
+						}
+					},
+					{key:"total_price", label:"Harga"},
+					{key:"order_status", label:"Status Pemesanan"},
+					{key:"registered_date", label:"Tanggal Pesan"},
+					{key:"payment_status", label:"Status Pembayaran"}
+				];
 		
-		YUI({gallery: 'gallery-2013.01.09-23-24'}).use('datatable','datatable-sort','datatype-number','datatype-date','datatable-paginator', function (Y) {
-			/*------------------------------------*/
-			function formatCurrency(cell) {
-				//console.log("column key : " + cell.column.key);
-				if(cell.column.key == "imps"){
-					console.log(JSON.stringify(cell));
-				}
-				format = {
-					//prefix: "Rp ",
-					thousandsSeparator: ".",
-					decimalSeparator: ",",
-					decimalPlaces: 2
-				};
-				cell.record.set(Number(cell.value));
-				return Y.DataType.Number.format(Number(cell.value), format);
-			}
-			
+		else if(category=='paket')
+			cols = [
+					{key:"order_id", label:"ID Pesanan"},
+					{key:"category", label:"Kategori"},
+					{key:"title", label:"Nama Paket"},
+					{key:"total_price", label:"Harga"},
+					{key:"order_status", label:"Status Pemesanan"},
+					{key:"registered_date", label:"Tanggal Pesan"},
+					{key:"payment_status", label:"Status Pembayaran"}
+				];
+		YUI({gallery: 'gallery-2013.01.09-23-24'}).use('datatable','datatable-sort','datatable-paginator', function (Y) {
 			var data_order = data;
 			var table = new Y.DataTable({
-				columns: [
-					{key:"number_row", label:"No.", width:"10px"},
-					{key:"order_id", label:"ID Pesanan"},
-					{key:"agent_name", label:"Nama Agen"},
-					{key:"name", label:"Kereta"},
-					{key:"route", label:"Rute"},
-					{key:"full_via", label:"Waktu"},
-					{key:"total_price", label:"Total Harga", formatter:formatCurrency},
-					{key:"payment_status", label:"Status Pembayaran"}
-				],
-				data: data_order,
-				caption: "Daftar Pesanan",
-				rowsPerPage: 10
-			});
-			table.render("#list");
-		});
-	}
-	function load_order_hotel(){
-		var data = [];
-		$.ajax({
-			type : "GET",
-			async: false,
-			url: '<?php echo base_url();?>index.php/agent/get_registered_order/hotel',
-			dataType: "json",
-			success:function(datajson){
-				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, name: datajson[i].name, hotel_id: datajson[i].id, address: datajson[i].address, regional: datajson[i].regional, book_date: datajson[i].checkin+' / '+datajson[i].checkout, night: datajson[i].night, room: datajson[i].room, total_price: datajson[i].total_price, adult: datajson[i].adult, child: datajson[i].child, payment_status: datajson[i].payment_status};
-			}
-		});
-		
-		YUI({gallery: 'gallery-2013.01.09-23-24'}).use('datatable','datatable-sort','datatype-number','datatype-date','datatable-paginator', function (Y) {
-			/*------------------------------------*/
-			function formatCurrency(cell) {
-				//console.log("column key : " + cell.column.key);
-				if(cell.column.key == "imps"){
-					console.log(JSON.stringify(cell));
-				}
-				format = {
-					//prefix: "Rp ",
-					thousandsSeparator: ".",
-					decimalSeparator: ",",
-					decimalPlaces: 2
-				};
-				cell.record.set(Number(cell.value));
-				return Y.DataType.Number.format(Number(cell.value), format);
-			}
-			
-			var data_order = data;
-			var table = new Y.DataTable({
-				columns: [
-					{key:"number_row", label:"No.", width:"10px"},
-					{key:"order_id", label:"ID Pesanan"},
-					{key:"agent_name", label:"Nama Agen"},
-					{key:"name", label:"Hotel"},
-					{key:"address", label:"Alamat"},
-					{key:"regional", label:"Regional"},
-					{key:"book_date", label:"Checkin / Checkout"},
-					{key:"night", label:"Malam"},
-					{key:"room", label:"Kamar"},
-					{key:"adult", label:"Dewasa"},
-					{key:"child", label:"Anak"},
-					{key:"total_price", label:"Total Harga", formatter:formatCurrency},
-					{key:"payment_status", label:"Status Pembayaran"}
-				],
+				columns: cols,
 				data: data_order,
 				caption: "Daftar Pesanan",
 				rowsPerPage: 10

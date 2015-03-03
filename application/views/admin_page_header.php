@@ -486,7 +486,7 @@ $(function() {
 	<!--<span id="logocms"><b>cms</b>one
 	</span> -->
 	<span style="margin: -15px 0px 0px 0px;float:left;width:140px;height:35px;display:inline-block;">
-		<img src="<?php echo base_url();?>/assets/uploads/option_images/logo.png" />
+		<img src="<?php echo base_url();?>assets/uploads/option_images/logo.png" />
 	</span>
 </div>
 

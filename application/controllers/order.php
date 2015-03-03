@@ -50,7 +50,7 @@ class Order extends CI_Controller {
 	
 	public function get_token()
 	{
-		$url = 'http://'.$this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key').'&output=json';
+		$url = 'http://'.$this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key_hotel').'&output=json';
 		$getdata = file_get_contents($url);
 		$this->insert_event_logging('get token', $url, $getdata, 'file_get_contents');
 		$json = json_decode($getdata);
@@ -106,7 +106,7 @@ class Order extends CI_Controller {
 	public function add_flight_order()
 	{
 		$response = '';
-		$flight_id_dep = $this->input->post('flight_id', TRUE);
+		$flight_id_dep = $this->input->post('flight_number_dep', TRUE);
 		//$ret_flight_id = $this->input->post('ret_flight_id', TRUE);
 		$airline_name_dep = $this->input->post('airline_name_dep', TRUE);
 		$depart_date = $this->input->post('date_go', TRUE);
@@ -129,7 +129,7 @@ class Order extends CI_Controller {
 		$conOtherPhone = $this->input->post('conOtherPhone', TRUE);
 		
 		/* for round trip*/
-		$flight_id_ret = $this->input->post('flight_id_ret', TRUE);
+		$flight_id_ret = $this->input->post('flight_number_ret', TRUE);
 		$airline_name_ret = $this->input->post('airline_name_ret', TRUE);
 		$depart_date_ret = $this->input->post('date_ret', TRUE);
 		$time_travel_ret = $this->input->post('time_travel_ret', TRUE);
@@ -555,8 +555,9 @@ class Order extends CI_Controller {
 		
 		/*inserting the general info*/
 		$data = array(
+			'order_system_id' => 'internal',
 			'account_id' => $account_id,
-			'token' => $token,
+			'customer_email' => $conEmailAddress,
 			'trip_category' => 'hotel',
 			'hotel_name' => $name,
 			'hotel_id' => $id,
@@ -584,13 +585,13 @@ class Order extends CI_Controller {
 			$passenger = array();
 			$contact_person = array(
 				'order_id' => $order_id,
-					'passenger_level' => 'contact',
-					'title' => $this->input->post('conSalutation', TRUE),
-					'first_name' => $this->input->post('conFirstName', TRUE),
-					'last_name' => $this->input->post('conLastName', TRUE),
-					'identity_number' => $this->input->post('conid', TRUE),
-					'email' => $this->input->post('conEmailAddress', TRUE),
-					'phone_1' => $this->input->post('conPhone', TRUE)
+				'passenger_level' => 'contact',
+				'title' => $this->input->post('conSalutation', TRUE),
+				'first_name' => $this->input->post('conFirstName', TRUE),
+				'last_name' => $this->input->post('conLastName', TRUE),
+				'identity_number' => $this->input->post('conid', TRUE),
+				'email' => $this->input->post('conEmailAddress', TRUE),
+				'phone_1' => $this->input->post('conPhone', TRUE)
 			);
 			array_push($passenger, $contact_person);
 			for($i=1; $i<=$tot_adult; $i++){
@@ -1037,7 +1038,7 @@ class Order extends CI_Controller {
 	}
 	
 	public function get_booking_list(){
-		$list = $this->orders->get_order_list();
+		$list = $this->orders->get_order_list('booked');
 		$number_row = 0;
 		foreach ($list->result_array() as $row){
 			$number_row++;

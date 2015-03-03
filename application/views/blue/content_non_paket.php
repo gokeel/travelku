@@ -126,7 +126,9 @@
 	
 	<?php include_once('footer.php')?>
 	
-	
+	<br />
+	<br />
+	<br />
 	<!-- Javascript  -->
 	<script src="<?php echo BLUE_THEME_DIR;?>/assets/js/js-payment.js"></script>
 	

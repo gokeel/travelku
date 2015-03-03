@@ -1,16 +1,21 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Hotel extends CI_Controller {
-	function get_content($URL){
-        /*$ch = curl_init();
-		curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (twh:20681061; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
+	public function php_curl(){
+		//echo "test curl";
+		$ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $URL);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        return $data;*/
+        curl_setopt($ch, CURLOPT_URL, 'http://api.sandbox.tiket.com/apiv1/payexpress?method=getToken&secretkey=34f08bda20602f4694c1466eefdd4a8e&output=json');
+        if (curl_exec($ch) === FALSE) {
+		   die("Curl Failed: " . curl_error($ch));
+		} else {
+		   echo curl_exec($ch);
+		}
+	}
+	
+	public function ci_curl($url){
 		$this->load->library('curl');
-		$this->curl->create($URL);
+		$this->curl->create($url);
 		$this->curl->option('buffersize', 10);
 		$this->curl->option('useragent', 'Mozilla/5.0 (twh:20782180; Windows NT 6.1; WOW64) AppleWebKit/537.4 (KHTML like Gecko) Chrome/22.0.1229.94 Safari/537.4');
 		$this->curl->option('returntransfer', 1);
@@ -20,10 +25,25 @@ class Hotel extends CI_Controller {
 		$data = $this->curl->execute();
 		
 		return $data;
-    }
+	}
+	
+	function insert_event_logging($event_name, $request, $response, $method){
+		$data = array(
+			'event_name' => $event_name,
+			'request_text' => $request,
+			'response_text' => $response,
+			'request_method' => $method
+		);
+		$this->load->model('general');
+		$insert = $this->general->add_to_table('event_logs', $data);
+	}
+	
 	public function get_token()
 	{
-		$getdata = $this->get_content($this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key_hotel').'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/apiv1/payexpress?method=getToken&secretkey=' . $this->config->item('api_key_hotel').'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('get token', $url, $getdata, 'ci curl');
+		
 		$json = json_decode($getdata);
 		$token = $json->token;
 		return $token;
@@ -44,7 +64,9 @@ class Hotel extends CI_Controller {
 	//cindy nordiansyah
 	public function tiketcom_search_autocomplete(){
 		$area = $this->input->get('area', TRUE);
-		$getdata = $this->get_content($this->config->item('api_server').'/search/autocomplete/hotel?q='.$area.'&token='.$this->get_token().'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/search/autocomplete/hotel?q='.$area.'&token='.$this->get_token().'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('hotel search autocomplete', $url, $getdata, 'ci curl');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -69,7 +91,9 @@ class Hotel extends CI_Controller {
 		$token = $this->get_token();
 		$this->session->set_userdata('token', $token);
 		
-		$getdata = $this->get_content($this->config->item('api_server').'/search/hotel?q='.$query.'&startdate='.$checkin.'&night='.$night.'&enddate='.$checkout.'&room='.$room.'&adult='.$adult.'&child='.$child.'&token='.$token.'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/search/hotel?q='.$query.'&startdate='.$checkin.'&night='.$night.'&enddate='.$checkout.'&room='.$room.'&adult='.$adult.'&child='.$child.'&token='.$token.'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('search hotels', $url, $getdata, 'ci curl');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -98,9 +122,10 @@ class Hotel extends CI_Controller {
 			$token = $this->get_token();
 			$this->session->set_userdata('token', $token);
 		}
-		$url=$this->config->item('api_server').'/'.$nama_hotel.'?startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json';
+		$url='http://'.$this->config->item('api_server').'/'.$nama_hotel.'?startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json';
 		//print_r($url);
-		$getdata = file_get_contents($url);
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('show hotel rooms', $url, $getdata, 'ci curl');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -134,7 +159,11 @@ class Hotel extends CI_Controller {
 		$room_id = $this->input->post('room_id', TRUE);
 		$hasPromo = $this->input->post('hasPromo', TRUE);
 		
-		$getdata = $this->get_content($this->config->item('api_server').'/order/add/hotel?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&minstar='.$minstar.'&maxstar='.$maxstar.'&minprice='.$minprice.'&maxprice='.$maxprice.'&hotelname='.$hotelname.'&room_id='.$room_id.'&hasPromo='.$hasPromo.'&token='.$token.'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/order/add/hotel?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&minstar='.$minstar.'&maxstar='.$maxstar.'&minprice='.$minprice.'&maxprice='.$maxprice.'&hotelname='.$hotelname.'&room_id='.$room_id.'&hasPromo='.$hasPromo.'&token='.$token.'&output=json';
+		
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('hotel add order', $url, $getdata, 'ci curl');
+		
 		$json = json_decode($getdata);
 		$diagnose = $json->diagnostic;
 			if($diagnose->status <> '200'){
@@ -146,8 +175,10 @@ class Hotel extends CI_Controller {
 			}
 			else {
 				// continue to order
-				$url_order = $this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
-				$send_order = $this->get_content($url_order);
+				$url_order = 'http://'.$this->config->item('api_server').'/order?token='.$json->token.'&lang=id&output=json';
+				$send_order = $this->ci_curl($url_order);
+				$this->insert_event_logging('hotel order', $url_order, $send_order, 'ci curl');
+				
 				$response_order = json_decode($send_order);
 				$diagnose_order = $response_order->diagnostic;
 				$myorder = $response_order->myorder;
@@ -196,6 +227,19 @@ class Hotel extends CI_Controller {
 					$this->load->model('orders');
 					$internal_order_id = $this->orders->add_order($data_insert);
 					
+					$contact_person = array(
+						'order_id' => $internal_order_id,
+						'passenger_level' => 'contact',
+						'title' => $this->input->post('conSalutation', TRUE),
+						'first_name' => $this->input->post('conFirstName', TRUE),
+						'last_name' => $this->input->post('conLastName', TRUE),
+						'identity_number' => $this->input->post('conid', TRUE),
+						'email' => $this->input->post('conEmailAddress', TRUE),
+						'nationality' => $this->input->post('country', TRUE),
+						'phone_1' => $this->input->post('conPhone', TRUE)
+					);
+					$batch = $this->orders->add_passenger($contact_person);
+					
 					//generate parameter for form_passenger.php
 					$response = array(
 						'status' => $diagnose->status,
@@ -230,9 +274,13 @@ class Hotel extends CI_Controller {
 	public function tiketcom_delete_order_hotel(){
 		$token = $this->session->userdata('token');
 		$order_detail_id = $this->input->get('order_detail_id', TRUE);
-		$getdata = $this->get_content($this->config->item('api_server').'/order/delete_order?&order_detail_id='.$order_detail_id.'&token='.$token.'&output=json');
+		
+		$url = 'http://'.$this->config->item('api_server').'/order/delete_order?&order_detail_id='.$order_detail_id.'&token='.$token.'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('delete order', $url, $getdata, 'ci curl');
+		
 		$json = json_decode($getdata);
-		echo ($this->config->item('api_server').'/order/delete_order?order_detail_id='.$order_detail_id.'&token='.$token.'&output=json');
+		//echo ($this->config->item('api_server').'/order/delete_order?order_detail_id='.$order_detail_id.'&token='.$token.'&output=json');
 		$array = array();
 		$array[] = (object)$json;
 		 
@@ -248,7 +296,9 @@ class Hotel extends CI_Controller {
 	public function tiketcom_show_order_hotel(){
 		$token = $this->session->userdata('token');
 		//echo ($this->config->item('api_server').'/order?&token='.$token.'&output=json');
-		$getdata = $this->get_content($this->config->item('api_server').'/order?&token='.$token.'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/order?&token='.$token.'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('hotel show order', $url, $getdata, 'ci curl');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -268,7 +318,9 @@ class Hotel extends CI_Controller {
 		$order_id = $this->uri->segment(3);
 		$currency = $this->uri->segment(4);
 		//echo ($this->config->item('api_server').'/order/checkout/'.$order_id.'/'.$currency.'?token='.$token.'&output=json');
-		$getdata = $this->get_content($this->config->item('api_server').'/order/checkout/'.$order_id.'/'.$currency.'?token='.$token.'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/order/checkout/'.$order_id.'/'.$currency.'?token='.$token.'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('hotel checkout order', $url, $getdata, 'ci curl');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -291,7 +343,11 @@ class Hotel extends CI_Controller {
 		$emailAddress = $this->input->get('emailAddress', TRUE);
 		$phone = $this->input->get('phone', TRUE);
 		$saveContinue = $this->input->get('saveContinue', TRUE);
-		$getdata = $this->get_content($this->config->item('api_server').'/checkout/checkout_customer?token='.$token.'&salutation='.$salutation.'&firstName='.$firstName.'&lastName='.$lastName.'&emailAddress='.$emailAddress.'&phone='.$phone.'&saveContinue='.$saveContinue.'&output=json');
+		
+		$url = 'http://'.$this->config->item('api_server').'/checkout/checkout_customer?token='.$token.'&salutation='.$salutation.'&firstName='.$firstName.'&lastName='.$lastName.'&emailAddress='.$emailAddress.'&phone='.$phone.'&saveContinue='.$saveContinue.'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('hotel checkout login', $url, $getdata, 'ci curl');
+		
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -320,7 +376,10 @@ class Hotel extends CI_Controller {
 		$detailId = $this->input->get('detailId', TRUE);
 		$country = $this->input->get('country', TRUE);
 		
-		$getdata = $this->get_content($this->config->item('api_server').'/checkout/checkout_customer?token='.$token.'&salutation='.$salutation.'&firstName='.$firstName.'&lastName='.$lastName.'&emailAddress='.$emailAddress.'&phone='.$phone.'&detail_id='.$detailId.'&country='.$country.'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/checkout/checkout_customer?token='.$token.'&salutation='.$salutation.'&firstName='.$firstName.'&lastName='.$lastName.'&emailAddress='.$emailAddress.'&phone='.$phone.'&detail_id='.$detailId.'&country='.$country.'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('hotel checkout customer', $url, $getdata, 'ci curl');
+		
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -338,7 +397,7 @@ class Hotel extends CI_Controller {
 	public function tiketcom_available_payment() {
 		$token = $this->session->userdata('token');
 		
-		$getdata = $this->get_content($this->config->item('api_server').'/checkout/checkout_payment?token='.$token.'&output=json');
+		$getdata = $this->ci_curl('http://'.$this->config->item('api_server').'/checkout/checkout_payment?token='.$token.'&output=json');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -355,7 +414,9 @@ class Hotel extends CI_Controller {
 	public function tiketcom_checkout_payment() {
 		$token = $this->session->userdata('token');
 		
-		$getdata = $this->get_content($this->config->item('api_server').'/checkout/checkout_payment?token='.$token.'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/checkout/checkout_payment?token='.$token.'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('hotel checkout payment', $url, $getdata, 'ci curl');
 		$json = json_decode($getdata);
 		
 		$array = array();
@@ -377,52 +438,71 @@ class Hotel extends CI_Controller {
 				$params .= $key.'='.$value.'&';
 		$uri = $this->input->post('link',TRUE);
 		
-		$url_1 = $uri.'?'.$params.'lang=id&output=json';
-		$checkout_page_request = file_get_contents($url_1);
-		$response_1 = json_decode($checkout_page_request);
-		$diagnose_1 = $response_1->diagnostic;
-		if($diagnose_1->status<>'200'){
-			$json_response['status'] = $diagnose_1->status;
-			$json_response['message'] = 'Terjadi kesalahan pada saat checkout page request';
-			echo json_encode($json_response);
+		$url_1 = str_replace('https','http',$uri).'?'.$params.'lang=id&output=json';
+		$checkout_page_request = $this->ci_curl($url_1);
+		$this->insert_event_logging('hotel checkout', $url_1, $checkout_page_request, 'ci curl');
+		if($checkout_page_request==""){
+			$json_response['status'] = '1000';
+			$json_response['message'] = 'Respon NULL pada checkout page request. Harap laporkan pada customer service kami.';
 		}
-		else
-		{ //jika sukses, checkout login
-			$cl_url = $response_1->next_checkout_uri.'?';
-			$token = $response_1->token;
-			$param = 'token='.$token. '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&saveContinue=2&lang=id&output=json';
-			$cl_url .= $param;
-			//print_r($cc_url);
-			$send_request_2 = file_get_contents($cl_url);
-			$response_2 = json_decode($send_request_2);
-			$diagnose_2 = $response_2->diagnostic;
-			
-			if($diagnose_2->status<>'200'){
-				$json_response['status'] = $diagnose_2->status;
-				$json_response['message'] = 'Terjadi kesalahan pada saat checkout login';
-				echo json_encode($json_response);
+		else{
+			$response_1 = json_decode($checkout_page_request);
+			$diagnose_1 = $response_1->diagnostic;
+			if($diagnose_1->status<>'200'){
+				$json_response['status'] = $diagnose_1->status;
+				$json_response['message'] = 'Terjadi kesalahan pada saat checkout page request';
 			}
-			else{//jika sukses, checkout customer
-				$cc_url = $response_1->next_checkout_uri.'?';
-				$params .=  '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&country='.$this->session->userdata('country').'&lang=id&output=json';
-				$cc_url .= $params;
+			else
+			{ //jika sukses, checkout login
+				$cl_url = str_replace('https','http',$response_1->next_checkout_uri).'?';
+				$token = $response_1->token;
+				$param = 'token='.$token. '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&saveContinue=2&lang=id&output=json';
+				$cl_url .= $param;
 				//print_r($cc_url);
-				$send_request_3 = file_get_contents($cc_url);
-				$response_3 = json_decode($send_request_3);
-				$diagnose_3 = $response_3->diagnostic;
-				
-				if($diagnose_2->status<>'200'){
-					$json_response['status'] = $diagnose_3->status;
-					$json_response['message'] = 'Terjadi kesalahan pada saat checkout login';
-					echo json_encode($json_response);
+				$send_request_2 = $this->ci_curl($cl_url);
+				$this->insert_event_logging('hotel checkout login', $cl_url, $send_request_2, 'ci curl');
+				if($send_request_2==""){
+					$json_response['status'] = '1000';
+					$json_response['message'] = 'Respon NULL pada checkout login. Harap laporkan pada customer service kami.';
 				}
 				else{
-					$json_response['status'] = $diagnose_3->status;
-					$json_response['token'] = $response_3->token;
-					echo json_encode($json_response);
-				}
+					$response_2 = json_decode($send_request_2);
+					$diagnose_2 = $response_2->diagnostic;
+					
+					if($diagnose_2->status<>'200'){
+						$json_response['status'] = $diagnose_2->status;
+						$json_response['message'] = 'Terjadi kesalahan pada saat checkout login';
+					}
+					else{//jika sukses, checkout customer
+						$cc_url = str_replace('https','http',$response_1->next_checkout_uri).'?';
+						$params .=  '&salutation='.$this->session->userdata('con_salutation').'&firstName='.$this->session->userdata('con_firstname').'&lastName='.$this->session->userdata('con_lastname').'&emailAddress='.$this->session->userdata('con_email').'&phone='.$this->session->userdata('con_phone').'&country='.$this->session->userdata('country').'&lang=id&output=json';
+						$cc_url .= $params;
+						//print_r($cc_url);
+						$send_request_3 = $this->ci_curl($cc_url);
+						$this->insert_event_logging('hotel checkout customer', $cc_url, $send_request_3, 'ci curl');
+						if($send_request_3==""){
+							$json_response['status'] = '1000';
+							$json_response['message'] = 'Respon NULL pada checkout customer. Harap laporkan pada customer service kami.';
+						}
+						else{
+							$response_3 = json_decode($send_request_3);
+							$diagnose_3 = $response_3->diagnostic;
+							
+							if($diagnose_2->status<>'200'){
+								$json_response['status'] = $diagnose_3->status;
+								$json_response['message'] = 'Terjadi kesalahan pada saat checkout login';
+							}
+							else{
+								$json_response['status'] = $diagnose_3->status;
+								$json_response['token'] = $response_3->token;
+							}
+						}						
+					}
+				}				
 			}
 		}
+				
+		echo json_encode($json_response);
 	}
 	public function load_theme($view, $additional_data=null){
 		$theme_name = 'blue';
@@ -456,7 +536,9 @@ class Hotel extends CI_Controller {
 			$token = $this->get_token();
 			$this->session->set_userdata('token', $token);
 		}
-		$getdata = file_get_contents($this->config->item('api_server').'/'.$nama_hotel.'?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json');
+		$url = 'http://'.$this->config->item('api_server').'/'.$nama_hotel.'?&startdate='.$checkin.'&enddate='.$checkout.'&night='.$night.'&room='.$room.'&adult='.$adult.'&child='.$child.'&uid='.$uid.'&token='.$token.'&output=json';
+		$getdata = $this->ci_curl($url);
+		$this->insert_event_logging('hotel detail room', $url, $getdata, 'ci curl');
 		$json = json_decode($getdata);
 		
 		$array = array();

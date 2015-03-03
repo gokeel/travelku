@@ -1,11 +1,11 @@
 	<!--<div class="footerbg">-->
-	<div style="overflow:hidden;padding:30px 0;width:100%;" >
-		<div class="container box-blue-rizky">	
+	<div style="overflow:hidden;padding:30px 0;width:100%;" class="box-blue-rizky">
+		<div class="container">	
 			<div class="col-md-3">
 				<!--<span class="ftitleblack">Let's socialize<br /><br /></span>-->
 				<span class="font-arial">Let's socialize<br /><br /></span>
 				<div class="scont">
-					<a target="_blank" href="<?php echo prep_url($facebook_link);?>" class="social1b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-facebook.png" alt=""/></a>
+					<a target="_blank" href="<?php echo prep_url($facebook_link);?>" class="social1b"><img src="<?php echo BLUE_THEME_DIR;?>/images/logo facebook.png" alt=""/></a>
 					<a target="_blank" href="<?php echo prep_url($twitter_link);?>" class="social2b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-twitter.png" alt=""/></a>
 					<!--<a target="_blank" href="<?php echo prep_url($gplus_link);?>" class="social3b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-gplus.png" alt=""/></a>-->
 					<a target="_blank" href="<?php echo prep_url($youtube_link);?>" class="social4b"><img src="<?php echo BLUE_THEME_DIR;?>/images/icon-youtube.png" alt=""/></a>
@@ -14,6 +14,7 @@
 					<span class="grey2">&copy; 2014  |  <a href="#">Privacy Policy</a><br/>
 					All Rights Reserved </span>
 					<br/><br/>-->
+					<br/>
 				</div>
 			</div>
 			<!-- End of column 1-->
@@ -40,7 +41,6 @@
 					<li><a href="<?php echo base_url();?>index.php/webfront/agent_registration">Registrasi Agen</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/confirm_payment">Konfirmasi Pembayaran Pesanan</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/detail_order">Cek Detil Pemesanan</a></li>
-					<li><a href="<?php echo base_url();?>index.php/webfront/cancel_order_tiketcom">Pembatalan Pesanan Tiket</a></li>
 					<li><a href="<?php echo base_url();?>index.php/webfront/general_payment_method">Metode Pembayaran ATM Transfer</a></li>
 				</ul>				
 			</div>

@@ -97,8 +97,13 @@ YUI().use('tabview', function(Y) {
 		}
 		else{
 			column_paket = [
-					{key:"id", label:"ID", sortable: true},
+					//{key:"id", label:"ID", sortable: true},
 					{key:"category", label:"Kategori", sortable: true},
+					{label:"Link",
+						nodeFormatter:function(o){
+							o.cell.setHTML('<?php echo base_url();?>index.php/webfront/load_non_paket/'+o.data.category);
+						}
+					},
 					{key:"title", label:"Judul"},
 					{key:"author", label:"Penulis"},
 					{key:"status", label:"Status"},

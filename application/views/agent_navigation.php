@@ -45,37 +45,26 @@
 				</li>
 				<li class="with-right-arrow">
 					<span>
-						<span class="list-count">11</span>
+						<span class="list-count">5</span>
 						Laporan
 					</span>
 					<ul class="big-menu">
-						<li>
-							<a href="<?php echo base_url();?>index.php/agent/report_order/flight" >Booking Pesawat</a>
-						</li>
-						<li>
-							<a href="<?php echo base_url();?>index.php/agent/report_order/train" >Booking Kereta</a>
-						</li>
-						<li>
-							<a href="<?php echo base_url();?>index.php/agent/report_order/hotel" >Booking Hotel</a>
-						</li>
-						<li>
-							<a href="<?php echo base_url();?>index.php/agent/report_order/tour" >Booking Tour</a>
-						</li>
-						<li>
-							<a href="<?php echo base_url();?>index.php/agent/report_order/travel" >Booking Travel</a>
-						</li>
-						<li>
-							<a href="<?php echo base_url();?>index.php/agent/report_order/rental" >Booking Rental</a>
-						</li>
-						<li>
-							<a href="<?php echo base_url();?>index.php/agent/report_order/umrah" >Booking Umrah</a>
-						</li>
 						<li>
 							<a href="<?php echo base_url();?>index.php/agent/report_deposit/topup" >Laporan Topup</a>
 						</li>
 						<li>
 							<a href="<?php echo base_url();?>index.php/agent/report_deposit/withdraw" >Laporan Withdraw</a>
 						</li>
+						<li>
+							<a href="<?php echo base_url();?>index.php/agent/report_order/flight" >Booking Pesawat</a>
+						</li>
+						<li>
+							<a href="<?php echo base_url();?>index.php/agent/report_order/hotel" >Booking Hotel</a>
+						</li>
+						<li>
+							<a href="<?php echo base_url();?>index.php/agent/report_order/paket" >Booking Paket</a>
+						</li>
+						
 					</ul>
 				</li>
 				<!--<li class="with-right-arrow">
@@ -97,7 +86,7 @@
 				</li>-->
 				<li class="with-right-arrow">
 					<span>
-						<span class="list-count">4</span>
+						<span class="list-count">3</span>
 						Profile
 					</span>
 					<ul class="big-menu">

@@ -164,7 +164,7 @@
 			dataType: "json",
 			success:function(data){
 				if(data.status!="200"){
-					$("#messages").append('<p style="color:red">Pesan Kesalahan: '+data.message+'</p>');
+					$("#result").append('<p style="color:red">Pesan Kesalahan: '+data.message+'</p>');
 					$("#progress").hide();
 				}
 				else{

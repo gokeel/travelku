@@ -295,7 +295,6 @@
 						</div>';
 						
 						input_return = '<input type="hidden" name="ret_flight_id" value="'+data.items[0].returns.flight_id+'">\
-						<input type="hidden" name="flight_number_ret" value="'+data.items[0].returns.flight_number+'">\
 						<input type="hidden" name="airline_name_ret" value="'+data.items[0].returns.airlines_name+'">\
 						<input type="hidden" name="flight_number_ret" value="'+data.items[0].returns.flight_number+'">\
 						<input type="hidden" name="time_travel_ret" value="'+data.items[0].returns.simple_departure_time+' - '+data.items[0].returns.simple_arrival_time+'">\

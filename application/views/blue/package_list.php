@@ -149,23 +149,9 @@
 	<!-- FOOTER -->
 
 	<?php include_once('footer.php')?>
-	
-	
-	
-	
-
-	
-	
-
     
 <script>
 	$( window ).load(function() {
-		load_all_airport('<?php echo base_url();?>index.php/flight/get_all_airport', "#flight-from");
-		load_all_airport('<?php echo base_url();?>index.php/flight/get_all_airport', "#flight-to");
-		
-		load_all_station('<?php echo base_url();?>index.php/train/get_all_station', "#train-from");
-		load_all_station('<?php echo base_url();?>index.php/train/get_all_station', "#train-to");
-		
 		load_posts();
 		count_all_content();
 	})

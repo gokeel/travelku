@@ -212,8 +212,8 @@ background:url('../../rs-plugin/assets/slider-bg.png') #333 scroll center center
 }
 .sliderbg2{
 position:fixed; 
-background-color:white;
-/*background:url('../../images/bg slide web.png') #0d73a5 scroll center -50px no-repeat;*/
+/*background-color:white;*/
+background:url('../../images/bg slide web.png') #0d73a5 center center repeat-x;
 /*background:url('../../images/bg.jpg') #0d73a5 scroll center -50px no-repeat;*/
 Width:100%; height:720px; 
 }
@@ -616,6 +616,54 @@ z-index:100;
 	background: -o-linear-gradient(top, #1d7db7, #3994d4);
 }
 
+.btn-search-biru-tua {
+  /*color: #333333;
+  background-color: #ffffff;
+  border-color: #cccccc;
+  */
+	text-transform:uppercase;
+	position:absolute;
+	bottom:20px;
+  
+	border: 1px solid #d75124;
+	background: #e35121;
+	background: -webkit-gradient(linear, left top, left bottom, from(#00669A), to(#00669A));
+	background: -webkit-linear-gradient(top, #00669A, #00669A);
+	background: -moz-linear-gradient(top, #00669A, #00669A);
+	background: -ms-linear-gradient(top, #00669A, #00669A);
+	background: -o-linear-gradient(top, #00669A, #00669A);
+	padding: 7.5px 20px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: rgba(0,0,0,0.18) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,0.18) 0 1px 0;
+	box-shadow: rgba(0,0,0,0.18) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 -1px 0;
+	color:#ffffff;
+	font-size: 13px;
+	font-family: Helvetica, Arial, Sans-Serif;
+	text-decoration: none;
+	vertical-align: middle;
+
+	font-family:"Open Sans";
+	font-weight:700;
+  
+-webkit-transition:.3s;-moz-transition:.3s;transition:.3s
+}
+.btn-search-biru-tua:hover{
+	/*color:#be3507;*/
+	color:#ffffff;
+	/*text-shadow: rgba(255,255,255,.4) 0 1px 0;*/
+	text-shadow: rgba(0,0,0,.4) 0 -1px 0;
+	
+	background: #00669A;
+	background: -webkit-gradient(linear, left top, left bottom, from(#00669A), to(#00669A));
+	background: -webkit-linear-gradient(top, #00669A, #00669A);
+	background: -moz-linear-gradient(top, #00669A, #00669A);
+	background: -ms-linear-gradient(top, #00669A, #00669A);
+	background: -o-linear-gradient(top, #00669A, #00669A);
+}
 
 a.add2fav{
 width:100%;
@@ -717,19 +765,24 @@ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
 
 .bookbtn{
-border:2px solid #ebebeb;
+border:2px solid #F44910;
+/*border:2px solid #ebebeb;*/
 padding:5px 15px 5px 15px;
-background:#fff;
-color:#999;
+background:#F44910;
+color:#fff;
+/*background:#fff;
+color:#999;*/
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
 border-radius: 4px;
 -webkit-transition:.2s;-moz-transition:.2s;transition:.2s
 }
 .bookbtn:hover{
-border:2px solid #006699;
+border:2px solid #F44910;
+/*border:2px solid #006699;*/
 color:#fff;
-background:#006699;
+background:#F44910;
+/*background:#006699;*/
 }
 .bookbtn:hover.cunvailable{
 border:2px solid #ebebeb;
@@ -1534,11 +1587,13 @@ img.fwimg{width:100%;}
 
 .slidercontainer{width:100%; height:446px; background:#fff; color:white;}
 /*.slidercontainer{width:100%; height:446px; background:#fff; color:#666;}*/
-.scolleft{background:#0489F6;height:430px; padding: 15px 30px 30px 30px; top:446px;}
+.scolleft{background:#F66332;height:430px; padding: 15px 30px 30px 30px; top:446px;}
+/*.scolleft{background:#0489F6;height:430px; padding: 15px 30px 30px 30px; top:446px;}*/
 /*.scolleft{background:#f2f2f2;height:100%; padding: 15px 30px 30px 30px; top:446px;}*/
 .scolright{background:#333;height:100%; overflow:hidden; top:-410px;}
 @media (min-width: 992px) {
-.scolleft{background:#0489F6;height:450px; padding: 15px 30px 30px 30px; top:0px;}
+.scolleft{background:#F66332;height:446px; padding: 15px 30px 30px 30px; top:0px;}
+/*.scolleft{background:#0489F6;height:450px; padding: 15px 30px 30px 30px; top:0px;}*/
 /*.scolleft{background:white;height:450px; padding: 15px 30px 30px 30px; top:0px;}*/
 .scolright{background:#333;height:100%; overflow:hidden; top:0px;}
 
@@ -1608,9 +1663,10 @@ background:url('../../images/slider/couple.png') no-repeat;
 
 
 
-.filtertip {height:100px; background:#006699; padding:0px; color:#fff; position:relative; text-align:center; line-height:10px; font-family:'Open Sans'}
+.filtertip {-webkit-border-bottom-right-radius: 75px; -moz-border-radius-bottomright: 75px; border-bottom-right-radius: 75px;height:100px; background:#006699; padding:0px; color:#fff; position:relative; text-align:center; line-height:10px; font-family:'Open Sans'}
 .filtertip a{color:#fff;}
 .tip-arrow{width:33px; height:9px; background:url('../../images/tip-arrow.png'); position:absolute; bottom:-9px; left:50%; margin-left:-15px;}
+.box-biru-miring {-webkit-border-bottom-right-radius: 75px; -moz-border-radius-bottomright: 75px; border-bottom-right-radius: 75px; background:#006699; padding:0px; color:#fff; text-align:left; font-family:'Open Sans'}
 
 .breadcrub{margin-top:70px; color:#ccc;}
 @media (min-width: 992px) {
@@ -1672,7 +1728,8 @@ background:url('../../images/back-icon.png') #222 no-repeat  scroll -16px -31px;
 }
 
 .itemlabel3{background:#f2f2f2; width:100%; height:210px;  font-family:"Open Sans"; font-size:13px; line-height:15px; overflow:hidden;}
-.itemlabel2{background:#f2f2f2; width:100%; height:210px;  font-family:"Open Sans"; font-size:13px; line-height:15px; overflow:hidden;}
+.itemlabel2{background:#f2f2f2; width:100%; height:120px;  font-family:"Open Sans"; font-size:13px; line-height:15px; overflow:hidden;}
+/*.itemlabel2{background:#f2f2f2; width:100%; height:210px;  font-family:"Open Sans"; font-size:13px; line-height:15px; overflow:hidden;}*/
 .labelright{float:right; height:100%; padding:10px; border-left:1px solid #e8e8e8;}
 .labelleft{padding:10px 0 15px 15px;}
 .labelleft2{padding:10px 0 15px 15px;font-family:"Open Sans"; font-size:13px; line-height:18px;}
@@ -2772,9 +2829,11 @@ padding-top:3px;
 	background-color:#0489F6;
 }
 
+
 .box-blue-rizky{
-	background-color: #006699;
-	/*background: url('../../images/bottom web.png') no-repeat;
+	width:100%; background:#006699;padding:60px 0; margin-top:80px; overflow:hidden;
+	/*background-color: #006699;
+	background: url('../../images/bottom web.png') no-repeat;
 	background-size: 100% 100%;*/
 }
 .font-arial{font-family:"Arial"; Font-size:16px; color:white; font-weight:700;}

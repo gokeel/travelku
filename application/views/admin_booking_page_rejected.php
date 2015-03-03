@@ -12,8 +12,8 @@ YUI().use('tabview', function(Y) {
 		<div id="tabs">
 			<ul>
 				<li><a href="#tab-1">Tiket Pesawat</a></li>
-				<!--<li><a href="#tab-2">Tiket Kereta Api</a></li>
-				<li><a href="#tab-3">Tiket Hotel</a></li>-->
+				<!--<li><a href="#tab-2">Tiket Kereta Api</a></li>-->
+				<li><a href="#tab-3">Tiket Hotel</a></li>
 				<li><a href="#tab-4">Paket</a></li>
 				<li><a href="#tab-5">Tiketcom</a></li>
 			</ul>
@@ -23,10 +23,10 @@ YUI().use('tabview', function(Y) {
 				</div>
 				<!--<div id="tab-2">
 					<div id="order-train"></div>
-				</div>
+				</div>-->
 				<div id="tab-3">
 					<div id="order-hotel"></div>
-				</div>-->
+				</div>
 				<div id="tab-4">
 					<div id="order-paket"></div>
 				</div>
@@ -110,7 +110,7 @@ YUI().use('tabview', function(Y) {
 	$( window ).load(function() {
 		load_order_flight();
 		//load_order_train();
-		//load_order_hotel();
+		load_order_hotel();
 		load_order_paket();
 		load_order_tiketcom();
 	});
@@ -229,18 +229,25 @@ YUI().use('tabview', function(Y) {
 					},
 					{key:"route", label:"Rute"},
 					{
-						label:"Waktu",
+						label:"Waktu Penerbangan",
 						nodeFormatter:function (o) {
-							var str = '<p><b>Dep:</b> '+o.data.datetime_depart;
+							var str = '<p><b>Dep:</b><br/> '+o.data.datetime_depart;
 							if (o.data.is_round_trip=="true")
-								str += '<br /><b>Ret:</b> '+o.data.datetime_return;
+								str += '<br /><b>Ret:</b><br/> '+o.data.datetime_return;
 							str += '</p>';
 							
 							o.cell.setHTML(str);
 							return false;
 						}
 					},
-					//{key:"total_price", label:"Total Harga", formatter:formatCurrency},
+					{key:"total_price", label:"Total Harga"},
+					{
+						label:"Detil",
+						nodeFormatter:function (o) {
+							o.cell.setHTML('<a href="<?php echo base_url();?>index.php/admin/view_detail_order/flight/'+o.data.order_id+'"><img src="<?php echo IMAGES_DIR;?>/look.ico" width="30px" height="25px"></a>');
+							return false;
+						}
+					},
 					{key:"payment_status", label:"Status Pembayaran"},
 					{key:"reason", label:"Alasan"}
 				],
@@ -307,35 +314,18 @@ YUI().use('tabview', function(Y) {
 		$.ajax({
 			type : "GET",
 			async: false,
-			url: '<?php echo base_url();?>index.php/admin/get_registered_order/hotel',
+			url: '<?php echo base_url();?>index.php/admin/get_cancelled_rejected_order_internal_nonpaket/hotel/Rejected',
 			dataType: "json",
 			success:function(datajson){
 				for(var i=0; i<datajson.length;i++)
-					data[i] = {number_row:datajson[i].number_row ,order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, name: datajson[i].name, hotel_id: datajson[i].id, address: datajson[i].address, regional: datajson[i].regional, book_date: datajson[i].checkin+' / '+datajson[i].checkout, night: datajson[i].night, room: datajson[i].room, total_price: datajson[i].total_price, adult: datajson[i].adult, child: datajson[i].child, payment_status: datajson[i].payment_status, order_status: datajson[i].order_status, reason: datajson[i].reason};
+					data[i] = {order_id: datajson[i].order_id, agent_name:datajson[i].agent_name, name: datajson[i].name, hotel_id: datajson[i].id, address: datajson[i].address, regional: datajson[i].regional, book_date: datajson[i].checkin+' / '+datajson[i].checkout, night: datajson[i].night, room: datajson[i].room, total_price: datajson[i].total_price, adult: datajson[i].adult, child: datajson[i].child, payment_status: datajson[i].payment_status, order_status: datajson[i].order_status, reason: datajson[i].reason};
 			}
 		});
 		
 		YUI({gallery: 'gallery-2013.01.09-23-24'}).use('datatable','datatable-sort','datatype-number','datatype-date','datatable-paginator', function (Y) {
-			/*------------------------------------*/
-			function formatCurrency(cell) {
-				//console.log("column key : " + cell.column.key);
-				if(cell.column.key == "imps"){
-					console.log(JSON.stringify(cell));
-				}
-				format = {
-					//prefix: "Rp ",
-					thousandsSeparator: ".",
-					decimalSeparator: ",",
-					decimalPlaces: 2
-				};
-				cell.record.set(Number(cell.value));
-				return Y.DataType.Number.format(Number(cell.value), format);
-			}
-			
 			var data_order = data;
 			var table = new Y.DataTable({
 				columns: [
-					{key:"number_row", label:"No.", width:"10px"},
 					{key:"order_id", label:"ID Pesanan"},
 					{key:"agent_name", label:"Nama Agen"},
 					{key:"name", label:"Hotel"},
@@ -348,7 +338,7 @@ YUI().use('tabview', function(Y) {
 							return false;
 						}
 					},
-					{key:"total_price", label:"Total Harga", formatter:formatCurrency},
+					{key:"total_price", label:"Total Harga"},
 					{key:"payment_status", label:"Status Pembayaran"},
 					{key:"order_status", label:"Status Pesanan"},
 					{key:"reason", label:"Alasan"}

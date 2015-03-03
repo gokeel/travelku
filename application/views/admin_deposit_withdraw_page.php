@@ -54,22 +54,6 @@ YUI().use('tabview', function(Y) {
 		});
 		
 		YUI({gallery: 'gallery-2013.01.09-23-24'}).use('datatable','datatable-sort','datatype-number','datatype-date','datatable-paginator', function (Y) {
-			/*------------------------------------*/
-			function formatCurrency(cell) {
-				//console.log("column key : " + cell.column.key);
-				if(cell.column.key == "imps"){
-					console.log(JSON.stringify(cell));
-				}
-				format = {
-					//prefix: "Rp ",
-					thousandsSeparator: ".",
-					decimalSeparator: ",",
-					decimalPlaces: 2
-				};
-				cell.record.set(Number(cell.value));
-				return Y.DataType.Number.format(Number(cell.value), format);
-			}
-			
 			var data_order = data;
 			var table = new Y.DataTable({
 				columns: [
@@ -78,7 +62,7 @@ YUI().use('tabview', function(Y) {
 					{key:"bank_to", label:"Bank Tujuan"},
 					{key:"receiver_name", label:"Nama Penerima"},
 					{key:"receiver_number", label:"No Rekening Penerima"},
-					{key:"nominal", label:"Nominal", formatter:formatCurrency},
+					{key:"nominal", label:"Nominal"},
 					{key:"message", label:"Catatan"},
 					{
 						key:"id", 
@@ -114,22 +98,6 @@ YUI().use('tabview', function(Y) {
 		});
 		
 		YUI({gallery: 'gallery-2013.01.09-23-24'}).use('datatable','datatable-sort','datatype-number','datatype-date','datatable-paginator', function (Y) {
-			/*------------------------------------*/
-			function formatCurrency(cell) {
-				//console.log("column key : " + cell.column.key);
-				if(cell.column.key == "imps"){
-					console.log(JSON.stringify(cell));
-				}
-				format = {
-					//prefix: "Rp ",
-					thousandsSeparator: ".",
-					decimalSeparator: ",",
-					decimalPlaces: 2
-				};
-				cell.record.set(Number(cell.value));
-				return Y.DataType.Number.format(Number(cell.value), format);
-			}
-			
 			var data_order = data;
 			var table = new Y.DataTable({
 				columns: [
@@ -138,7 +106,7 @@ YUI().use('tabview', function(Y) {
 					{key:"bank_to", label:"Bank Tujuan"},
 					{key:"receiver_name", label:"Nama Penerima"},
 					{key:"receiver_number", label:"No Rekening Penerima"},
-					{key:"nominal", label:"Nominal", formatter:formatCurrency},
+					{key:"nominal", label:"Nominal"},
 					{key:"message", label:"Catatan"}
 				],
 				data: data_order,
@@ -162,22 +130,6 @@ YUI().use('tabview', function(Y) {
 		});
 		
 		YUI({gallery: 'gallery-2013.01.09-23-24'}).use('datatable','datatable-sort','datatype-number','datatype-date','datatable-paginator', function (Y) {
-			/*------------------------------------*/
-			function formatCurrency(cell) {
-				//console.log("column key : " + cell.column.key);
-				if(cell.column.key == "imps"){
-					console.log(JSON.stringify(cell));
-				}
-				format = {
-					//prefix: "Rp ",
-					thousandsSeparator: ".",
-					decimalSeparator: ",",
-					decimalPlaces: 2
-				};
-				cell.record.set(Number(cell.value));
-				return Y.DataType.Number.format(Number(cell.value), format);
-			}
-			
 			var data_order = data;
 			var table = new Y.DataTable({
 				columns: [
@@ -186,7 +138,7 @@ YUI().use('tabview', function(Y) {
 					{key:"bank_to", label:"Bank Tujuan"},
 					{key:"receiver_name", label:"Nama Penerima"},
 					{key:"receiver_number", label:"No Rekening Penerima"},
-					{key:"nominal", label:"Nominal", formatter:formatCurrency},
+					{key:"nominal", label:"Nominal"},
 					{key:"message", label:"Catatan"}
 				],
 				data: data_order,

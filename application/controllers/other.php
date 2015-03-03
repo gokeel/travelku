@@ -20,4 +20,8 @@ class Other extends CI_Controller {
 	public function get_server_info(){
 		phpinfo();
 	}
+	
+	public function curl(){
+		echo exec('/usr/bin/curl http://api.sandbox.tiket.com/apiv1/payexpress?method=getToken&secretkey=34f08bda20602f4694c1466eefdd4a8e&output=json');
+	}
 }

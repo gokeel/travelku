@@ -11,13 +11,13 @@
 						<p class="size13">Kami menyediakan</p>
 						<p class="size30 bold">Tiket & Paket</p>
 					</div>
-					<div class="tip-arrow"></div>
+					<!--<div class="tip-arrow"></div>-->
 				</div>
 				<div class="line2"></div>
 					
 				<?php if($pesawat_status=='200'){?>
-				<button type="button" class="collapsebtn" data-toggle="collapse" data-target="#promo-pesawat">
-				  Promo Penerbangan <span class="collapsearrow"></span>
+				<button type="button" class="collapsebtn box-biru-miring" data-toggle="collapse" data-target="#promo-pesawat">
+				  <span style="color:white">Promo Penerbangan</span> <span class="collapsearrow"></span>
 				</button>
 				<div id="promo-pesawat" class="collapse in">
 					<div class="padding20">
@@ -31,10 +31,11 @@
                         </div>
 					</div>
 				</div>
+			
 				<div class="line2"></div>
 				<?php } ?>
-				<button type="button" class="collapsebtn" data-toggle="collapse" data-target="#paket-promo">
-				  Paket Promo <span class="collapsearrow"></span>
+				<button type="button" class="collapsebtn box-biru-miring" data-toggle="collapse" data-target="#paket-promo">
+				  <span style="color:white">Paket Promo</span> <span class="collapsearrow"></span>
 				</button>
 				<div id="paket-promo" class="collapse in">
 					<div class="padding20">
@@ -57,8 +58,8 @@
 					</div>
 				</div>
 				<div class="line2"></div>
-				<button type="button" class="collapsebtn" data-toggle="collapse" data-target="#paket-regular">
-				  Paket Reguler <span class="collapsearrow"></span>
+				<button type="button" class="collapsebtn box-biru-miring" data-toggle="collapse" data-target="#paket-regular">
+				  <span style="color:white">Paket Reguler</span> <span class="collapsearrow"></span>
 				</button>
 				<div id="paket-regular" class="collapse in">
 					<div class="padding20">

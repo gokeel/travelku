@@ -35,13 +35,12 @@ class Orders extends CI_Model {
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
 		$this->db->join('users', 'orders.locked_by = users.account_id', 'left');
 		if($all==null)
-			$this->db->where("trip_category ='". $cat."' and (order_status = 'Registered' or order_status = 'Booked' or order_status = 'Paid')");
+			$this->db->where("order_system_id = 'internal' and trip_category ='". $cat."' and (order_status = 'Registered' or order_status = 'Booked' or order_status = 'Paid')");
 		else if($all==true)
-			$this->db->where("trip_category", $cat);
+			$this->db->where("order_system_id = 'internal' and trip_category ='". $cat);
 		if($account_id<>null)
 			$this->db->where('orders.account_id', $account_id);
 		$this->db->order_by('orders.order_id desc');
-		//$this->db->where("order_status = 'Registered' or order_status = 'Paid'");
 		
 		$query = $this->db->get();
 		return $query;
@@ -61,7 +60,7 @@ class Orders extends CI_Model {
 	}
 	
 	function get_cancelled_rejected_order_internal_nonpaket($cat, $status){
-		$this->db->select('orders.*, agents.agent_name, payments.status, reasons.reason');
+		$this->db->select('orders.*, agents.agent_name, payments.status as payment_status, reasons.reason');
 		$this->db->from('orders');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
@@ -74,12 +73,13 @@ class Orders extends CI_Model {
 		return $query;
 	}
 	
-	function get_order_list(){
+	function get_order_list($all=null){
 		$this->db->select('orders.*, agents.agent_name, agents.agent_username, payments.status, payments.transfer_date');
 		$this->db->from('orders');
 		$this->db->join('agents', 'orders.account_id = agents.agent_id');
 		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
-		//$this->db->where("order_status = 'Registered' or order_status = 'Booked' or order_status = 'booked'");
+		if($all<>null)
+			$this->db->where("order_status = 'Registered' or order_status = 'Booked' or order_status = 'booked'");
 		$this->db->order_by('orders.order_id desc');
 		
 		$query = $this->db->get();
@@ -377,6 +377,47 @@ class Orders extends CI_Model {
 		
 		$this->db->order_by('orders.order_id desc');
 		//echo $this->db->get_compiled_select();
+		$query = $this->db->get();
+		if($query->num_rows > 0)
+			return $query;
+		else
+			return false;
+	}
+	
+	function agent_get_order_flight($agent_id){
+		// collect order data in internal and tiketcom orders
+		$query = $this->db->query("select if(order_system_id='internal', a.order_id, 3rd_party_order_id) as orderid, a.*, b.status as payment_status
+					from orders a 
+					left join payments b on a.order_id=b.order_id 
+					where account_id = '$agent_id' and trip_category = 'flight' order by a.order_id desc");
+		if($query->num_rows > 0)
+			return $query;
+		else
+			return false;
+	}
+	
+	function agent_get_order_hotel($agent_id){
+		// collect order data in internal and tiketcom orders
+		$query = $this->db->query("select if(order_system_id='internal', a.order_id, 3rd_party_order_id) as orderid, a.*, b.status as payment_status
+					from orders a 
+					left join payments b on a.order_id=b.order_id 
+					where account_id = '$agent_id' and trip_category = 'hotel' order by a.order_id desc");
+		if($query->num_rows > 0)
+			return $query;
+		else
+			return false;
+	}
+	
+	function agent_get_order_paket($agent_id){
+		// collect order data in internal and tiketcom orders
+		$this->db->select('orders.*, posts.title, posts.mini_slogan, posts.currency, post_categories.category, post_categories.description, agents.agent_name, payments.status as payment_status, payments.transfer_date');
+		$this->db->from('orders');
+		$this->db->join('posts', 'orders.post_id = posts.post_id');
+		$this->db->join('post_categories', 'posts.category = post_categories.id');
+		$this->db->join('agents', 'orders.account_id = agents.agent_id');
+		$this->db->join('payments', 'orders.order_id = payments.order_id', 'left');
+		$this->db->where('orders.account_id', $agent_id);
+		$this->db->order_by('orders.order_id desc');
 		$query = $this->db->get();
 		if($query->num_rows > 0)
 			return $query;

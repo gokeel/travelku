@@ -93,6 +93,7 @@ class Posts extends CI_Model {
 		$this->db->where('posts.status', 'publish');
 		$this->db->where('posts.enabled', 'true');
 		$this->db->where('post_categories.is_package', 'true');
+		$this->db->where('posts.price !=', '0');
 		$this->db->order_by('posts.post_id desc');
 		$this->db->limit($limit_count, $limit_start);
 		$get = $this->db->get();
@@ -189,6 +190,7 @@ class Posts extends CI_Model {
 		$this->db->where('post_categories.is_package', 'true');
 		$this->db->where('posts.status', 'publish');
 		$this->db->where('posts.enabled', 'true');
+		$this->db->where('posts.price !=', '0');
 		$this->db->order_by('posts.post_id desc');
 		$this->db->limit($limit_count, $limit_start);
 		$get = $this->db->get();
@@ -311,6 +313,8 @@ class Posts extends CI_Model {
 		$this->db->from('posts');
 		$this->db->join('post_categories', 'posts.category=post_categories.id');
 		$this->db->where('is_package', 'false');
+		$this->db->where('status', 'publish');
+		$this->db->where('enabled', 'true');
 		$this->db->where('post_categories.category', $type);
 		$get = $this->db->get();
 		if ($get->num_rows() > 0)
